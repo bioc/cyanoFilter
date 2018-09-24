@@ -1,0 +1,23 @@
+Package: cyanoFilter
+Title: Filter Out BS4 and BS5 Cyano Cells
+Version: 0.0.0.9000
+Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.be", role = c("aut", "cre")),
+    person("Aerts", "Marc", email = "marc.aerts@uhasselt.be", role = "ctb"),
+    person("Delaender", "Frederik", email = "frederik.delaender@unamur.be", role = "ctb"),
+    person("Neyens", "Thomas", email = "thomas.neyens@uhasselt.be", role = "ctb"),
+    person("Spaak", "jurg", email = "jurg.spaak@unamur.be", role = "ctb"))
+Description: It filters out living cyano cells from all particles measured via flowcytometry. 
+    It combines known characteristics of BS4 and BS5 cyanobacteria alongside flowDensity package to 
+    maximally filter out BS4 and BS5 cyano cells from debris and doublets. However, it can also be used for
+    cyanobacteria cells that are differentaible in two dimensions.
+Depends: R (>= 3.4.4), Biobase (>= 2.36.2), flowCore (>= 1.42.3), flowDensity (>= 1.10.0), stringr(>= 1.3.1), 
+    modes(>= 0.7.0)
+Imports:
+    flowCore (>= 1.42.3),
+    flowDensity (>= 1.10.0),
+    stringr(>= 1.3.1),
+    modes(>= 0.7.0)
+License: GPL-2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
