@@ -6,6 +6,12 @@
 \usage{
 nona(x)
 }
+\arguments{
+\item{x}{is the flowframe with expression matrix containing NA}
+}
+\value{
+a flowframe with expression matrix rid of NAs
+}
 \description{
 Removes NA values from the expression matrix of a flowfile
 }

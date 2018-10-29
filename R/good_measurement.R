@@ -9,10 +9,18 @@
 #' @param d_cellpML maximal accepted cell per microlitre. Flowfiles with larger cell per microlitre are
 #'        termed bad. Defaults to 1000
 #' @return dataframe with columns
-#'         CML cell per microlitre as read from the associated metafile.
-#'         status flowfile status, either "good" or "bad".
-#'         ID is the row number in meta file
-#'         Size is the number of cells in the FCS file.
+#' \itemize{
+#'         \item \strong{CML -} cell per microlitre as read from the associated metafile.
+#'         \item \strong{status -} flowfile status, either "good" or "bad".
+#'         \item \strong{ID -} is the row number in meta file
+#'         \item \strong{Size -} is the number of cells in the FCS file.
+#'         }
+#' @examples
+#' \dontrun{
+#'   goodfcs(fcsfile = flowframe, metadtat, Cell_per_microlitre, 12, d_cellnum = 500, 1500)
+#' }
+#'
+#' @export goodfcs
 
 goodfcs <- function(fcsfile, metafile, CpermL, rowinmetafile, d_cellnum = 90, d_cellpML = 1000){
   if(!is.null(metafile) & !is.null(fcsfile) & !is.null(CpermL) & !is.null(rowinmetafile)){

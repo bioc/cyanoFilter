@@ -7,6 +7,36 @@
 goodfcs(fcsfile, metafile, CpermL, rowinmetafile, d_cellnum = 90,
   d_cellpML = 1000)
 }
+\arguments{
+\item{fcsfile}{flowfile to be checked.}
+
+\item{metafile}{associated metafile to the supplied fcsfile.}
+
+\item{CpermL}{column name in metafile containing cell per microlitre.}
+
+\item{rowinmetafile}{row containing measurements associated to fcsfile.}
+
+\item{d_cellnum}{desired minimum number of particle counts. Flowfiles with smaller particle counts are
+termed bad. Defaults to 90.}
+
+\item{d_cellpML}{maximal accepted cell per microlitre. Flowfiles with larger cell per microlitre are
+termed bad. Defaults to 1000}
+}
+\value{
+dataframe with columns
+\itemize{
+        \item \strong{CML -} cell per microlitre as read from the associated metafile.
+        \item \strong{status -} flowfile status, either "good" or "bad".
+        \item \strong{ID -} is the row number in meta file
+        \item \strong{Size -} is the number of cells in the FCS file.
+        }
+}
 \description{
 indicates if measurement from a flowfile is good or bad
+}
+\examples{
+\dontrun{
+  goodfcs(fcsfile = flowframe, metadtat, Cell_per_microlitre, 12, d_cellnum = 500, 1500)
+}
+
 }

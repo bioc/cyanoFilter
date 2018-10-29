@@ -5,41 +5,52 @@
 \title{Gates cyano cells of interest using 2 channels.}
 \usage{
 celldebris(flowframe, p1 = "RED.B.HLin", p2 = "YEL.B.HLin",
-  positions = c(F, NA), control = F, control_use = c(T, T),
+  positions = c(F, NA), control_use = c(T, T),
   control_flowFrame = NULL, interest = c("BS4", "BS5", "Both"),
-  day1mono_control = NULL, day1b4_control = NULL, day1b5_control = NULL)
+  mono_control = NULL, b4_control = NULL, b5_control = NULL)
 }
 \arguments{
-\item{flowframe}{is the flowframe to be filtered}
+\item{flowframe}{flowframe to be filtered}
 
-\item{p1}{a character vector giving the first channel. Defaults to RED.B.HLin (a measure of chlorophyll presence)}
+\item{p1}{character vector giving the first channel.
+Defaults to RED.B.HLin (a measure of chlorophyll presence)}
 
-\item{p2}{a character vector giving the first channel. Defaults to YEL.B.HLin (a measure of decaying pigments)}
+\item{p2}{character vector giving the first channel.
+Defaults to YEL.B.HLin (a measure of decaying pigments)}
 
 \item{positions}{dictates if both channels should be used in identifying the cell populations.}
 
-\item{control}{a logical vector indicating if a control flowframe will be supplied. Defaults to T}
+\item{control_use}{a logical flowframe indicating if a control flowframe be used for both channels.
+See \code{?flowDensity} for more}
 
-\item{control_use}{a logical flowframe indicating if a control flowframe be used for both channels. See \code{?flowDensity for more}}
+\item{control_flowFrame}{control flowframe}
 
-\item{interest}{a character vector specifying if BS4, BS5 or both specie are of interest to be gated out of the sample}
+\item{interest}{character vector specifying if BS4, BS5 or both specie are of interest to be
+gated out of the sample}
 
-\item{day1mono_control}{is the control flowframe if monocultures are being gated}
+\item{mono_control}{is the control flowframe on first day if monocultures are being gated}
 
-\item{day1b4_control}{is the control flowframe for BS4 if a mix of BS4 and BS5 are being gated. Defaults to NULL}
+\item{b4_control}{control flowframe for BS4 if a mix of BS4 and BS5 are being gated.
+Defaults to NULL}
 
-\item{day1b5_control}{is the control flowframe for BS5 if a mix of BS4 and BS5 are being gated. Defaults to NULL}
-
-\item{control_flowframe}{a}
+\item{b5_control}{control flowframe for BS5 if a mix of BS4 and BS5 are being gated.
+Defaults to NULL}
 }
 \value{
-rframe is the resulting flowframe after debris have been filtered out.
+list containing the following;
+\itemize{
+        \item \strong{rframe -} reduced flowframe after debris have been filtered out.
+        \item \strong{fullframe -} full flowframe with indicator for debris in the expression matrix
+        \item \strong{Cell_count -} total number of cyano cells counted. This will be the number of BS4
+        if interest is BS4 and number of BS5 if interest is BS5 and addition of both
+        if interest is both.
+        \item \strong{N_particle -} is the total number of particles counted.
+        \item \strong{N_others -} is the total number of other particles counted.
+        }
 
-fullframe is the full flowframe with indicator for debris in the expression matrix
 
-Cell_count is the total number of cyano cells counted. This will be the number of BS4 if interest is BS4 and number of BS5 if interest is BS5 and addition of both if interesr is both.
-
-N_particle is the total number of particles counted.
+ @import Biobase
+ @export celldebris
 }
 \description{
 Gates cyano cells of interest using 2 channels.

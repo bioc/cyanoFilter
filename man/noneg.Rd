@@ -6,6 +6,12 @@
 \usage{
 noneg(x)
 }
+\arguments{
+\item{x}{is the flowframe whose expression matrix contains negative values}
+}
+\value{
+a flow frame with non-negative values in its expression matrix
+}
 \description{
 Removes negative values from the expression matrix
 }
