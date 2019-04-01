@@ -1,27 +1,27 @@
-#' Removes or assign indicators to margin events
-#'
-#' @param flow.frame Flowframe containing margin events to be filtered out
-#' @param Channel The channel on which margin events are. Defaults to SSC.W (side scatter width)
-#' @param type The method to be used in gating out the margin cells. Can either be "manual" where user
-#'             supplies a cut off point on the channel, 1 = not margin 0 = margin
-#' @param  cut sould not be NULL if type = "manual"
-#'
-#' @return list containing;
-#' \itemize{
-#'         \item \strong{reducedflowframe -} flowframe without margin events
-#'         \item \strong{fullflowframe -} flowframe with an Margin.Indicator added as an
-#'         extra column added to the expression matrix to indicate which particles are margin events.
-#'         \item \strong{N_margin -} number of margin events recorded
-#'         \item \strong{N_cell -} numner of non-margin events
-#'         \item \strong{N_particle -} is the number of particles in total, i.e. N_cell + N_margin
-#'         }
-#' @examples
-#'
-#' \dontrun{
-#'    cellmargin(log_TransformedSet$Day1[[1]], "SSC.W", "estimate")
-#' }
-#' @importFrom methods new
-#' @export cellmargin
+# Removes or assign indicators to margin events
+#
+# @param flow.frame Flowframe containing margin events to be filtered out
+# @param Channel The channel on which margin events are. Defaults to SSC.W (side scatter width)
+# @param type The method to be used in gating out the margin cells. Can either be "manual" where user
+#             supplies a cut off point on the channel, 1 = not margin 0 = margin
+# @param  cut sould not be NULL if type = "manual"
+#
+# @return list containing;
+# \itemize{
+#         \item \strong{reducedflowframe -} flowframe without margin events
+#         \item \strong{fullflowframe -} flowframe with an Margin.Indicator added as an
+#         extra column added to the expression matrix to indicate which particles are margin events.
+#         \item \strong{N_margin -} number of margin events recorded
+#         \item \strong{N_cell -} numner of non-margin events
+#         \item \strong{N_particle -} is the number of particles in total, i.e. N_cell + N_margin
+#         }
+# @examples
+#
+# \dontrun{
+#    cellmargin(log_TransformedSet$Day1[[1]], "SSC.W", "estimate")
+# }
+# @importFrom methods new
+# @export cellmargin
 
 cellmargin <- function(flow.frame, Channel = "SSC.W", type = c("manual", "estimate"), cut = NULL){
   if(type=="manual" & !is.null(cut)) {

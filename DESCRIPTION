@@ -11,7 +11,7 @@ Description: It filters out living cyano cells from all particles measured via f
     maximally filter out BS4 and BS5 cyano cells from debris and doublets. However, it can also be used for
     cyanobacteria cells that are differentaible in two dimensions.
 Depends: R (>= 3.4),
-Imports: 
+Imports:
     Biobase(>= 2.40.0),
     flowCore (>= 1.42.3),
     flowDensity (>= 1.10.0),
@@ -22,3 +22,6 @@ License: GPL-2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

@@ -1,0 +1,49 @@
+\begin{thebibliography}{5}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Aghaeepour \emph{et~al.}(2011)Aghaeepour, Nikolic, Hoos, and
+  Brinkman}]{Aghaeepour:2011}
+Aghaeepour N, Nikolic R, Hoos HH, Brinkman RR (2011).
+\newblock \enquote{{Rapid cell population identification in flow cytometry
+  data}.}
+\newblock \emph{Cytometry Part A}.
+\newblock ISSN 15524922.
+\newblock \doi{10.1002/cyto.a.21007}.
+\newblock \eprint{NIHMS150003}.
+
+\bibitem[{Chambers and Hastie(1992)}]{Chambers+Hastie:1992}
+Chambers JM, Hastie TJ (eds.) (1992).
+\newblock \emph{Statistical Models in \proglang{S}}.
+\newblock Chapman \& Hall, London.
+
+\bibitem[{Ge and Sealfon(2012)}]{Ge:2012}
+Ge Y, Sealfon SC (2012).
+\newblock \enquote{{Flowpeaks: A fast unsupervised clustering for flow
+  cytometry data via K-means and density peak finding}.}
+\newblock \emph{Bioinformatics}.
+\newblock ISSN 13674803.
+\newblock \doi{10.1093/bioinformatics/bts300}.
+
+\bibitem[{McCullagh and Nelder(1989)}]{McCullagh+Nelder:1989}
+McCullagh P, Nelder JA (1989).
+\newblock \emph{Generalized Linear Models}.
+\newblock 2nd edition. Chapman \& Hall, London.
+\newblock \doi{10.1007/978-1-4899-3242-6}.
+
+\bibitem[{O'Neill \emph{et~al.}(2013)O'Neill, Aghaeepour, {\v{S}}pidlen, and
+  Brinkman}]{ONeill:2013}
+O'Neill K, Aghaeepour N, {\v{S}}pidlen J, Brinkman R (2013).
+\newblock \enquote{{Flow Cytometry Bioinformatics}.}
+\newblock \emph{PLoS Computational Biology}, \textbf{9}(12).
+\newblock ISSN 1553734X.
+\newblock \doi{10.1371/journal.pcbi.1003365}.
+
+\end{thebibliography}

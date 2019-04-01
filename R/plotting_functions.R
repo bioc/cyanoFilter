@@ -1,19 +1,19 @@
-#' function to plot the expression matrix of a flowframe. Note that, it takes some time to
-#' display the plot.
-#'
-#' @param x flowframe to be plotted
-#' @param notToPlot column in expression matrix not to be plotted
-#'
-#' @examples
-#' \dontrun{
-#'   pair_plot(log_transformedSet$Day1[[1]])
-#' }
-#'
-#'
-#' @importFrom grDevices colorRampPalette
-#' @importFrom graphics abline points panel.smooth pairs smoothScatter text
-#' @export pair_plot
-#'
+# function to plot the expression matrix of a flowframe. Note that, it takes some time to
+# display the plot.
+#
+# @param x flowframe to be plotted
+# @param notToPlot column in expression matrix not to be plotted
+#
+# @examples
+# \dontrun{
+#   pair_plot(log_transformedSet$Day1[[1]])
+# }
+#
+#
+# @importFrom grDevices colorRampPalette
+# @importFrom graphics abline points panel.smooth pairs smoothScatter text
+# @export pair_plot
+#
 
 pair_plot <- function(x, notToPlot = c("TIME")) {
   col.palette <- colorRampPalette(c("white","blue","cyan","green","orange", "red"),

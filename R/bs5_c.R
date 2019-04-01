@@ -1,24 +1,24 @@
-#' function to gate out bs5 from a debris filtered flowframe using a control flowframe.
-#' Called within the cell_debris function.
-#'
-#' @param bs4bs5 debris filtered flowframe
-#' @param p1 same as cell_debris
-#' @param p2 same as cell_debris
-#' @param day1_2 debris gated mono_control
-#' @param others position of not yet identified particles
-#'
-#' @return
-#' \itemize{
-#'         \item \strong{bs5_reduced -} reduced flowframe containing BS5
-#'         \item \strong{others_nk -} position of unknown particles
-#'         \item \strong{others_bs52 -} position of BS5s
-#'         \item \strong{others_bs4 -} position of BS4s, if present
-#' }
-#'
-#' @importFrom utils capture.output
-#' @export bs5_c
-#'
-#'
+# function to gate out bs5 from a debris filtered flowframe using a control flowframe.
+# Called within the cell_debris function.
+#
+# @param bs4bs5 debris filtered flowframe
+# @param p1 same as cell_debris
+# @param p2 same as cell_debris
+# @param day1_2 debris gated mono_control
+# @param others position of not yet identified particles
+#
+# @return
+# \itemize{
+#         \item \strong{bs5_reduced -} reduced flowframe containing BS5
+#         \item \strong{others_nk -} position of unknown particles
+#         \item \strong{others_bs52 -} position of BS5s
+#         \item \strong{others_bs4 -} position of BS4s, if present
+# }
+#
+# @importFrom utils capture.output
+# @export bs5_c
+#
+#
 
 bs5_c <- function(bs4bs5, p1, p2, day1_2, others) {
   #BS4
