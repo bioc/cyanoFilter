@@ -38,7 +38,7 @@ retain <- function(meta_files, make_decision = c("maxi", "mini")) {
 
         }
 
-      } else {
+      } else if(make_decision == "maxi") {
 
         if(are_both_good == 1) {
 
@@ -56,7 +56,7 @@ retain <- function(meta_files, make_decision = c("maxi", "mini")) {
 
         }
 
-      }
+      } else stop("Error: Supply make_decision")
 
 
   return(decision)
