@@ -56,7 +56,7 @@ retain <- function(meta_files, make_decision = c("maxi", "mini")) {
 
         }
 
-      } else stop("Error: Supply make_decision")
+      } else stop("Supply make_decision")
 
 
   return(decision)
