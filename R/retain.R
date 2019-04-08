@@ -17,8 +17,47 @@
 #
 # @export retain
 #
-retain <- function(meta_files, decision = c("maxi", "mini")) {
+retain <- function(meta_files, make_decision = c("maxi", "mini")) {
+      are_both_good <- sum(meta_files$Status == "good")
+
+      if(make_decision == "mini") {
+
+        if(are_both_good == 1) {
+
+          decision <- ifelse(meta_files$Status == "good", "Retain", "No!")
+
+        } else if(are_both_good >= 2) {
+
+          decision <- NULL
+          decision[which(meta_files$CellspML == min(meta_files$CellspML))] <- "Retain"
+          decision[which(meta_files$CellspML != min(meta_files$CellspML))] <- "No!"
+
+        } else {
+
+          decision <- "All Files are bad!"
+
+        }
+
+      } else {
+
+        if(are_both_good == 1) {
+
+          decision <- ifelse(meta_files$Status == "good", "Retain", "No!")
+
+        } else if(are_both_good >= 2) {
+
+          decision <- NULL
+          decision[which(meta_files$CellspML == max(meta_files$CellspML))] <- "Retain"
+          decision[which(meta_files$CellspML != max(meta_files$CellspML))] <- "No!"
+
+        } else {
+
+          decision <- "All Files are bad!"
+
+        }
+
+      }
 
 
-  return(needed)
+  return(decision)
 }

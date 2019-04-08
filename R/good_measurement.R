@@ -25,8 +25,7 @@
 goodfcs <- function(metafile, mxd_cellpML = 1000, mnd_cellpML = 50) {
   if(!is.null(metafile) & !is.null(mxd_cellpML & !is.null(mnd_cellpML))) {
 
-    goodfile <- ifelse((metafile$CellspML < mxd_cellpML & metafile$CellspML > mnd_cellpML) &
-                         (metafile$Number.of.Events >= metafile$Termination.Count),
+    goodfile <- ifelse((metafile$CellspML < mxd_cellpML & metafile$CellspML > mnd_cellpML),
                        "good", "bad")
 
   } else stop("At least metafile is empty")
