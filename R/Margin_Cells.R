@@ -24,7 +24,7 @@
 # @export cellmargin
 
 cellmargin <- function(flow.frame, Channel = "SSC.W", type = c("manual", "estimate"), cut = NULL){
-  if(type=="manual" & !is.null(cut)) {
+  if(type == "manual" & !is.null(cut)) {
     margin.ind <- ifelse(flowCore::exprs(flow.frame)[,Channel] <= cut, T, F)
     n_margin <- sum(margin.ind == F)
 

@@ -17,15 +17,18 @@
 #         }
 # @examples
 # \dontrun{
-#   goodfcs(fcsfile = flowframe, metadtat, Cell_per_microlitre, 12, d_cellnum = 500, 1500)
+#   goodfcs(metafile = flowframe, col_cpml = "CellspML", mxd_cellpML = 1000,
+#mnd_cellpML = 50)
 # }
 #
 # @export goodfcs
 
-goodfcs <- function(metafile, mxd_cellpML = 1000, mnd_cellpML = 50) {
+goodfcs <- function(metafile, col_cpml = "CellspML", mxd_cellpML = 1000,
+                    mnd_cellpML = 50) {
   if(!is.null(metafile) & !is.null(mxd_cellpML & !is.null(mnd_cellpML))) {
 
-    goodfile <- ifelse((metafile$CellspML < mxd_cellpML & metafile$CellspML > mnd_cellpML),
+    goodfile <- ifelse((metafile[, col_cpml] < mxd_cellpML &
+                          metafile[, col_cpml] > mnd_cellpML),
                        "good", "bad")
 
   } else stop("At least metafile is empty")
