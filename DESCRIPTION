@@ -8,8 +8,7 @@ Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.
     person("Spaak", "jurg", email = "jurg.spaak@unamur.be", role = "ctb"))
 Description: It filters out living cyano cells from all particles measured via flowcytometry. 
     It combines known characteristics of BS4 and BS5 cyanobacteria alongside flowDensity package to 
-    maximally filter out BS4 and BS5 cyano cells from debris and doublets. However, it can also be used for
-    cyanobacteria cells that are differentaible in two dimensions.
+    maximally filter out BS4 and BS5 cyano cells from debris.
 Depends: R (>= 3.4),
 Imports:
     Biobase(>= 2.40.0),

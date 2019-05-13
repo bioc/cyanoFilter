@@ -10,7 +10,7 @@ bs4_nc <- function(bs4bs5, p1, p2, others, to_retain = "potential") {
   red.bhlin_peaks <- flowDensity::getPeaks(bs4bs5, p1)
   msg <- capture.output(flowDensity::deGate(bs4bs5, p2, all.cuts = T))[1]
 
-  if(stringr::str_detect(msg, "Only one peak") == T) {
+  if(length(yel.bhlin_peaks$Peaks) == 1) {
 
     yel_cuts <- flowDensity::deGate(bs4bs5, p2, use.percentile = T, percentile = 0.97)
     bs4_pot <- bs4bs5[which(bs4bs5@exprs[, p2] < yel_cuts), ]
@@ -40,7 +40,8 @@ bs4_nc <- function(bs4bs5, p1, p2, others, to_retain = "potential") {
     }
   } else {
 
-    yel_cuts <- min(yel.bhlin_peaks$Peaks) + 0.50*sd(bs4bs5@exprs[, p2])
+    yel_cuts <- flowDensity::deGate(bs4bs5, p2, use.percentile = T, percentile = 0.05)
+    #min(yel.bhlin_peaks$Peaks) + 0.50*sd(bs4bs5@exprs[, p2])
     bs4_pot <- bs4bs5[which(bs4bs5@exprs[, p2] > yel_cuts), ]
     others_pot <- others[which(bs4bs5@exprs[, p2] > yel_cuts)]
     others_nk <- others[which(!(bs4bs5@exprs[, p2] > yel_cuts))]
@@ -57,11 +58,13 @@ bs4_nc <- function(bs4bs5, p1, p2, others, to_retain = "potential") {
   if(to_retain == "refined") {
 
     bs4s <- flowDensity::flowDensity(bs4_pot, channels = c(p1, p2), position = c(F, F),
-                                      use.upper = c(T, T),
-                                      upper = c(T, T),
+                                      use.upper = c(T, F),
+                                      upper = c(T, NA),
+                                      use.percentile = c(F, T),
+                                      percentile = c(NA, 0.70),
                                       ellip.gate = T)
     points(bs4s@filter, type = "l", col = 2, lwd = 2, lty = 4)
-     text(mean(bs4s@filter[, 1]), mean(bs4s@filter[, 2]), "BS4",
+     text(mean(bs4s@filter[, 1]), mean(bs4s@filter[, 2]), paste("BS4", ptt, sep = "-"),
           col = 2)
      #reduced flowframe for BS4
     bs4_reduced <- bs4_pot[which(!is.na(bs4s@flow.frame@exprs[, 1])), ]

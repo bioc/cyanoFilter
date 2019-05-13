@@ -6,11 +6,12 @@ debris_nc <- function(flowframe, p1, p2) {
 
   #plotting
   flowDensity::plotDens(flowframe, c(p1, p2),
-                        main = paste(flowCore::identifier(flowframe), length(p1_peaks$Peaks), sep = "-"), frame.plot = F)
+                        main = paste(flowCore::identifier(flowframe), length(p1_peaks$Peaks), sep = "-"),
+                        frame.plot = F)
 
   if(length(p1_peaks$Peaks) == 2) {
     #all is well
-    deb_cut <- flowDensity::deGate(flowframe, p1, bimodal = T)
+    deb_cut <- flowDensity::deGate(flowframe, p1, all.cuts = T)[1]
 
   } else if(length(p1_peaks$Peaks) > 2) {
     #invader present

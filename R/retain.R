@@ -20,6 +20,10 @@
 retain <- function(meta_files, make_decision = c("maxi", "mini")) {
       are_all_good <- sum(meta_files$Status == "good")
 
+      decision <- rep(NA, nrow(meta_files))
+      decision[which(meta_files$Status != "good")] <- "No!"
+      good_pos <- which(meta_files$Status == "good")
+
       if(make_decision == "mini") {
 
         if(are_all_good == 1) {
@@ -28,9 +32,13 @@ retain <- function(meta_files, make_decision = c("maxi", "mini")) {
 
         } else if(are_all_good >= 2) {
 
-          decision <- NULL
-          decision[which(meta_files$CellspML == min(meta_files$CellspML))] <- "Retain"
-          decision[which(meta_files$CellspML != min(meta_files$CellspML))] <- "No!"
+          mini_pos <- which(meta_files$CellspML[good_pos] == min(meta_files$CellspML[good_pos]) )
+          nmini_pos <- which(meta_files$CellspML[good_pos] != min(meta_files$CellspML[good_pos]) )
+
+          decision[good_pos[mini_pos]] <- "Retain"
+
+          decision[good_pos[nmini_pos]] <- "No!"
+
 
         } else {
 
@@ -46,9 +54,13 @@ retain <- function(meta_files, make_decision = c("maxi", "mini")) {
 
         } else if(are_all_good >= 2) {
 
-          decision <- NULL
-          decision[which(meta_files$CellspML == max(meta_files$CellspML))] <- "Retain"
-          decision[which(meta_files$CellspML != max(meta_files$CellspML))] <- "No!"
+          maxi_pos <- which(meta_files$CellspML[good_pos] == max(meta_files$CellspML[good_pos]) )
+          nmaxi_pos <- which(meta_files$CellspML[good_pos] != max(meta_files$CellspML[good_pos]) )
+
+          decision[good_pos[maxi_pos]] <- "Retain"
+
+          decision[good_pos[nmaxi_pos]] <- "No!"
+
 
         } else {
 
@@ -59,5 +71,5 @@ retain <- function(meta_files, make_decision = c("maxi", "mini")) {
       } else stop("Supply make_decision")
 
 
-  return(decision)
+   return(decision)
 }
