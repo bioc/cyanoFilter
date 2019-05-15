@@ -2,16 +2,22 @@
 % Please edit documentation in R/nona.R
 \name{nona}
 \alias{nona}
-\title{Removes NA values from the expression matrix of a flowfile}
+\title{Removes NA values from the expression matrix of a flow cytometer file.}
 \usage{
 nona(x)
 }
 \arguments{
-\item{x}{is the flowframe with expression matrix containing NA}
+\item{flowframe}{with expression matrix containing NAs.}
 }
 \value{
-a flowframe with expression matrix rid of NAs
+a flowframe with expression matrix rid of NAs.
 }
 \description{
-Removes NA values from the expression matrix of a flowfile
+Removes NA values from the expression matrix of a flow cytometer file.
+}
+\examples{
+\dontrun{
+nona(x = flowfile)
+}
+
 }

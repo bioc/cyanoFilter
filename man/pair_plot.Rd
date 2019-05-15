@@ -2,8 +2,7 @@
 % Please edit documentation in R/plotting_functions.R
 \name{pair_plot}
 \alias{pair_plot}
-\title{function to plot the expression matrix of a flowframe. Note that, it takes some time to
-display the plot.}
+\title{plots the expression matrix of a flowframe. Note that, it takes some time to display the plot.}
 \usage{
 pair_plot(x, notToPlot = c("TIME"))
 }
@@ -13,13 +12,8 @@ pair_plot(x, notToPlot = c("TIME"))
 \item{notToPlot}{column in expression matrix not to be plotted}
 }
 \description{
-function to plot the expression matrix of a flowframe. Note that, it takes some time to
-display the plot.
+plots the expression matrix of a flowframe. Note that, it takes some time to display the plot.
 }
 \examples{
-\dontrun{
-  pair_plot(log_transformedSet$Day1[[1]])
-}
-
-
+\dontrun{ pair_plot(x = flowfile, notToPlot = "TIME") }
 }

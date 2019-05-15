@@ -10,8 +10,14 @@ noneg(x)
 \item{x}{is the flowframe whose expression matrix contains negative values}
 }
 \value{
-a flow frame with non-negative values in its expression matrix
+a flowframe with non-negative values in its expression matrix
 }
 \description{
 Removes negative values from the expression matrix
+}
+\examples{
+\dontrun{
+noneg(x = flowfile)
+}
+
 }

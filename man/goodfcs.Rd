@@ -2,41 +2,31 @@
 % Please edit documentation in R/good_measurement.R
 \name{goodfcs}
 \alias{goodfcs}
-\title{indicates if measurement from a flowfile is good or bad}
+\title{indicates if measurement from a flowfile is good or bad @param fcsfile flowfile to be checked.}
 \usage{
-goodfcs(fcsfile, metafile, CpermL, rowinmetafile, d_cellnum = 90,
-  d_cellpML = 1000)
+goodfcs(metafile, col_cpml = "CellspML", mxd_cellpML = 1000,
+  mnd_cellpML = 50)
 }
 \arguments{
-\item{fcsfile}{flowfile to be checked.}
+\item{metafile}{associated metafile to the supplied fcsfile. This is a csv file containig computed stats from the flow cytometer.}
 
-\item{metafile}{associated metafile to the supplied fcsfile.}
+\item{col_cpml}{column name or column number in metafile containing cell per microlitre measurements.}
 
-\item{CpermL}{column name in metafile containing cell per microlitre.}
+\item{mxd_cellpML}{maximal accepted cell per microlitre. Flowfiles with larger cell per microlitre are termed bad.
+Defaults to 1000.}
 
-\item{rowinmetafile}{row containing measurements associated to fcsfile.}
-
-\item{d_cellnum}{desired minimum number of particle counts. Flowfiles with smaller particle counts are
-termed bad. Defaults to 90.}
-
-\item{d_cellpML}{maximal accepted cell per microlitre. Flowfiles with larger cell per microlitre are
-termed bad. Defaults to 1000}
+\item{mnd_cellpML}{minimum accepted cell per microlitre. Flowfiles with lesser cell per microlitre are termed bad.
+Defaults to 50.}
 }
 \value{
-dataframe with columns
-\itemize{
-        \item \strong{CML -} cell per microlitre as read from the associated metafile.
-        \item \strong{status -} flowfile status, either "good" or "bad".
-        \item \strong{ID -} is the row number in meta file
-        \item \strong{Size -} is the number of cells in the FCS file.
-        }
+character vector with length same as the number of rows in the metafile and its entries are
+         \strong{good} for good files and \strong{bad} for bad files.
 }
 \description{
-indicates if measurement from a flowfile is good or bad
+indicates if measurement from a flowfile is good or bad @param fcsfile flowfile to be checked.
 }
 \examples{
 \dontrun{
-  goodfcs(fcsfile = flowframe, metadtat, Cell_per_microlitre, 12, d_cellnum = 500, 1500)
+goodfcs(metafile = flowframe, col_cpml = "CellspML", mxd_cellpML = 1000, mnd_cellpML = 50)
 }
-
 }
