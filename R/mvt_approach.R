@@ -1,7 +1,7 @@
-#' function to cluster BS4, BS5 and Debris in a flowfile using an EM style algorithm.
-#' are used and the data is clustered into 5 clusters (automatically reduces this number)
+#' clusters BS4, BS5 and Debris in a flowfile using an EM style algorithm.
+#' Data is clustered into 5 clusters (automatically reduces this number if need be)
 #'
-#' @param flowfile flowframe with.
+#' @param flowfile flowframe to be clustered.
 #' @param channels channels to use for the clustering
 #' @param mu pre-specified mean matrix for the clusters. Number of rows should equal ncluster and number
 #'           of columns should equal length(channels). Defaults to NULL and can be computed from the data internally.

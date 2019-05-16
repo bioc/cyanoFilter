@@ -2,14 +2,14 @@
 % Please edit documentation in R/mvt_approach.R
 \name{cyano_emclustering}
 \alias{cyano_emclustering}
-\title{function to cluster BS4, BS5 and Debris in a flowfile using an EM style algorithm.
-are used and the data is clustered into 5 clusters (automatically reduces this number)}
+\title{clusters BS4, BS5 and Debris in a flowfile using an EM style algorithm.
+Data is clustered into 5 clusters (automatically reduces this number if need be)}
 \usage{
 cyano_emclustering(flowfile, channels, mu = NULL, sigma = NULL,
   ncluster = 5, min.itera = 20)
 }
 \arguments{
-\item{flowfile}{flowframe with.}
+\item{flowfile}{flowframe to be clustered.}
 
 \item{channels}{channels to use for the clustering}
 
@@ -30,8 +30,8 @@ list containing; \itemize{
 }
 }
 \description{
-function to cluster BS4, BS5 and Debris in a flowfile using an EM style algorithm.
-are used and the data is clustered into 5 clusters (automatically reduces this number)
+clusters BS4, BS5 and Debris in a flowfile using an EM style algorithm.
+Data is clustered into 5 clusters (automatically reduces this number if need be)
 }
 \examples{
 \dontrun{

@@ -1,4 +1,11 @@
-
+#' multivariate normal density
+#'
+#' @param x matrix to compute density on
+#' @param mu mean vector
+#' @param sigma variance covariance matrix
+#' @return vector of density
+#'
+#' @export mvnorm
 
 # mnrom computes the probability of an event
 mvnorm <- function(x,mu, sigma){
