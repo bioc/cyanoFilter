@@ -1,13 +1,13 @@
 #' Removes negative values from the expression matrix
 #'
 #' @param x is the flowframe whose expression matrix contains negative values
-#'
-#' @return a flowframe with non-negative values in its expression matrix
+#' @return flowframe with non-negative values in its expression matrix
 #'
 #' @examples \dontrun{
 #' noneg(x = flowfile)
 #' }
 #'
+#'@importFrom methods new
 #'@export noneg
 
 noneg <- function(x) {

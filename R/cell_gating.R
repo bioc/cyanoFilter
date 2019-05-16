@@ -14,7 +14,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' celldebris_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p1 = "YEL.B.HLin", others = b4b5_others, to_retain = "refined")
+#' celldebris_nc(bs4bs5 = flowfile, channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin",
+#' interest = "Both", to_retain = "refined")
 #' }
 #'
 #'
@@ -121,6 +122,6 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
     # number of debris
     n_debris <- sum(BS4BS5_ind == 0)
 
-    return(list(fullframe = fflowframe, reducedframe = NA, Cell_count = n_cyano, Debris_Count = n_debris))
+    return(list(fullframe = fflowframe, reducedframe = rframe, Cell_count = n_cyano, Debris_Count = n_debris))
 
 }

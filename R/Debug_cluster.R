@@ -55,7 +55,7 @@
 #cluster.index <- data.matrix(read.csv(paste(exp.id,
 #                                  "cluster.index.csv", sep = ","), sep = ","))
 
-color_data1 <- function(data, tau, mu, sig, pars,clusters.pres= 1:5){
+color_data1 <- function(data, tau, mu, sig, pars, clusters.pres= 1:5){
   # find probabilities
 
   lambda <- matrix(NA, nrow = nrow(data), ncol = 5)
