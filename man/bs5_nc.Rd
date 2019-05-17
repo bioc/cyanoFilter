@@ -15,22 +15,25 @@ bs5_nc(bs4bs5, p1, p2, others, to_retain = "potential")
 
 \item{others}{row numbers for non-debris events. This is provided by the debris_nc or debris_inc function.}
 
-\item{retain}{should potential candidates be retained or further gating be applied to filter out only certain BS5 cells.}
-}
-\value{
-list containing; \itemize{
-\item \strong{bs5_reduced -}
-\item \strong{others_nk -}
-\item \strong{others_nk2 -}
-\item \strong{bs5_pos -}
-}
+\item{to_retain}{should potential candidates be retained or further gating be applied to filter out only certain BS5 cells.
+ @return list containing; \itemize{
+\item \strong{bs5_reduced -} flowframe containing only BS5s
+\item \strong{others_nk -} unidentified particle positions
+\item \strong{bs5_pos -} BS5 positions
+\item \strong{others_nk2 -} other unidentified particle positions
+}}
 }
 \description{
-gates out or assign indicators to BS5 cyano cells from a flowframe.
+This function takes in a flowframe with debris removed and identifies BS5 populations in the provided frame.
+}
+\details{
+The functions uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
+         identify peaks and identify cut-off points between the identified peaks.
 }
 \examples{
 \dontrun{
-bs5_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p1 = "YEL.B.HLin", others = b4b5_others, to_retain = "refined")
+bs5_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin",
+       others = b4b5_others, to_retain = "refined")
 }
 
 

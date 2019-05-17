@@ -7,10 +7,10 @@
 nona(x)
 }
 \arguments{
-\item{flowframe}{with expression matrix containing NAs.}
+\item{x}{flowframe with expression matrix containing NAs.}
 }
 \value{
-a flowframe with expression matrix rid of NAs.
+flowframe with expression matrix rid of NAs.
 }
 \description{
 Removes NA values from the expression matrix of a flow cytometer file.

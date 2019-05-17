@@ -1,7 +1,7 @@
 #' Removes NA values from the expression matrix of a flow cytometer file.
 #'
-#' @param flowframe with expression matrix containing NAs.
-#' @return a flowframe with expression matrix rid of NAs.
+#' @param x flowframe with expression matrix containing NAs.
+#' @return flowframe with expression matrix rid of NAs.
 #'
 #' @examples
 #' \dontrun{

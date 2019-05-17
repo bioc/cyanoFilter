@@ -9,26 +9,31 @@ celldebris_nc(flowframe, channel1 = "RED.B.HLin",
   to_retain = c("refined", "potential"))
 }
 \arguments{
-\item{bs4bs5}{flowframe with.}
+\item{flowframe}{flowframe with debris, BS4, BS5 and other cells.}
 
-\item{p1}{first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".}
+\item{channel1}{first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".}
 
-\item{p2}{second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"}
+\item{channel2}{second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"}
 
-\item{others}{row numbers for non-debris events. This is provided by the debris_nc or debris_inc function.}
+\item{interest}{a string indicating cells of interest to be gated.}
 
-\item{retain}{should potential candidates be retained or further gating be applied to filter out only certain BS4 cells.}
+\item{to_retain}{should potential candidates be retained or further gating be applied to filter out only certain cyano cells.}
 }
 \value{
 list containing; \itemize{
-\item \strong{bs4_reduced -}
-\item \strong{others_nk -}
-\item \strong{bs4_pos -}
-\item \strong{others_nk2 -}
+\item \strong{fullframe -} full flowframe with indicator for debris, BS4/BS5 or both.
+\item \strong{reducedframe -} flowframe with only cells of interest.
+\item \item \strong{Cell_count -} a vector containing number of BS4 and/or number of BS5 as the case may be.
+\item \strong{Debris_count -} number of debris particles.
 }
 }
 \description{
-gates out or assign indicators to BS4 cyano cells from a flowframe.
+This is a top-level function that calls other functions to identify cell populations of interest.
+}
+\details{
+The indicators assigned to the "BS4BS5.Indicator" column in the full flowframe depends on the \emph{interest} supplied.
+         For \emph{interest="BS4"} or \emph{interest="BS5"}; 0 = Debris, 1 = BS4/BS5, 2 = not-identified while for \emph{interest="Both"},
+         0 = Debris, 1 = BS4, 2 = BS5, 3 = not-identified.
 }
 \examples{
 \dontrun{

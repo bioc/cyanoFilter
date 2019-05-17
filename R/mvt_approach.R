@@ -1,33 +1,39 @@
-#' clusters BS4, BS5 and Debris in a flowfile using an EM style algorithm.
-#' Data is clustered into 5 clusters (automatically reduces this number if need be)
+#' identifies BS4, BS5 and Debris in a flowfile using an EM style algorithm.
 #'
 #' @param flowfile flowframe to be clustered.
 #' @param channels channels to use for the clustering
 #' @param mu pre-specified mean matrix for the clusters. Number of rows should equal ncluster and number
-#'           of columns should equal length(channels). Defaults to NULL and can be computed from the data internally.
+#'           of columns should equal length(channels). Defaults to NULL and will be computed from the data internally if left as NULL.
 #' @param sigma pre-specified list of variance-covariace matrix for the clusters. Each element of the list should contain a square matrix
-#'        of variance-covariance matrix with length equal ncluster.
-#' @param  ncluster number of cluster to desired
+#'        of variance-covariance matrix with length equal ncluster. Defaults to NULL and will be computed from the data internally if left as NULL.
+#' @param  ncluster number of cluster desired.
+#' @param  min.itera minimum number of EM iterations.
+#'
 #' @return list containing; \itemize{
-#' \item \strong{percentages -}
-#' \item \strong{mus -}
-#' \item \strong{sigmas -}
-#' \item \strong{result -}
+#' \item \strong{percentages -} percentage of cells in each cluster
+#' \item \strong{mus -} list of mean vectors for each cluster
+#' \item \strong{sigmas -} list of variance-covariance matrix for each cluster
+#' \item \strong{result -} flowframe with probabilities of each cluster added as columns to the expression matrix of the flowfile
 #' }
+#'
+#' @description  separates BS4, BS5 and Debris population in a flowfile using an EM style algorithm.
+#'               Algorithm starts with \emph{ncluster} clusters and automatically reduces
+#'               this number if need be.
 #'
 #' @examples
 #' \dontrun{
-#' cyano_emclustering(flowfile = flowfile, channel1 = c("RED.B.HLin", "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"),
-#' ncluster = 5, min.itera = 20)
+#' cyano_emclustering(flowfile = flowfile, channel1 = c("RED.B.HLin",
+#'                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"),
+#'                    ncluster = 5, min.itera = 20)
 #' }
 #'
-#'
-#' @export cyano_emclustering
+#' @importFrom stats var
+#' @export celldebris_emclustering
 
 
 
 
-cyano_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, ncluster = 5,
+celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, ncluster = 5,
                        min.itera = 20) {
 
       data <- flowCore::exprs(flowfile)
@@ -66,7 +72,7 @@ cyano_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, nclu
       }
       if(anyNA(lambda)) { # one cluster has size 0, repeat algorithm
         #clusters.pres <- clusters.pres[!is.na(lambda[1,clusters.pres])]
-        return( clustering(data, ncluster = ncluster - 1))
+        return( celldebris_emclustering(flowfile, ncluster = ncluster - 1))
     }
 
     # each cell should have probability 1
@@ -86,10 +92,11 @@ cyano_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, nclu
     rel.diff.tau <- max((abs(tau - tau.old) / tau))
     #if (min(c(rel.diff.mu, rel.diff.tau)) < 0) print(c(i,rel.diff.mu, rel.diff.tau))
     if (i > min.itera & rel.diff.mu < 1e-3 & rel.diff.tau < 1e-3) {
-      assigned <- proportions(lambda)
+      #assigned <- proportions(lambda)
       print(c(i, rel.diff.mu, rel.diff.tau))
-      return(list(percentages = tau, mus = mu, sigmas = sig,
-                  assigned = assigned))
+      break
+      #return(list(percentages = tau, mus = mu, sigmas = sig,
+      #            assigned = assigned))
       }
     }
 
@@ -101,13 +108,14 @@ cyano_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, nclu
       )
     }
 
-
+    dvarMetadata <- flowfile@parameters@varMetadata
+    ddimnames <- flowfile@parameters@dimLabels
     paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata, dimLabels = ddimnames)
-    describe <- flowframe@description
-    row.names(ddata) <- c(row.names(flowframe@parameters@data), "$P13", "$P14", "$P15", "$P16", "$P17")
+    describe <- flowfile@description
+    row.names(ddata) <- c(row.names(flowfile@parameters@data), "$P13", "$P14", "$P15", "$P16", "$P17")
 
     ### Full flowframe Forming a new expression matrix for the full flowframe with indicator added for BS4 or BS5
-    nexp_mat <- as.matrix(cbind(flowCore::exprs(flowframe), as.numeric(lambda)))
+    nexp_mat <- as.matrix(cbind(flowCore::exprs(flowfile), as.numeric(lambda)))
     # giving a name to the newly added column to the expression matrix
     colnames(nexp_mat)[13:length(colnames(nexp_mat))] <- paste("Cluster_Prob", 13:17, sep = "_")
 

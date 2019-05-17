@@ -4,20 +4,26 @@
 #' @param p1 first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".
 #' @param p2 second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"
 #' @param others row numbers for non-debris events. This is provided by the debris_nc or debris_inc function.
-#' @param  retain should potential candidates be retained or further gating be applied to filter out only certain BS4 cells.
+#' @param  to_retain should potential candidates be retained or further gating be applied to filter out only certain BS4 cells.
 #' @return list containing; \itemize{
-#' \item \strong{bs4_reduced -}
-#' \item \strong{others_nk -}
-#' \item \strong{bs4_pos -}
-#' \item \strong{others_nk2 -}
+#' \item \strong{bs4_reduced -} flowframe containing only BS4s
+#' \item \strong{others_nk -} unidentified particle positions
+#' \item \strong{bs4_pos -} BS4 positions
+#' \item \strong{others_nk2 -} other unidentified particle positions
 #' }
+#'
+#' @description This function takes in a flowframe with debris removed and identifies BS4 populations in the provided frame.
+#'
+#' @details The functions uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
+#'          identify peaks and identify cut-off points between the identified peaks.
 #'
 #' @examples
 #' \dontrun{
-#' bs4_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p1 = "YEL.B.HLin", others = b4b5_others, to_retain = "refined")
+#' bs4_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin",
+#'        others = b4b5_others, to_retain = "refined")
 #' }
 #'
-#'
+#' @importFrom utils capture.output
 #' @export bs4_nc
 
 bs4_nc <- function(bs4bs5, p1, p2, others, to_retain = c("refined", "potential")) {

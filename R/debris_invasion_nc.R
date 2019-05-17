@@ -1,24 +1,22 @@
-#' gates out or assign indicators to BS4 cyano cells from a flowframe.
+#' gates out or assign indicators to debris contained a flowframe.
 #'
-#' @param bs4bs5 flowframe with.
+#' @param flowframe flowframe with.
 #' @param p1 first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".
 #' @param p2 second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"
-#' @param others row numbers for non-debris events. This is provided by the debris_nc or debris_inc function.
-#' @param  retain should potential candidates be retained or further gating be applied to filter out only certain BS4 cells.
+#'
 #' @return list containing; \itemize{
-#' \item \strong{bs4_reduced -}
-#' \item \strong{others_nk -}
-#' \item \strong{bs4_pos -}
-#' \item \strong{others_nk2 -}
+#' \item \strong{bs4bs5 -}
+#' \item \strong{deb_pos -}
+#' \item \strong{bs4bs5_pos -}
 #' }
 #'
 #' @examples
 #' \dontrun{
-#' celldebris_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin", others = b4b5_others, to_retain = "refined")
+#' debris_inc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
 #' }
 #'
-#'
-#' @export celldebris_nc
+#' @importFrom stats sd
+#' @export debris_inc
 
 
 debris_inc <- function(flowframe, p1, p2) {

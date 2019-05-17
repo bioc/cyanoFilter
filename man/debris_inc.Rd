@@ -2,36 +2,30 @@
 % Please edit documentation in R/debris_invasion_nc.R
 \name{debris_inc}
 \alias{debris_inc}
-\title{gates out or assign indicators to BS4 cyano cells from a flowframe.}
+\title{gates out or assign indicators to debris contained a flowframe.}
 \usage{
 debris_inc(flowframe, p1, p2)
 }
 \arguments{
+\item{flowframe}{flowframe with.}
+
 \item{p1}{first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".}
 
 \item{p2}{second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"}
-
-\item{bs4bs5}{flowframe with.}
-
-\item{others}{row numbers for non-debris events. This is provided by the debris_nc or debris_inc function.}
-
-\item{retain}{should potential candidates be retained or further gating be applied to filter out only certain BS4 cells.}
 }
 \value{
 list containing; \itemize{
-\item \strong{bs4_reduced -}
-\item \strong{others_nk -}
-\item \strong{bs4_pos -}
-\item \strong{others_nk2 -}
+\item \strong{bs4bs5 -}
+\item \strong{deb_pos -}
+\item \strong{bs4bs5_pos -}
 }
 }
 \description{
-gates out or assign indicators to BS4 cyano cells from a flowframe.
+gates out or assign indicators to debris contained a flowframe.
 }
 \examples{
 \dontrun{
-celldebris_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin", others = b4b5_others, to_retain = "refined")
+debris_inc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
 }
-
 
 }
