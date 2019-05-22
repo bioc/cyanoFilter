@@ -42,7 +42,6 @@ celldebris_nc(bs4bs5 = flowfile, channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin
 interest = "Both", to_retain = "refined")
 }
 
-
 }
 \seealso{
 \code{\link{celldebris_emclustering}}
