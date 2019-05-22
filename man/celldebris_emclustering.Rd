@@ -32,8 +32,13 @@ list containing; \itemize{
 }
 \description{
 separates BS4, BS5 and Debris population in a flowfile using an EM style algorithm.
-              Algorithm starts with \emph{ncluster} clusters and automatically reduces
-              this number if need be.
+             Algorithm starts with \emph{ncluster} number of clusters and automatically reduces
+             this number if need be.
+}
+\details{
+The function using EM algorithm involving mixtures of multivariate normals to separate the entire cell-population provided into cluster. The \code{\link{mvnorm}}
+         function is used to compute the densities and only the probabilites of each point belonging to a cluster are returned as additional columns to the
+         expression matrix of \emph{result}.
 }
 \examples{
 \dontrun{
@@ -42,4 +47,7 @@ cyano_emclustering(flowfile = flowfile, channel1 = c("RED.B.HLin",
                    ncluster = 5, min.itera = 20)
 }
 
+}
+\seealso{
+\code{\link{celldebris_nc}}
 }

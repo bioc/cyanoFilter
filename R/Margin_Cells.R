@@ -5,6 +5,7 @@
 #' @param type The method to be used in gating out the margin cells. Can either be 'manual' where
 #' user supplies a cut off point on the channel, 1 = not margin 0 = margin
 #' @param cut sould not be NULL if type = 'manual'
+#'
 #' @return list containing; \itemize{
 #' \item \strong{reducedflowframe -} flowframe without margin events
 #' \item \strong{fullflowframe -} flowframe with an Margin.Indicator added as an extra column added to the expression matrix
@@ -14,10 +15,17 @@
 #' \item \strong{N_particle -} is the number of particles in total, i.e. N_cell + N_margin
 #' }
 #'
+#' @description The function identifies margin events, i.e. cells that are too large for the flow cytometer to measure.
+#'
+#' @details Users can either supply a cut-off point along the channel describing particle width or allow the function to estimate the cut-off point using the
+#'          \code{\link[flowDensity]{deGate}} function from the \emph{flowDensity} package. A plot of channel against "FSC.HLin" is provided with a vertical line showing the
+#'          cut-off point separating margin events from other cells.
+#'
 #' @examples
 #' \dontrun{
 #' cellmargin(flow.frame = flowfile, Channel = 'SSC.W', type = 'estimate')
 #' }
+#'
 #' @importFrom methods new
 #' @export cellmargin
 

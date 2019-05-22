@@ -28,10 +28,16 @@ to indicate which particles are margin events. 1 = not margin event, 0 = margin 
 }
 }
 \description{
-Removes or assign indicators to margin events.
+The function identifies margin events, i.e. cells that are too large for the flow cytometer to measure.
+}
+\details{
+Users can either supply a cut-off point along the channel describing particle width or allow the function to estimate the cut-off point using the
+         \code{\link[flowDensity]{deGate}} function from the \emph{flowDensity} package. A plot of channel against "FSC.HLin" is provided with a vertical line showing the
+         cut-off point separating margin events from other cells.
 }
 \examples{
 \dontrun{
 cellmargin(flow.frame = flowfile, Channel = 'SSC.W', type = 'estimate')
 }
+
 }

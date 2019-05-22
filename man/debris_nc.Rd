@@ -2,12 +2,12 @@
 % Please edit documentation in R/debris_nc.R
 \name{debris_nc}
 \alias{debris_nc}
-\title{gates out or assign indicators to debris contained a flowframe.}
+\title{gates out or assign indicators to debris particle.}
 \usage{
 debris_nc(flowframe, p1, p2)
 }
 \arguments{
-\item{flowframe}{flowframe with.}
+\item{flowframe}{flowframe with debris, BS4, BS5 and other cells.}
 
 \item{p1}{first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".}
 
@@ -15,13 +15,18 @@ debris_nc(flowframe, p1, p2)
 }
 \value{
 list containing; \itemize{
-\item \strong{bs4bs5 -}
-\item \strong{deb_pos -}
-\item \strong{bs4bs5_pos -}
+\item \strong{bs4bs5 - flowframe containing non-debris particles}
+\item \strong{deb_pos - position of particles that are debris}
+\item \strong{bs4bs5_pos - position of particles that are not debris}
 }
 }
 \description{
-gates out or assign indicators to debris contained a flowframe.
+The function takes in a flowframe and identifies debris contained in the provided flowframe.
+}
+\details{
+The function uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
+         identify peaks between peaks and identify cut-off points between these peaks. A plot of both channels supplied with horizontal line separating
+         debris from other cell populations is also returned.
 }
 \examples{
 \dontrun{
@@ -29,4 +34,7 @@ debris_nc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
 }
 
 
+}
+\seealso{
+\code{\link{debris_inc}}
 }

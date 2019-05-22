@@ -2,7 +2,7 @@
 % Please edit documentation in R/good_measurement.R
 \name{goodfcs}
 \alias{goodfcs}
-\title{indicates if measurement from a flowfile is good or bad @param fcsfile flowfile to be checked.}
+\title{indicates if measurement from a flowfile is good or bad.}
 \usage{
 goodfcs(metafile, col_cpml = "CellspML", mxd_cellpML = 1000,
   mnd_cellpML = 50)
@@ -19,14 +19,19 @@ Defaults to 1000.}
 Defaults to 50.}
 }
 \value{
-character vector with length same as the number of rows in the metafile and its entries are
+character vector with length same as the number of rows in the metafile whose entries are
          \strong{good} for good files and \strong{bad} for bad files.
 }
 \description{
-indicates if measurement from a flowfile is good or bad @param fcsfile flowfile to be checked.
+This function examines the column containig \eqn{cells/\mu L}  and determins if the measurement can be used for further analysis or not based on a supplied range.
+}
+\details{
+Most flow cytometer makers will always inform clients within which range can measurements from the machine be trusted. The machines normally stores the amount of
+         \eqn{cells/\mu L} it counted in a sample. A too large value could mean possible doublets and too low value could mean too little cells.
 }
 \examples{
 \dontrun{
 goodfcs(metafile = flowframe, col_cpml = "CellspML", mxd_cellpML = 1000, mnd_cellpML = 50)
 }
+
 }

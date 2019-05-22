@@ -1,14 +1,23 @@
-#' gates out or assign indicators to debris contained a flowframe.
+#' gates out or assign indicators to debris particle.
 #'
-#' @param flowframe flowframe with.
-#' @param p1 first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".
-#' @param p2 second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"
+#' @param flowframe flowframe with debris, BS4, BS5 and other cells.
+#' @param p1 first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".
+#' @param p2 second flowcytometer channel that can be used to separate debris from the rest, e.g. "YEL.B.HLin"
 #'
 #' @return list containing; \itemize{
-#' \item \strong{bs4bs5 -}
-#' \item \strong{deb_pos -}
-#' \item \strong{bs4bs5_pos -}
+#' \item \strong{bs4bs5 - flowframe containing non-debris particles}
+#' \item \strong{deb_pos - position of particles that are debris}
+#' \item \strong{bs4bs5_pos - position of particles that are not debris}
 #' }
+#'
+#' @description The function takes in a flowframe and identifies debris contained in the provided flowframe. It is specially designed for flowframe contaning both debris,
+#'              BS4, BS5 and possibly other invading populations.
+#'
+#' @details The function uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
+#'          identify peaks between peaks and identify cut-off points between these peaks. A plot of both channels supplied with horizontal line separating
+#'          debris from other cell populations is also returned.
+#'
+#' @seealso \code{\link{debris_nc}}
 #'
 #' @examples
 #' \dontrun{

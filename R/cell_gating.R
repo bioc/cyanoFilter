@@ -1,10 +1,10 @@
-#' gates out or assign indicators to BS4 cyano cells from a flowframe.
+#' gates out or assign indicators to BS4 and/or BS5 cyanobacteria cells.
 #'
 #' @param flowframe flowframe with debris, BS4, BS5 and other cells.
-#' @param channel1 first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".
-#' @param channel2 second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"
-#' @param interest a string indicating cells of interest to be gated.
-#' @param  to_retain should potential candidates be retained or further gating be applied to filter out only certain cyano cells.
+#' @param channel1 first flowcytometer channel that can be used to separate cyanobacteria cells from the rest, e.g. "RED.B.HLin".
+#' @param channel2 second flowcytometer channel that can be used to separate cyanobacteria cells from the rest, e.g. "YEL.B.HLin"
+#' @param interest a string indicating cell population of interest to be gated, can be "BS4", "BS5" or both.
+#' @param to_retain should potential candidates be retained or further gating be applied to filter out only certain cyano cells.
 #' @return list containing; \itemize{
 #' \item \strong{fullframe -} full flowframe with indicator for debris, BS4/BS5 or both.
 #' \item \strong{reducedframe -} flowframe with only cells of interest.
@@ -12,11 +12,14 @@
 #' \item \strong{Debris_count -} number of debris particles.
 #' }
 #'
-#' @description This is a top-level function that calls other functions to identify cell populations of interest.
+#' @description This is a top-level function that calls other functions to identify cell population of interest.
 #'
 #' @details The indicators assigned to the "BS4BS5.Indicator" column in the full flowframe depends on the \emph{interest} supplied.
 #'          For \emph{interest="BS4"} or \emph{interest="BS5"}; 0 = Debris, 1 = BS4/BS5, 2 = not-identified while for \emph{interest="Both"},
-#'          0 = Debris, 1 = BS4, 2 = BS5, 3 = not-identified.
+#'          0 = Debris, 1 = BS4, 2 = BS5, 3 = not-identified. This function calls the \code{\link{debris_nc}} or \code{\link{debris_inc}} function to identify debris and afterwards
+#'          call the \code{\link{bs4_nc}} and/or \code{\link{bs5_nc}} depending on the interest supplied.
+#'
+#' @seealso \code{\link{celldebris_emclustering}}
 #'
 #' @examples
 #' \dontrun{

@@ -1,6 +1,6 @@
-#' gates out or assign indicators to BS5 cyano cells from a flowframe.
+#' gates out or assign indicators to BS5 cyanobacteria cells.
 #'
-#' @param bs4bs5 flowframe with debris gated.
+#' @param bs4bs5 flowframe with debris removed.
 #' @param p1 first flowcytometer channel that can be used to separate BS5 cells from the rest, e.g. "RED.B.HLin".
 #' @param p2 second flowcytometer channel that can be used to separate BS5 cells from the rest, e.g. "YEL.B.HLin"
 #' @param others row numbers for non-debris events. This is provided by the debris_nc or debris_inc function.
@@ -14,8 +14,11 @@
 #'
 #' @description This function takes in a flowframe with debris removed and identifies BS5 populations in the provided frame.
 #'
-#' @details The functions uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
-#'          identify peaks and identify cut-off points between the identified peaks.
+#' @details The function uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the \emph{flowDensity} package to
+#'          identify peaks and identify cut-off points between these peaks. This function is not designed to be called in isolation, if called
+#'          in isolation an error will be returned. It is preferably called on the results from \code{\link{debris_nc}} or \code{\link{debris_inc}} function. A graph with horizontal
+#'          and vertical lines used in separating the populations is returned and if \emph{to_retain="potential"}, all BS5 points are coloured red while a
+#'          circle made of dashed lines is drawn around BS5 points if \emph{to_retain="refined"}.
 #'
 #' @examples
 #' \dontrun{

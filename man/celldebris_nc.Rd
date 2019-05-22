@@ -2,7 +2,7 @@
 % Please edit documentation in R/cell_gating.R
 \name{celldebris_nc}
 \alias{celldebris_nc}
-\title{gates out or assign indicators to BS4 cyano cells from a flowframe.}
+\title{gates out or assign indicators to BS4 and/or BS5 cyanobacteria cells.}
 \usage{
 celldebris_nc(flowframe, channel1 = "RED.B.HLin",
   channel2 = "YEL.B.HLin", interest = c("BS4", "BS5", "Both"),
@@ -11,11 +11,11 @@ celldebris_nc(flowframe, channel1 = "RED.B.HLin",
 \arguments{
 \item{flowframe}{flowframe with debris, BS4, BS5 and other cells.}
 
-\item{channel1}{first flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "RED.B.HLin".}
+\item{channel1}{first flowcytometer channel that can be used to separate cyanobacteria cells from the rest, e.g. "RED.B.HLin".}
 
-\item{channel2}{second flowcytometer channel that can be used to separate BS4 cells from the rest, e.g. "YEL.B.HLin"}
+\item{channel2}{second flowcytometer channel that can be used to separate cyanobacteria cells from the rest, e.g. "YEL.B.HLin"}
 
-\item{interest}{a string indicating cells of interest to be gated.}
+\item{interest}{a string indicating cell population of interest to be gated, can be "BS4", "BS5" or both.}
 
 \item{to_retain}{should potential candidates be retained or further gating be applied to filter out only certain cyano cells.}
 }
@@ -28,12 +28,13 @@ list containing; \itemize{
 }
 }
 \description{
-This is a top-level function that calls other functions to identify cell populations of interest.
+This is a top-level function that calls other functions to identify cell population of interest.
 }
 \details{
 The indicators assigned to the "BS4BS5.Indicator" column in the full flowframe depends on the \emph{interest} supplied.
          For \emph{interest="BS4"} or \emph{interest="BS5"}; 0 = Debris, 1 = BS4/BS5, 2 = not-identified while for \emph{interest="Both"},
-         0 = Debris, 1 = BS4, 2 = BS5, 3 = not-identified.
+         0 = Debris, 1 = BS4, 2 = BS5, 3 = not-identified. This function calls the \code{\link{debris_nc}} or \code{\link{debris_inc}} function to identify debris and afterwards
+         call the \code{\link{bs4_nc}} and/or \code{\link{bs5_nc}} depending on the interest supplied.
 }
 \examples{
 \dontrun{
@@ -42,4 +43,7 @@ interest = "Both", to_retain = "refined")
 }
 
 
+}
+\seealso{
+\code{\link{celldebris_emclustering}}
 }

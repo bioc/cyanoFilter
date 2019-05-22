@@ -2,12 +2,12 @@
 % Please edit documentation in R/bs5_nc.R
 \name{bs5_nc}
 \alias{bs5_nc}
-\title{gates out or assign indicators to BS5 cyano cells from a flowframe.}
+\title{gates out or assign indicators to BS5 cyanobacteria cells.}
 \usage{
 bs5_nc(bs4bs5, p1, p2, others, to_retain = "potential")
 }
 \arguments{
-\item{bs4bs5}{flowframe with debris gated.}
+\item{bs4bs5}{flowframe with debris removed.}
 
 \item{p1}{first flowcytometer channel that can be used to separate BS5 cells from the rest, e.g. "RED.B.HLin".}
 
@@ -27,8 +27,11 @@ bs5_nc(bs4bs5, p1, p2, others, to_retain = "potential")
 This function takes in a flowframe with debris removed and identifies BS5 populations in the provided frame.
 }
 \details{
-The functions uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
-         identify peaks and identify cut-off points between the identified peaks.
+The function uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the \emph{flowDensity} package to
+         identify peaks and identify cut-off points between these peaks. This function is not designed to be called in isolation, if called
+         in isolation an error will be returned. It is preferably called on the results from \code{\link{debris_nc}} or \code{\link{debris_inc}} function. A graph with horizontal
+         and vertical lines used in separating the populations is returned and if \emph{to_retain="potential"}, all BS5 points are coloured red while a
+         circle made of dashed lines is drawn around BS5 points if \emph{to_retain="refined"}.
 }
 \examples{
 \dontrun{
