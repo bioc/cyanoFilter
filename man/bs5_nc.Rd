@@ -39,5 +39,4 @@ bs5_nc(bs4bs5 = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin",
        others = b4b5_others, to_retain = "refined")
 }
 
-
 }

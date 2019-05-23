@@ -26,7 +26,7 @@
 #'        others = b4b5_others, to_retain = "refined")
 #' }
 #'
-#'
+#' @import Rdpack
 #' @importFrom stats sd
 #' @importFrom utils capture.output
 #' @export bs5_nc
