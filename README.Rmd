@@ -16,7 +16,13 @@ cyaoFilter is a package designed to identify, assign indicators and/or filter ou
 
 # Installation and Dependencies
 
-To use the package, please intall the following needed **bioconductor** packages.
+Run the `code` below to install the package and all its dependencies.
+
+```{r cran-installation2, eval=FALSE}
+install.packages("cyanoFilter")
+```
+
+All dependencies both on **CRAN** and **bioconductor** should be installed when you install the package itself. However, do intall the following needed **bioconductor** packages should you run into errors while attempting to use the functions in this package.
 
 ```{r cran-installation, eval=FALSE}
 install.packages("BiocManager")
@@ -24,11 +30,7 @@ library(BiocManager)
 install(c("Biobase", "flowCore", "flowDensity"))
 ```
 
-All other needed dependencies are avialble on **CRAN** and will be installed when you install the package itself.
 
-```{r cran-installation2, eval=FALSE}
-install.packages("cyanoFilter")
-```
 
 # Motivation and Background
 

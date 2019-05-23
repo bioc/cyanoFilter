@@ -38,8 +38,8 @@ retain <- function(meta_files, make_decision = c("maxi", "mini"), Status = "Stat
 
         } else if (are_all_good >= 2) {
 
-            mini_pos <- which(meta_files[CellspML][good_pos] == min(meta_files[CellspML][good_pos]))
-            nmini_pos <- which(meta_files[CellspML][good_pos] != min(meta_files[CellspML][good_pos]))
+            mini_pos <- which(meta_files[good_pos, CellspML] == min(meta_files[good_pos, CellspML]))
+            nmini_pos <- which(meta_files[good_pos, CellspML] != min(meta_files[good_pos, CellspML]))
 
             decision[good_pos[mini_pos]] <- "Retain"
 
@@ -60,8 +60,8 @@ retain <- function(meta_files, make_decision = c("maxi", "mini"), Status = "Stat
 
         } else if (are_all_good >= 2) {
 
-            maxi_pos <- which(meta_files[CellspML][good_pos] == max(meta_files[CellspML][good_pos]))
-            nmaxi_pos <- which(meta_files[CellspML][good_pos] != max(meta_files[CellspML][good_pos]))
+            maxi_pos <- which(meta_files[good_pos, CellspML] == max(meta_files[good_pos, CellspML]))
+            nmaxi_pos <- which(meta_files[good_pos, CellspML] != max(meta_files[good_pos, CellspML]))
 
             decision[good_pos[maxi_pos]] <- "Retain"
 
