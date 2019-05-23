@@ -1,5 +1,8 @@
 ^.*\.Rproj$
+^.*\.Renviron$
 ^\.Rproj\.user$
+^README\.Rmd$
 ^doc$
 ^Meta$
 ^\.travis\.yml$
+^cran-comments\.md$

@@ -3,13 +3,4 @@
 language: R
 cache: packages
 sudo: false
-install:
-  ## For a CRAN package
-  - ./travis-tool.sh install_r utils methods knitr stringr Rdpack rmarkdown
-
-  ## For a Bioconductor package
-  - ./travis-tool.sh install_bioc Biobase flowCore flowDensity
-
-env:
-  global:
-    - BIOC_USE_DEVEL="FALSE"
+r: bioc-release
