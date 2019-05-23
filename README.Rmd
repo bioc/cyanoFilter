@@ -6,11 +6,13 @@ output:
     toc: false
 ---
 
+# cyanoFilter
+
+[![Travis-CI Build Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter)
+
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = ">")
 ```
-
-# cyanoFilter
 
 cyaoFilter is a package designed to identify, assign indicators and/or filter out synechoccus type cyanobacteria from a water sample examined with flowcytometry.
 
@@ -22,7 +24,7 @@ Run the `code` below to install the package and all its dependencies.
 install.packages("cyanoFilter")
 ```
 
-All dependencies both on **CRAN** and **bioconductor** should be installed when you install the package itself. However, do intall the following needed **bioconductor** packages should you run into errors while attempting to use the functions in this package.
+All dependencies both on **CRAN** and **bioconductor** should be installed when you install the package itself. However, do install the following needed **bioconductor** packages should you run into errors while attempting to use the functions in this package.
 
 ```{r cran-installation, eval=FALSE}
 install.packages("BiocManager")

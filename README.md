@@ -1,26 +1,30 @@
 
 # cyanoFilter
 
+[![Travis-CI Build
+Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter)
+
 cyaoFilter is a package designed to identify, assign indicators and/or
 filter out synechoccus type cyanobacteria from a water sample examined
-via flowcytometry.
+with flowcytometry.
 
 # Installation and Dependencies
 
-To use the package, please intall the following needed **bioconductor**
-packages.
+Run the `code` below to install the package and all its dependencies.
+
+``` r
+install.packages("cyanoFilter")
+```
+
+All dependencies both on **CRAN** and **bioconductor** should be
+installed when you install the package itself. However, do intall the
+following needed **bioconductor** packages should you run into errors
+while attempting to use the functions in this package.
 
 ``` r
 install.packages("BiocManager")
 library(BiocManager)
 install(c("Biobase", "flowCore", "flowDensity"))
-```
-
-All other needed dependencies are avialble on **CRAN** and will be
-installed when you install the package itself.
-
-``` r
-install.packages("cyanoFilter")
 ```
 
 # Motivation and Background

@@ -6,7 +6,7 @@ Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.
     person("Delaender", "Frederik", email = "frederik.delaender@unamur.be", role = "ctb"),
     person("Neyens", "Thomas", email = "thomas.neyens@uhasselt.be", role = "ctb"),
     person("Spaak", "jurg", email = "jurg.spaak@unamur.be", role = "aut"))
-Maintainer: Oluwafemi Daniel Olusoji <oluwafemi.olusoji@uhasselt.be>
+Maintainer: Oluwafemi Olusoji <oluwafemi.olusoji@uhasselt.be>
 Description: An approach to filter out and/or identify two synechococcus type cyanobacteria cells from all particles measured via flowcytometry. 
     It combines known characteristics of these two cyanobacteria strains (BS4 and BS5) alongside gating techniques developed by Mehrnoush, M. et al (2015) <10.1093/bioinformatics/btu677> 
     in the flowDensity package to identify and separate these cyanobacteria cells from other cell types. Aside the gating techniques in the flowDensity package, an EM style clustering technique
