@@ -7,7 +7,7 @@
 \title{cyanoFilter: A package to identify and/or assign indicators to BS4, BS5 cyanobacteria cells contained in water sample.}
 \description{
 The package provides two categories of functions:
-metafile preprocessing functions and fcsfile processing functions.
+\emph{metafile} preprocessing functions and \emph{fcsfile} processing functions.
 }
 \section{metafile preprocessing functions}{
 

@@ -1,5 +1,5 @@
 Package: cyanoFilter
-Title: Events partitioning for flow cytometer files
+Title: Cyanobacteria Population Identification for Flow Cytometry
 Version: 0.1.0
 Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.be", role = c("aut", "cre")),
     person("Aerts", "Marc", email = "marc.aerts@uhasselt.be", role = "ctb"),
@@ -14,7 +14,7 @@ Description: An approach to filter out and/or identify two synechococcus type cy
 URL: https://github.com/fomotis/cyanoFilter
 BugReports: https://github.com/fomotis/cyanoFilter/issues
 Depends: R (>= 3.4), Biobase(>= 2.40.0)
-biocviews: 
+biocviews:
 Imports: 
     flowCore (>= 1.42.3),
     flowDensity (>= 1.10.0),
