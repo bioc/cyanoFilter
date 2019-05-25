@@ -24,7 +24,7 @@
 #' }
 #'
 #'
-#' @export celldebris_nc
+#' @export debris_nc
 
 debris_nc <- function(flowframe, p1, p2) {
 
