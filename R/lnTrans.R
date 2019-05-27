@@ -4,17 +4,25 @@
 #' @param notToTransform columns not to be transformed
 #' @return \strong{flowframe} with log transformed expression matrix
 #'
-#' @examples \dontrun{
-#' lnTrans(x = flowfile, c('YEL.B.HLin', 'TIME'))
+#' @examples \donttest{
+#' flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1) #FCS file contains only one data object
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' }
 #'
 #' @importFrom methods new
 #' @export lnTrans
 
 lnTrans <- function(x, notToTransform = c("SSC.W", "TIME")) {
-    exx <- cbind(log(flowCore::exprs(x)[, which(!(colnames(x) %in% notToTransform))]), flowCore::exprs(x)[, which(colnames(x) %in% notToTransform)])
-    colnames(exx) <- colnames(x)
+    exx <- cbind(log(flowCore::exprs(x)[, which(!(flowCore::colnames(x) %in% notToTransform))]),
+                 flowCore::exprs(x)[, which(flowCore::colnames(x) %in% notToTransform)])
+    colnames(exx) <- flowCore::colnames(x)
     paraa <- x@parameters
     describe <- x@description
-    methods::new("flowFrame", exprs = exx, parameters = paraa, description = describe)
+    return(flowCore::flowFrame(exprs = exx, parameters = paraa, description = describe))
 }

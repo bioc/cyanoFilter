@@ -14,16 +14,35 @@
 #'          to retain and finally use for further analysis. This function and \code{\link{goodfcs}} are to help you decide that.
 #'          If more than one of the dilution levels are judged good, the option \emph{make_decision = "maxi"} will give "Retain" to the
 #'          row with the maximum \eqn{cells/\mu L} while the opposite occurs for \emph{make_decision = "mini"}.
+#'          \emph{make_decision = "unique"} i there is only one measurement for that particular sample, while \emph{make_decision = "maxi"}
+#'          and \emph{make_decision = "mini"} should be used for files with more than one measurement for the sample in question.
 #'
 #' @seealso \code{\link{goodfcs}}
 #'
-#' @examples \dontrun{
-#' retain(meta_files = dataframe, make_decision = "maxi")
-#' }
+#' @examples
+#'
+#'  metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", package = "cyanoFilter",
+#'               mustWork = TRUE)
+#'  metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE, check.names = TRUE)
+#'  metafile <- metafile[, 1:65] #first 65 columns contain useful information
+#'  #extract the part of the Sample.ID that corresponds to BS4 or BS5
+#'  metafile$Sample.ID2 <- stringr::str_extract(metafile$Sample.ID, "BS*[4-5]")
+#'  #clean up the Cells.muL column
+#'  names(metafile)[which(stringr::str_detect(names(metafile), "Cells."))] <- "CellspML"
+#'  metafile$Status <- cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML",
+#'                             mxd_cellpML = 1000, mnd_cellpML = 50)
+#'  metafile$Retained <- NULL
+#'  # first 3 rows contain BS4 measurements at 3 dilution levels
+#'  metafile$Retained[1:3] <- cyanoFilter::retain(meta_files = metafile[1:3,], make_decision = "maxi",
+#'                    Status = "Status", CellspML = "CellspML")
+#'  # last 3 rows contain BS5 measurements at 3 dilution levels as well
+#'  metafile$Retained[4:6] <- cyanoFilter::retain(meta_files = metafile[4:6,], make_decision = "maxi",
+#'                    Status = "Status", CellspML = "CellspML")
+#'
 #'
 #' @export retain
 #'
-retain <- function(meta_files, make_decision = c("maxi", "mini"), Status = "Status", CellspML = "CellspML") {
+retain <- function(meta_files, make_decision = c("maxi", "mini", "unique"), Status = "Status", CellspML = "CellspML") {
     are_all_good <- sum(meta_files[Status] == "good")
 
     decision <- rep(NA, nrow(meta_files))
@@ -73,6 +92,10 @@ retain <- function(meta_files, make_decision = c("maxi", "mini"), Status = "Stat
             decision <- "All Files are bad!"
 
         }
+
+    } else if (make_decision == "unique") {
+
+                decision[good_pos] <- "Retain"
 
     } else stop("Supply make_decision")
 

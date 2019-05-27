@@ -5,7 +5,7 @@
 \title{Removes or assign indicators to margin events.}
 \usage{
 cellmargin(flow.frame, Channel = "SSC.W", type = c("manual",
-  "estimate"), cut = NULL)
+  "estimate"), cut = NULL, y_toplot = "FSC,HLin")
 }
 \arguments{
 \item{flow.frame}{Flowframe containing margin events to be filtered out}
@@ -16,6 +16,8 @@ cellmargin(flow.frame, Channel = "SSC.W", type = c("manual",
 user supplies a cut off point on the channel, 1 = not margin 0 = margin}
 
 \item{cut}{sould not be NULL if type = 'manual'}
+
+\item{y_toplot}{channel on y-axis of plot with \emph{Channel} used to gate out margin events}
 }
 \value{
 list containing; \itemize{
@@ -36,8 +38,17 @@ Users can either supply a cut-off point along the channel describing particle wi
          cut-off point separating margin events from other cells.
 }
 \examples{
-\dontrun{
-cellmargin(flow.frame = flowfile, Channel = 'SSC.W', type = 'estimate')
+\donttest{
+flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) #FCS file contains only one data object
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
 }
 
 }

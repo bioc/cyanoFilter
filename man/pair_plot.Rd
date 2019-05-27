@@ -4,10 +4,10 @@
 \alias{pair_plot}
 \title{plots the expression matrix of a flowframe. Note that, it takes some time to display the plot.}
 \usage{
-pair_plot(x, notToPlot = c("TIME"))
+pair_plot(flowfile, notToPlot = c("TIME"))
 }
 \arguments{
-\item{x}{flowframe to be plotted}
+\item{flowfile}{flowframe to be plotted}
 
 \item{notToPlot}{column in expression matrix not to be plotted}
 }

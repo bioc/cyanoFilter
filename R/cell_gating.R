@@ -116,7 +116,7 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
     # giving a name to the newly added column to the expression matrix
     colnames(nexp_mat)[length(colnames(nexp_mat))] <- "BS4BS5.Indicator"
     # full flow frame with indicator for particly type
-    fflowframe <- methods::new("flowFrame", exprs = nexp_mat, parameters = paraa, description = describe)
+    fflowframe <- flowCore::flowFrame(exprs = nexp_mat, parameters = paraa, description = describe)
 
     ### reduced flowframe
     if (interest == "Both") {

@@ -13,11 +13,18 @@
 #' @description This function examines the column containig \eqn{cells/\mu L}  and determins if the measurement can be used for further analysis or not based on a supplied range.
 #'
 #' @details Most flow cytometer makers will always inform clients within which range can measurements from the machine be trusted. The machines normally stores the amount of
-#'          \eqn{cells/\mu L} it counted in a sample. A too large value could mean possible doublets and too low value could mean too little cells.
+#'          \eqn{cells/\mu L} it counted in a sample. Too large value could mean possible doublets and too low value could mean too little cells.
 #'
-#' @examples \dontrun{
-#' goodfcs(metafile = flowframe, col_cpml = "CellspML", mxd_cellpML = 1000, mnd_cellpML = 50)
-#' }
+#' @examples
+#'  metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", package = "cyanoFilter",
+#'               mustWork = TRUE)
+#'  metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE, check.names = TRUE)
+#'  metafile <- metafile[, 1:65] #first 65 columns contains useful information
+#'  #extract the part of the Sample.ID that corresponds to BS4 or BS5
+#'  metafile$Sample.ID2 <- stringr::str_extract(metafile$Sample.ID, "BS*[4-5]")
+#'  #clean up the Cells.muL column
+#'  names(metafile)[which(stringr::str_detect(names(metafile), "Cells."))] <- "CellspML"
+#'  goodfcs(metafile = metafile, col_cpml = "CellspML", mxd_cellpML = 1000, mnd_cellpML = 50)
 #'
 #' @export goodfcs
 
