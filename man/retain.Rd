@@ -35,7 +35,8 @@ It is typically not known in advance which dilution level would result in the de
 
  metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", package = "cyanoFilter",
               mustWork = TRUE)
- metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE, check.names = TRUE)
+ metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE,
+                      check.names = TRUE, encoding = "UTF-8")
  metafile <- metafile[, 1:65] #first 65 columns contain useful information
  #extract the part of the Sample.ID that corresponds to BS4 or BS5
  metafile$Sample.ID2 <- stringr::str_extract(metafile$Sample.ID, "BS*[4-5]")
