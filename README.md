@@ -228,6 +228,8 @@ flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Ch
 
 ### cyanobacteria Population Identification (Kernel-Density Approach)
 
+### cyanobacteria Population Identification (EM Approach)
+
 # License
 
 This is a free to use package for anyone who has the need.
