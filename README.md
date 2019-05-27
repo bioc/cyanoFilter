@@ -190,13 +190,13 @@ option.
 cyanoFilter::pair_plot(flowfile_noneg, notToPlot = "TIME") ##untransfrmed
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+![](man/figures/README-plotting-1.png)<!-- -->
 
 ``` r
 cyanoFilter::pair_plot(flowfile_logtrans, notToPlot = "TIME") ##logtransformed
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-1-2.png)<!-- -->
+![](man/figures/README-plotting-2.png)<!-- -->
 
 ## Clustering and Gating
 
@@ -222,7 +222,11 @@ flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Ch
                                               type = 'estimate', y_toplot = "FSC.HLin")
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+![](man/figures/README-marginEvents-1.png)<!-- -->
+
+### cyanobacteria Population Identification (Kernel-Density Approach)
+
+### cyanobacteria Population Identification (Kernel-Density Approach)
 
 # License
 

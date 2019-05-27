@@ -12,7 +12,11 @@ output:
 
 ```{r setup, include=FALSE, echo=FALSE}
 library(tidyverse)
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = ">", warning = FALSE, message = FALSE, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = ">",
+                      warning = FALSE, 
+                      message = FALSE, 
+                      cache = TRUE,
+                      fig.path = "man/figures/README-")
 ```
 
 cyaoFilter is a package designed to identify, assign indicators and/or filter out synechoccus type cyanobacteria from a water sample examined with flowcytometry.
@@ -131,7 +135,7 @@ flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, notToTransform = c
 
 pair_plot() gives a scatter plot of all columns in the flowframe, except that specified in the *notToPlot* option. 
 
-```{r}
+```{r plotting}
 cyanoFilter::pair_plot(flowfile_noneg, notToPlot = "TIME") ##untransfrmed
 cyanoFilter::pair_plot(flowfile_logtrans, notToPlot = "TIME") ##logtransformed
 
@@ -149,10 +153,20 @@ Margin Events are particles that are too large for teh flow cytometer to measure
 - *N_nonmargin* number of non-margin events
 - *N_particle* number of particles in the input flowframe
 
-```{r}
+```{r marginEvents}
 flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
                                               type = 'estimate', y_toplot = "FSC.HLin")
 ```
+
+### cyanobacteria Population Identification (Kernel-Density Approach)
+
+
+```{r}
+
+
+```
+
+### cyanobacteria Population Identification (Kernel-Density Approach)
 
 # License
 
