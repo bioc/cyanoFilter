@@ -138,12 +138,14 @@ associated with dilution *2000* since *make\_decision = “maxi”* and
 diltion *2000* happens to have the highest cells/\(\mu\)L measurement
 among the dilution levels for both *BS4* and *BS5*. Furthermore, rather
 than reading in 6 files, we have narrowed down to reading only the 2
-needed
-files.
+needed files.
 
 ## Flow Cytometer File Processing
 
 ### Removing NAs in Expression Matrix
+
+`nona()` functions removes `NA` values from the inputed
+flowframe.
 
 ``` r
 flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
@@ -156,17 +158,33 @@ flowfile_nona <- cyanoFilter::nona(x = flowfile)
 
 ### Removing Negative Values in Expression Matrix
 
+Typically negative values are removed from the expression matrix as they
+are deemed measurement error (there are some arguments against this) so
+the `noneg()` rids a flowframe of all negative values in its expression
+matrix.
+
 ``` r
 flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 ```
 
 ### Log-Transforming Expression Matrix
 
+`lnTrans()` transforms all values (except those specified in the
+*notToTransform* option) in an expression matrix to the log scale. This
+function has a counterpart in the `flowCore()` package but we made
+things simpler and also give the opportunity for users to specify
+columns in the flowframe that are not to be
+transformed.
+
 ``` r
 flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, notToTransform = c("SSC.W", "TIME"))
 ```
 
 ### Plotting
+
+pair\_plot() gives a scatter plot of all columns in the flowframe,
+except that specified in the *notToPlot*
+option.
 
 ``` r
 cyanoFilter::pair_plot(flowfile_noneg, notToPlot = "TIME") ##untransfrmed
@@ -184,8 +202,24 @@ cyanoFilter::pair_plot(flowfile_logtrans, notToPlot = "TIME") ##logtransformed
 
 ### Margin Events
 
+Margin Events are particles that are too large for teh flow cytometer to
+measure. It is desired to eliminate this particles or assign indicators
+to them in the flow frame to allow its identification. The
+`cellmargin()` function achieves this. It returns a list containing;
+
+  - *fullflowframe* with indicator for margin and non-margin events in
+    th eexpression matrix,
+  - *reducedflowframe* containing only non-margin events
+  - *N\_margin* number of margin events contained in the input flowframe
+  - *N\_nonmargin* number of non-margin events
+  - *N\_particle* number of particles in the input
+flowframe
+
+<!-- end list -->
+
 ``` r
-flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W', type = 'estimate', y_toplot = "FSC.HLin")
+flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
+                                              type = 'estimate', y_toplot = "FSC.HLin")
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->

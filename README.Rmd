@@ -150,7 +150,8 @@ Margin Events are particles that are too large for teh flow cytometer to measure
 - *N_particle* number of particles in the input flowframe
 
 ```{r}
-flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W', type = 'estimate', y_toplot = "FSC.HLin")
+flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
+                                              type = 'estimate', y_toplot = "FSC.HLin")
 ```
 
 # License
