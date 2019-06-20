@@ -234,6 +234,22 @@ cyanoFilter::pair_plot(flowfile_logtrans, notToPlot = "TIME") ##logtransformed
 
 ## Clustering and Gating
 
+Flow cytometry outcomes can be divided into 3 and they are not entirely
+mutually exclusive but this is normally not a problem as scientists are
+normally interested in a pre-defined outcome.
+
+![Flow Cytometry
+Outcomes](README_files/figure-gfm/flowcytometryOutcome.PNG)
+
+  - Margin Events are particles too big to be measured
+  - Doublets are cells with disproportionate Area, Height relationship
+  - Singlets are the ‘normal cells’ but these could either be dead
+    cells/particles (debris) and living (good cells).
+
+The set of functions below identifies margin events and singlets.
+Doublets are normally pre-filtered during the event acquiring phase in a
+flow cytometer, especially in new models.
+
 ### Margin Events
 
 Margin Events are particles that are too large for teh flow cytometer to
@@ -257,6 +273,20 @@ flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Ch
 ```
 
 ![](man/figures/README-marginEvents-1.png)<!-- -->
+
+We conceptualized the division of cells into clusters in two ways in
+cyanoFilter and this is reflected in two main functions that perform the
+clustering exercise; `celldebris_nc()` and `celldebris_emclustering()`.
+The `celldebris_nc()` function employs minimum intersection points
+between peaks in observed in a two dimensional kernel density estimate
+while `celldebris_emclustering()` employs an EM algorithm which uses a
+mixture of multivariate normals to assign probabilities to each cell
+belonging to a cluster. Behind the scenes, `celldebris_nc()` calls the
+`deGate()` in **flowDensity** package to estimate the intersection point
+between peaks and `celldebris_emclustering()` calls an internal
+`mvnorm()` function for the multivariate normals. Both functions produce
+plots by default to enable users access the
+results.
 
 ### cyanobacteria Population Identification (Kernel Density Approach using flowDensity)
 
@@ -340,66 +370,71 @@ cyanoFilter::celldebris_nc(flowfile_marginout$reducedflowframe, channel1 = "RED.
     > $Debris_Count
     > [1] 348
 
+Here, we demonstrate the use of the `celldebris_nc()` function on the
+result from filtering out of margin events. The dashed red lines in the
+plot shows the intersection points estimated and the circle comes from
+the fact that *to\_retain* option was set to refined *refined*. This
+option forces the algorithm to retain only cells that are not more than
+1 standard deviations away from the center. If *to\_retain* is set to
+refined *potential*, then all points in the desired section of the 4
+sections resulting from the partitions are retained. The functions
+returns a list containing; a fullflowframe with added column for
+indicators for each cell type, a reduced flowframe with only *interest*
+cells retained, cell count and debris counts.
+
 ### cyanobacteria Population Identification (EM Approach)
 
 ``` r
 
 cyanoFilter::celldebris_emclustering(flowfile_marginout$reducedflowframe, channels =  c("RED.B.HLin",
-                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin") )
+                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), ncluster = 4, min.itera = 20)
 ```
 
 ![](man/figures/README-emapproach-1.png)<!-- -->
 
     > $percentages
-    > [1] 0.16141975 0.05674587 0.03567496 0.10603963 0.64011979
+    > [1] 0.1603434 0.0913181 0.1352290 0.6131095
     > 
     > $mus
-    >                 [,1]      [,2]      [,3]     [,4]     [,5]
-    > RED.B.HLin 3.7667113 0.6918045 0.8377841 4.672208 3.940687
-    > YEL.B.HLin 0.8290632 2.0195027 1.5998735 2.189597 1.847443
-    > FSC.HLin   4.7099883 5.5553504 5.1949117 6.799144 4.686122
-    > RED.R.HLin 7.5222036 2.1122156 3.0892964 8.460369 7.739509
+    >                 [,1]      [,2]     [,3]     [,4]
+    > RED.B.HLin 3.8465630 0.7131422 4.464301 3.930001
+    > YEL.B.HLin 0.6397642 1.8554664 2.102632 1.898378
+    > FSC.HLin   4.5897667 5.4170762 6.421048 4.701586
+    > RED.R.HLin 7.6555843 2.4252307 8.227040 7.721501
     > 
     > $sigmas
     > $sigmas[[1]]
-    >             RED.B.HLin  YEL.B.HLin   FSC.HLin  RED.R.HLin
-    > RED.B.HLin  0.08650772 -0.04124413 0.07685445  0.08766450
-    > YEL.B.HLin -0.04124413  1.49207964 0.16748962 -0.06058480
-    > FSC.HLin    0.07685445  0.16748962 0.20253901  0.08075963
-    > RED.R.HLin  0.08766450 -0.06058480 0.08075963  0.12208235
+    >            RED.B.HLin YEL.B.HLin   FSC.HLin RED.R.HLin
+    > RED.B.HLin 0.07580081 0.02980540 0.08426180 0.07097636
+    > YEL.B.HLin 0.02980540 1.23630828 0.04172387 0.05866036
+    > FSC.HLin   0.08426180 0.04172387 0.16182267 0.08745400
+    > RED.R.HLin 0.07097636 0.05866036 0.08745400 0.08886564
     > 
     > $sigmas[[2]]
-    >            RED.B.HLin   YEL.B.HLin   FSC.HLin   RED.R.HLin
-    > RED.B.HLin 0.24587507  0.064379340 0.15697100  0.039666562
-    > YEL.B.HLin 0.06437934  0.158786398 0.13088514 -0.006178874
-    > FSC.HLin   0.15697100  0.130885137 1.07100822  0.020786312
-    > RED.R.HLin 0.03966656 -0.006178874 0.02078631  0.362570873
+    >            RED.B.HLin YEL.B.HLin   FSC.HLin RED.R.HLin
+    > RED.B.HLin 0.57603628 0.07228834 0.15286443 0.27384572
+    > YEL.B.HLin 0.07228834 0.45502738 0.18243234 0.06658472
+    > FSC.HLin   0.15286443 0.18243234 1.05536281 0.09535163
+    > RED.R.HLin 0.27384572 0.06658472 0.09535163 2.19134493
     > 
     > $sigmas[[3]]
     >            RED.B.HLin YEL.B.HLin  FSC.HLin RED.R.HLin
-    > RED.B.HLin  1.3504202  0.1361328 0.1780014  1.0482982
-    > YEL.B.HLin  0.1361328  0.8100661 0.1622922  0.4575789
-    > FSC.HLin    0.1780014  0.1622922 0.9449451  0.4280339
-    > RED.R.HLin  1.0482982  0.4575789 0.4280339  5.3530708
+    > RED.B.HLin  0.7139009  0.2776214 0.8619770  0.7329412
+    > YEL.B.HLin  0.2776214  0.3681875 0.5154923  0.2867341
+    > FSC.HLin    0.8619770  0.5154923 1.7671543  0.9027176
+    > RED.R.HLin  0.7329412  0.2867341 0.9027176  0.7740840
     > 
     > $sigmas[[4]]
-    >            RED.B.HLin YEL.B.HLin  FSC.HLin RED.R.HLin
-    > RED.B.HLin  0.6641398  0.2581150 0.6986730  0.6627531
-    > YEL.B.HLin  0.2581150  0.3525741 0.4785388  0.2572977
-    > FSC.HLin    0.6986730  0.4785388 1.5192332  0.6987817
-    > RED.R.HLin  0.6627531  0.2572977 0.6987817  0.6758216
-    > 
-    > $sigmas[[5]]
-    >            RED.B.HLin  YEL.B.HLin   FSC.HLin  RED.R.HLin
-    > RED.B.HLin 0.08377324 0.015955755 0.09307965 0.075609542
-    > YEL.B.HLin 0.01595576 0.245660497 0.02724529 0.008981062
-    > FSC.HLin   0.09307965 0.027245289 0.15232267 0.094490988
-    > RED.R.HLin 0.07560954 0.008981062 0.09449099 0.091592072
+    >            RED.B.HLin YEL.B.HLin   FSC.HLin RED.R.HLin
+    > RED.B.HLin 0.08659053 0.01262454 0.09003367 0.07992904
+    > YEL.B.HLin 0.01262454 0.20102538 0.02049452 0.00709516
+    > FSC.HLin   0.09003367 0.02049452 0.15117268 0.09328323
+    > RED.R.HLin 0.07992904 0.00709516 0.09328323 0.09980127
     > 
     > 
     > $result
     > flowFrame object ' B4_18_1'
-    > with 3831 cells and 17 observables:
+    > with 3831 cells and 16 observables:
     >                  name                                desc range
     > $P1          FSC.HLin          Forward Scatter (FSC-HLin) 1e+05
     > $P2          SSC.HLin             Side Scatter (SSC-HLin) 1e+05
@@ -417,26 +452,33 @@ cyanoFilter::celldebris_emclustering(flowfile_marginout$reducedflowframe, channe
     > 2      Cluster_Prob_2                      Cluster_Prob_2     1
     > 3      Cluster_Prob_3                      Cluster_Prob_3     1
     > 4      Cluster_Prob_4                      Cluster_Prob_4     1
-    > 5      Cluster_Prob_5                      Cluster_Prob_5     1
-    >                   minRange          maxRange
-    > $P1                      0             99999
-    > $P2      -34.4792823791504             99999
-    > $P3      -21.1945362091064             99999
-    > $P4      -10.3274412155151             99999
-    > $P5      -5.34720277786255             99999
-    > $P6      -4.30798292160034             99999
-    > $P7      -25.4901847839355             99999
-    > $P8      -16.0200233459473             99999
-    > $P9                      0             99999
-    > $P10                  -111             99999
-    > $P11                     0             99999
-    > 12                       0                 1
-    > 1                        0 0.999999999999675
-    > 2    2.00292214577102e-109 0.996307497800057
-    > 3     3.24771377094787e-13                 1
-    > 4                        0 0.999999999769265
-    > 5                        0 0.994124337680755
+    >                  minRange          maxRange
+    > $P1                     0             99999
+    > $P2     -34.4792823791504             99999
+    > $P3     -21.1945362091064             99999
+    > $P4     -10.3274412155151             99999
+    > $P5     -5.34720277786255             99999
+    > $P6     -4.30798292160034             99999
+    > $P7     -25.4901847839355             99999
+    > $P8     -16.0200233459473             99999
+    > $P9                     0             99999
+    > $P10                 -111             99999
+    > $P11                    0             99999
+    > 12                      0                 1
+    > 1                       0                 1
+    > 2    1.25653237833895e-27                 1
+    > 3                       0                 1
+    > 4                       0 0.998020607860337
     > 368 keywords are stored in the 'description' slot
+
+Here, we demonstrate the `celldebris_emclustering()` function on the
+result from filtering out of margin events. The red texts in the plot
+shows the center of each cluster and the boundaries of the cluster with
+the largest weight is plotted. It is quite difficult to vizualise
+5-dimensional clustering in two dimensions hence this option. The
+function returns a list containing; matrix of means, list of
+variance-covariance matrices and a flowframe with added columns for the
+cluster probabilities in the expression matrix.
 
 # License
 

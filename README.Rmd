@@ -153,6 +153,16 @@ cyanoFilter::pair_plot(flowfile_logtrans, notToPlot = "TIME") ##logtransformed
 
 ## Clustering and Gating
 
+Flow cytometry outcomes can be divided into 3 and they are not entirely mutually exclusive but this is normally not a problem as scientists are normally interested in a pre-defined outcome.
+
+![Flow Cytometry Outcomes](README_files/figure-gfm/flowcytometryOutcome.PNG)
+
+- Margin Events are particles too big to be measured
+- Doublets are cells with disproportionate Area, Height relationship
+- Singlets are the 'normal cells' but these could either be dead cells/particles (debris) and living (good cells).
+
+The set of functions below identifies margin events and singlets. Doublets are normally pre-filtered during the event acquiring phase in a flow cytometer, especially in new models.
+
 ### Margin Events
 
 Margin Events are particles that are too large for teh flow cytometer to measure. It is desired to eliminate this particles or assign indicators to them in the flow frame to allow its identification. The `cellmargin()` function achieves this. It returns a list containing; 
@@ -168,6 +178,9 @@ flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Ch
                                               type = 'estimate', y_toplot = "FSC.HLin")
 ```
 
+
+We conceptualized the division of cells into clusters in two ways in cyanoFilter and this is reflected in two main functions that perform the clustering exercise; `celldebris_nc()` and `celldebris_emclustering()`. The `celldebris_nc()` function employs minimum intersection points between peaks in observed in a two dimensional kernel density estimate while `celldebris_emclustering()` employs an EM algorithm which uses a mixture of multivariate normals to assign probabilities to each cell belonging to a cluster. Behind the scenes, `celldebris_nc()` calls the `deGate()` in **flowDensity** package to estimate the intersection point between peaks and `celldebris_emclustering()` calls an internal `mvnorm()` function for the multivariate normals. Both functions produce plots by default to enable users access the results. 
+
 ### cyanobacteria Population Identification (Kernel Density Approach using flowDensity)
 
 
@@ -177,14 +190,18 @@ cyanoFilter::celldebris_nc(flowfile_marginout$reducedflowframe, channel1 = "RED.
                     channel2 = "YEL.B.HLin", interest = "BS4", to_retain = "refined" )
 ```
 
+Here, we demonstrate the use of the `celldebris_nc()` function on the result from filtering out of margin events. The dashed red lines in the plot shows the intersection points estimated and the circle comes from the fact that *to_retain* option was set to refined *refined*. This option forces the algorithm to retain only cells that are not more than 1 standard deviations away from the center. If *to_retain* is set to refined *potential*, then all points in the desired section of the 4 sections resulting from the partitions are retained. The functions returns a list containing; a fullflowframe with added column for indicators for each cell type, a reduced flowframe with only *interest* cells retained, cell count and debris counts.
+
 ### cyanobacteria Population Identification (EM Approach)
 
 
 ```{r emapproach}
 
 cyanoFilter::celldebris_emclustering(flowfile_marginout$reducedflowframe, channels =  c("RED.B.HLin",
-                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin") )
+                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), ncluster = 4, min.itera = 20)
 ```
+
+Here, we demonstrate the `celldebris_emclustering()` function on the result from filtering out of margin events. The red texts in the plot shows the center of each cluster and the boundaries of the cluster with the largest weight is plotted. It is quite difficult to vizualise 5-dimensional clustering in two dimensions hence this option. The function returns a list containing; matrix of means, list of variance-covariance matrices and a flowframe with added columns for the cluster probabilities in the expression matrix.
 
 # License
 
