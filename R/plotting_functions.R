@@ -29,8 +29,8 @@ pair_plot <- function(flowfile, notToPlot = c("TIME")) {
 #' @examples \dontrun{ cluster_plot(flowfile = flowfile, channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin",
 #' mus = mu, tau = tau)
 #' }
-#' @importFrom grDevices colorRampPalette densCols
-#' @importFrom graphics abline points panel.smooth pairs smoothScatter text
+#' @importFrom grDevices colorRampPalette densCols chull
+#' @importFrom graphics plot abline points panel.smooth pairs smoothScatter text polygon
 #' @importFrom RColorBrewer brewer.pal
 #' @export cluster_plot
 
@@ -67,11 +67,11 @@ cluster_plot <- function(flowfile, channel1 = "RED.B.HLin", channel2 = "YEL.B.HL
 
       points(plotdata, pch = ".", col =  col)
       #points to write cluster names
-      x <- ifelse(class(try(test$mus[channel1, unique(color_code)[i]], silent = TRUE)) == "numeric",
+      x <- ifelse(class(try(mus[channel1, unique(color_code)[i]], silent = TRUE)) == "numeric",
                   mus[channel1, unique(color_code)[i]],
                   mean(plotdata[, channel1]) )
 
-      y <- ifelse(class(try(test$mus[channel2, unique(color_code)[i]], silent = TRUE)) == "numeric",
+      y <- ifelse(class(try(mus[channel2, unique(color_code)[i]], silent = TRUE)) == "numeric",
                   mus[channel2, unique(color_code)[i]],
                   mean(plotdata[, channel2]) )
       #cluster names

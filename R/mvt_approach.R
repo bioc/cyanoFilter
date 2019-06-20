@@ -33,7 +33,7 @@
 #'                    ncluster = 5, min.itera = 20)
 #' }
 #'
-#' @importFrom stats var
+#' @importFrom stats var cov quantile runif
 #' @export celldebris_emclustering
 
 
