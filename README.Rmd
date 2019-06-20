@@ -76,6 +76,8 @@ knitr::kable(metafile %>%
               dplyr::select(Sample.ID, Sample.ID2, Number.of.Events, Dilution.Factor, CellspML, Status) )
 ```
 
+
+
 The **Status** columns indicates if the file at the current dilution level is good.
 
 ### Files to Retain

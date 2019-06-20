@@ -91,15 +91,17 @@ knitr::kable(metafile %>%
               dplyr::select(Sample.ID, Sample.ID2, Number.of.Events, Dilution.Factor, CellspML, Status) )
 ```
 
-| Sample.ID      | Sample.ID2      |    Number.of.Events |   Dilution.Factor |     CellspML | Status   |
-| :------------- | :-------------- | ------------------: | ----------------: | -----------: | :------- |
-| BS4\_20000     | BS4             |                6918 |             20000 |     62.02270 | good     |
-| BS4\_10000     | BS4             |                6591 |             10000 |    116.76311 | good     |
-| BS4\_2000      | BS4             |                6508 |              2000 |    517.90008 | good     |
-| BS5\_20000     | BS5             |                5976 |             20000 |     48.31036 | bad      |
-| BS5\_10000     | BS5             |                5844 |             10000 |     90.51666 | good     |
-| BS5\_2000      | BS5             |                5829 |              2000 |    400.72498 | good     |
-| The \*\*Status | \*\* columns in | dicates if the file | at the current di | lution level | is good. |
+| Sample.ID  | Sample.ID2 | Number.of.Events | Dilution.Factor |  CellspML | Status |
+| :--------- | :--------- | ---------------: | --------------: | --------: | :----- |
+| BS4\_20000 | BS4        |             6918 |           20000 |  62.02270 | good   |
+| BS4\_10000 | BS4        |             6591 |           10000 | 116.76311 | good   |
+| BS4\_2000  | BS4        |             6508 |            2000 | 517.90008 | good   |
+| BS5\_20000 | BS5        |             5976 |           20000 |  48.31036 | bad    |
+| BS5\_10000 | BS5        |             5844 |           10000 |  90.51666 | good   |
+| BS5\_2000  | BS5        |             5829 |            2000 | 400.72498 | good   |
+
+The **Status** columns indicates if the file at the current dilution
+level is good.
 
 ### Files to Retain
 
