@@ -25,7 +25,7 @@ of variance-covariance matrix with length equal ncluster. Defaults to NULL and w
 \value{
 list containing; \itemize{
 \item \strong{percentages -} percentage of cells in each cluster
-\item \strong{mus -} list of mean vectors for each cluster
+\item \strong{mus -} matrix of mean vectors for each cluster
 \item \strong{sigmas -} list of variance-covariance matrix for each cluster
 \item \strong{result -} flowframe with probabilities of each cluster added as columns to the expression matrix of the flowfile
 }

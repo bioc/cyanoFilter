@@ -102,7 +102,8 @@ debris_inc <- function(flowframe, p1, p2) {
     other_pos <- which(flowCore::exprs(flowframe)[, p1] > deb_cut)
     deb_pos <- which(flowCore::exprs(flowframe)[, p1] <= deb_cut)
 
-    text(x = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, p1] <= deb_cut), p1]), y = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, p2] <=
+    text(x = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, p1] <= deb_cut), p1]),
+         y = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, p2] <=
         deb_cut), p2]), paste("Deb", ptt, sep = "-"), col = 2)
 
     return(list(bs4bs5 = bs4bs5, deb_pos = deb_pos, bs4bs5_pos = other_pos))

@@ -11,7 +11,7 @@
 #'
 #' @return list containing; \itemize{
 #' \item \strong{percentages -} percentage of cells in each cluster
-#' \item \strong{mus -} list of mean vectors for each cluster
+#' \item \strong{mus -} matrix of mean vectors for each cluster
 #' \item \strong{sigmas -} list of variance-covariance matrix for each cluster
 #' \item \strong{result -} flowframe with probabilities of each cluster added as columns to the expression matrix of the flowfile
 #' }
@@ -42,12 +42,16 @@
 celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, ncluster = 5,
                        min.itera = 20) {
 
-      data <- flowCore::exprs(flowfile)
+      data <- flowCore::exprs(flowfile)[, channels]
 
 
       if(is.null(mu)) {
-          #sapply(, )
-          #mu <- matrix(, nrow = ncluster, ncol = length(channels))
+        #generate a uniform data
+        rands <- matrix(NA, nrow = length(channels), ncol = ncluster)
+        rand_mu <- apply(rands, 2, function(x){runif(length(channels), 0, 1)})
+        boundaries <- apply(data, 2, quantile, probs = c(0.05, 0.95) )
+        mu <- boundaries[1, ] + rand_mu *(boundaries[2, ] - boundaries[1, ])
+        #mu <- matrix(, nrow = ncluster, ncol = length(channels))
 
       } else {
           mu <- mu
@@ -55,8 +59,7 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
 
       if(is.null(sigma)) {
           sigma <- vector("list", length = ncluster)
-          sigma <- lapply(sigma, diag(var(data), ncol = length(channels),
-                                      nrow = length(channels)))
+          sigma <- lapply(sigma, function(i){ cov(data)} )
       } else {
         sigma <- sigma
       }
@@ -64,6 +67,8 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
       # probability of each cell to belong to each cluster
       lambda <- matrix(NA, nrow = nrow(data), ncol = ncluster)
       tau <- rep(1/ncluster, ncluster) # wheight of each cluster
+
+      row.names(mu) <- channels
 
     i <- 0
 
@@ -74,7 +79,7 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
       mu.old <- mu
       # compute the probability of each cell for each cluster (E step)
       for (p in 1:ncluster) {
-        lambda[,p] <- tau[p] * mvnorm(data, mu[,p], sig[[p]])
+        lambda[,p] <- tau[p] * mvnorm(data, mu[,p], sigma[[p]])
       }
       if(anyNA(lambda)) { # one cluster has size 0, repeat algorithm
         #clusters.pres <- clusters.pres[!is.na(lambda[1,clusters.pres])]
@@ -90,44 +95,44 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
     # adapt the mean and the std for the different clusters (M - step)
     for(p in 1:ncluster) {
         mu[,p] <- colSums(lambda[, p] * data) / sum(lambda[, p])
-        sig[[p]] <- t(lambda[,p] * sweep(data, 2, mu[,p])) %*% sweep(data, 2, mu[, p]) /
+        sigma[[p]] <- t(lambda[,p] * sweep(data, 2, mu[,p])) %*% sweep(data, 2, mu[, p]) /
                     sum(lambda[, p])
     }
     # check whether local maxima has been achieved
     rel.diff.mu <- max((abs(mu - mu.old) / mu))
     rel.diff.tau <- max((abs(tau - tau.old) / tau))
-    #if (min(c(rel.diff.mu, rel.diff.tau)) < 0) print(c(i,rel.diff.mu, rel.diff.tau))
-    if (i > min.itera & rel.diff.mu < 1e-3 & rel.diff.tau < 1e-3) {
-      #assigned <- proportions(lambda)
-      print(c(i, rel.diff.mu, rel.diff.tau))
-      break
-      #return(list(percentages = tau, mus = mu, sigmas = sig,
-      #            assigned = assigned))
-      }
-    }
+
+    if (i > min.itera & rel.diff.mu < 1e-3 & rel.diff.tau < 1e-3) break
+
+  }
 
     ddata <- data.frame()
     for(i in 1:ncol(lambda)) {
 
-      ddata <- data.frame(rbind(ddata, flowfile@parameters@data,
-                       c(paste("Cluster_Prob", i, "_"), paste("Cluster_Prob", i, sep = "_"), 1, 0, 1))
+      ddata <- data.frame(rbind(ddata, data.frame(name = paste("Cluster_Prob", i, sep = "_"),
+                                                  desc = paste("Cluster_Prob", i, sep = "_"), range = 1, minRange = range(lambda[, i])[1],
+                                                  maxRange = range(lambda[, i])[2]))
       )
     }
+
+    ddata <- rbind(flowfile@parameters@data, ddata)
 
     dvarMetadata <- flowfile@parameters@varMetadata
     ddimnames <- flowfile@parameters@dimLabels
     paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata, dimLabels = ddimnames)
     describe <- flowfile@description
-    row.names(ddata) <- c(row.names(flowfile@parameters@data), "$P13", "$P14", "$P15", "$P16", "$P17")
+    row.names(ddata) <- c(row.names(flowfile@parameters@data),
+                          paste("$P", length(row.names(flowfile@parameters@data))+ 1:ncluster, sep = ""))
 
     ### Full flowframe Forming a new expression matrix for the full flowframe with indicator added for BS4 or BS5
-    nexp_mat <- as.matrix(cbind(flowCore::exprs(flowfile), as.numeric(lambda)))
+    nexp_mat <- as.matrix(cbind(flowCore::exprs(flowfile), lambda))
     # giving a name to the newly added column to the expression matrix
-    colnames(nexp_mat)[13:length(colnames(nexp_mat))] <- paste("Cluster_Prob", 13:17, sep = "_")
+    colnames(nexp_mat) <- ddata$name
 
     # full flow frame with indicator for particly type
     fflowframe <- methods::new("flowFrame", exprs = nexp_mat, parameters = paraa, description = describe)
+    cluster_plot(fflowframe, channel1 = channels[1], channel2 = channels[2], mus = mu, tau = tau)
 
-    return(list(percentages = tau, mus = mu, sigmas = sig,
+    return(list(percentages = tau, mus = mu, sigmas = sigma,
                   result = fflowframe))
 }

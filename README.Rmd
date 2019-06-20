@@ -69,9 +69,14 @@ metafile$Status <- cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspM
 metafile <- metafile %>% mutate(Status = cyanoFilter::goodfcs(metafile = metafile, col_cpml = 
                                                                 "CellspML", mxd_cellpML = 1000,
                                                               mnd_cellpML = 50))
+#the whole metadata file
 knitr::kable(metafile)
+#some interesting columns and the newly added column
+knitr::kable(metafile %>% 
+              dplyr::select(Sample.ID, Sample.ID2, Number.of.Events, Dilution.Factor, CellspML, Status) )
 ```
 
+The **Status** columns indicates if the file at the current dilution level is good.
 
 ### Files to Retain
 
@@ -93,8 +98,11 @@ metafile$Retained <- unlist(map(broken$data, function(.x) {
                       CellspML = "CellspML")
   })
 )  
-
+#the whole metadata file
 knitr::kable(metafile)
+#some interesting column
+knitr::kable(metafile %>% 
+              dplyr::select(Sample.ID, Sample.ID2, Number.of.Events, Dilution.Factor, CellspML, Status, Retained) )
 ```
 
 Notice that the function suggests you retain only the measurements associated with dilution *2000* since *make_decision = "maxi"* and diltion *2000* happens to have the highest cells/$\mu$L measurement among the dilution levels for both *BS4* and *BS5*. Furthermore, rather than reading in 6 files, we have narrowed down to reading only the 2 needed files.
@@ -158,16 +166,23 @@ flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Ch
                                               type = 'estimate', y_toplot = "FSC.HLin")
 ```
 
-### cyanobacteria Population Identification (Kernel-Density Approach)
+### cyanobacteria Population Identification (Kernel Density Approach using flowDensity)
 
 
-```{r}
+```{r }
 
-
+cyanoFilter::celldebris_nc(flowfile_marginout$reducedflowframe, channel1 = "RED.B.HLin",
+                    channel2 = "YEL.B.HLin", interest = "BS4", to_retain = "refined" )
 ```
 
-
 ### cyanobacteria Population Identification (EM Approach)
+
+
+```{r emapproach}
+
+cyanoFilter::celldebris_emclustering(flowfile_marginout$reducedflowframe, channels =  c("RED.B.HLin",
+                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin") )
+```
 
 # License
 

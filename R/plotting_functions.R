@@ -16,3 +16,84 @@ pair_plot <- function(flowfile, notToPlot = c("TIME")) {
                   colramp = col.palette,
                   add = TRUE), gap = 0.2, main = flowCore::identifier(flowfile))
 }
+
+
+#' plots the expression matrix of a flowframe analysed with celldebris_emclustering.
+#'
+#' @param flowfile flowframe to be plotted
+#' @param channel1 column in expression matrix not to be plotted
+#' @param channel2 column in expression matrix not to be plotted
+#' @param mus matrix of means obtained from celldebris_emclustering
+#' @param tau vector of cluster weights obtained from celldebris_emclustering
+#'
+#' @examples \dontrun{ cluster_plot(flowfile = flowfile, channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin",
+#' mus = mu, tau = tau)
+#' }
+#' @importFrom grDevices colorRampPalette densCols
+#' @importFrom graphics abline points panel.smooth pairs smoothScatter text
+#' @importFrom RColorBrewer brewer.pal
+#' @export cluster_plot
+
+
+cluster_plot <- function(flowfile, channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin", mus = NULL, tau = NULL) {
+
+  if(is.null(mus) | is.null(tau)) stop("supply the matrix of mean and vector of percentages obtained
+                                       from the celldebris_emclustering function")
+
+    ddata <- flowCore::exprs(flowfile)
+
+    ddata2 <- ddata[, stringr::str_detect(colnames(ddata), "Prob") ]
+
+    color_code <- apply(ddata2, 1, function(x) {
+
+        rest <- which(x >= 0.7 & x == max(x))
+        frest <- ifelse(length(rest) == 0, ncol(ddata2)+1, rest) # maximum = not sure in other words NA
+
+        return(frest)
+
+    })
+
+    #plotting
+    cols.pal <- RColorBrewer::brewer.pal(n = length(unique(color_code)), "Dark2")
+    plot(ddata[, c(channel1, channel2)], pch = ".", main = flowCore::identifier(flowfile),
+         frame.plot = F, type = "n"
+        )
+
+    for(i in 1:length(unique(color_code))) {
+
+      plotdata <- ddata[color_code==unique(color_code)[i], c(channel1, channel2)]
+      pal <- colorRampPalette(c(cols.pal[i], "gray88", "green", "yellow", "orange", cols.pal[i]))
+      col <- densCols(plotdata, colramp =  pal)
+
+      points(plotdata, pch = ".", col =  col)
+      #points to write cluster names
+      x <- ifelse(class(try(test$mus[channel1, unique(color_code)[i]], silent = TRUE)) == "numeric",
+                  mus[channel1, unique(color_code)[i]],
+                  mean(plotdata[, channel1]) )
+
+      y <- ifelse(class(try(test$mus[channel2, unique(color_code)[i]], silent = TRUE)) == "numeric",
+                  mus[channel2, unique(color_code)[i]],
+                  mean(plotdata[, channel2]) )
+      #cluster names
+      text(x = x,
+           y = y,
+           labels = paste("C", unique(color_code)[i], sep = ""),
+           col = 2, offset = 0.0, cex = 0.8
+           )
+      #convexhull
+        if(unique(color_code)[i] == which(tau == max(tau)) ) {
+          convhull <- chull(plotdata[ ,
+                                      c(channel1, channel2)])
+          polygon(plotdata[convhull, ], lty = 4, lwd = 2, border = "red")
+        }
+
+
+
+    }
+
+    message("C'largest' is a cluster of points not in a defined cluster,
+    points are assigned to clusters if they have at least 70% probability of belonging to that cluster except for c'largest',
+    boundaries of the largest cluster is drawn but the outermost colors represent the boundaries of each cluster")
+
+
+}
