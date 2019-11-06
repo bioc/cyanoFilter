@@ -5,9 +5,9 @@ author: "Olusoji O. D., De Laender F., Spaak J., Neyens T., Aerts M."
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{cyanoFilter: An Automated Framework for Identifying synechoccus type cyanobacteria population in Flow Cytometry}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\usepackage{UTF-8}{inputenc}
 ---
 
 ```{r setup, include = FALSE}

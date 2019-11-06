@@ -23,7 +23,6 @@
 #'          cut-off point separating margin events from other cells.
 #'
 #' @examples
-#' \donttest{
 #' flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -34,7 +33,7 @@
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' }
+#'
 #'
 #' @importFrom methods new
 #' @export cellmargin
@@ -87,8 +86,12 @@ cellmargin <- function(flow.frame, Channel = "SSC.W", type = c("manual", "estima
 
         # constructing the annotated data frame for the parameter
         ddata <- data.frame(rbind(flow.frame@parameters@data, c("Margin.Indicator", "Margin Indicator", 1, 0, 1)))
-        paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata, dimLabels = ddimnames)
-        row.names(ddata) <- c(row.names(flow.frame@parameters@data), paste0("$", "P", ncol(exx)))
+        paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata,
+                                             dimLabels = ddimnames)
+        row.names(ddata) <- c(row.names(flow.frame@parameters@data),
+                              paste("$P", length(row.names(flow.frame@parameters@data))+1,
+                                    sep = "")
+                              )
 
         fflowframe <- flowCore::flowFrame(exprs = exx, parameters = paraa, description = describe)
 

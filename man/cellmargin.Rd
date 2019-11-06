@@ -38,7 +38,6 @@ Users can either supply a cut-off point along the channel describing particle wi
          cut-off point separating margin events from other cells.
 }
 \examples{
-\donttest{
 flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
               mustWork = TRUE)
 flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -49,6 +48,6 @@ flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
            type = 'estimate', y_toplot = "FSC.HLin")
-}
+
 
 }

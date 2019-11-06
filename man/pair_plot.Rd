@@ -15,5 +15,17 @@ pair_plot(flowfile, notToPlot = c("TIME"))
 plots the expression matrix of a flowframe. Note that, it takes some time to display the plot.
 }
 \examples{
-\dontrun{ pair_plot(x = flowfile, notToPlot = "TIME") }
+\donttest{
+flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) #FCS file contains only one data object
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+pair_plot(x = flowfile_logtrans,
+          notToPlot = c("TIME", "FSC.HLin", "RED.R.HLin", "NIR.R.HLin"))
+
+}
 }

@@ -3,14 +3,14 @@
 #' @param x flowframe with expression matrix containing NAs.
 #' @return flowframe with expression matrix rid of NAs.
 #'
-#' @examples \donttest{
+#' @examples
 #' flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) #FCS file contains only one data object
 #' nona(x = flowfile)
-#' }
+#'
 #'
 #' @importFrom methods new
 #' @export nona

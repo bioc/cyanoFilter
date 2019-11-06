@@ -1,9 +1,5 @@
 ---
-author: ""
-date: ""
-output: 
-  github_document:
-    toc: false
+output: github_document
 ---
 
 # cyanoFilter
@@ -173,7 +169,7 @@ Margin Events are particles that are too large for teh flow cytometer to measure
 - *N_nonmargin* number of non-margin events
 - *N_particle* number of particles in the input flowframe
 
-```{r marginEvents}
+```{r marginEvents, cache=TRUE}
 flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
                                               type = 'estimate', y_toplot = "FSC.HLin")
 ```
@@ -184,7 +180,7 @@ We conceptualized the division of cells into clusters in two ways in cyanoFilter
 ### cyanobacteria Population Identification (Kernel Density Approach using flowDensity)
 
 
-```{r }
+```{r kdapproach, cache=TRUE}
 
 cyanoFilter::celldebris_nc(flowfile_marginout$reducedflowframe, channel1 = "RED.B.HLin",
                     channel2 = "YEL.B.HLin", interest = "BS4", to_retain = "refined" )
@@ -195,7 +191,7 @@ Here, we demonstrate the use of the `celldebris_nc()` function on the result fro
 ### cyanobacteria Population Identification (EM Approach)
 
 
-```{r emapproach}
+```{r emapproach, cache=TRUE}
 
 cyanoFilter::celldebris_emclustering(flowfile_marginout$reducedflowframe, channels =  c("RED.B.HLin",
                     "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), ncluster = 4, min.itera = 20)

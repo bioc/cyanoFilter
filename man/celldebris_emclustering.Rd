@@ -5,7 +5,7 @@
 \title{identifies BS4, BS5 and Debris in a flowfile using an EM style algorithm.}
 \usage{
 celldebris_emclustering(flowfile, channels, mu = NULL, sigma = NULL,
-  ncluster = 5, min.itera = 20)
+  ncluster = 5, min.itera = 20, classifier = 0.8)
 }
 \arguments{
 \item{flowfile}{flowframe to be clustered.}
@@ -21,6 +21,9 @@ of variance-covariance matrix with length equal ncluster. Defaults to NULL and w
 \item{ncluster}{number of cluster desired.}
 
 \item{min.itera}{minimum number of EM iterations.}
+
+\item{classifier}{cells will be assigned to a cluster if belongs to that cluster
+by at least this probability. Only for plotting purposes.}
 }
 \value{
 list containing; \itemize{
@@ -41,11 +44,24 @@ The function using EM algorithm involving mixtures of multivariate normals to se
          expression matrix of \emph{result}.
 }
 \examples{
-\dontrun{
-cyano_emclustering(flowfile = flowfile, channel1 = c("RED.B.HLin",
-                   "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"),
-                   ncluster = 5, min.itera = 20)
+\donttest{
+flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) #FCS file contains only one data object
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
+
+emapproach <- celldebris_emclustering(flowfile = cells_nonmargin$reducedflowframe,
+                    channels = c("RED.B.HLin", "YEL.B.HLin",
+                    "FSC.HLin", "RED.R.HLin"),
+                    ncluster = 5, min.itera = 20)
 }
+
 
 }
 \seealso{

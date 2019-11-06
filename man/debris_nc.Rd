@@ -9,9 +9,11 @@ debris_nc(flowframe, p1, p2)
 \arguments{
 \item{flowframe}{flowframe with debris, BS4, BS5 and other cells.}
 
-\item{p1}{first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".}
+\item{p1}{first flowcytometer channel that can be used to separate debris
+from the rest, e.g. "RED.B.HLin".}
 
-\item{p2}{second flowcytometer channel that can be used to separate debris from the rest, e.g. "YEL.B.HLin"}
+\item{p2}{second flowcytometer channel that can be used to separate debris
+from the rest, e.g. "YEL.B.HLin"}
 }
 \value{
 list containing; \itemize{
@@ -21,19 +23,15 @@ list containing; \itemize{
 }
 }
 \description{
-The function takes in a flowframe and identifies debris contained in the provided flowframe.
+The function takes in a flowframe and identifies debris contained in the
+             provided flowframe.
 }
 \details{
-The function uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
-         identify peaks between peaks and identify cut-off points between these peaks. A plot of both channels supplied with horizontal line separating
+The function uses the \code{\link[flowDensity]{getPeaks}} and
+         \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
+         identify peaks between peaks and identify cut-off points between these peaks.
+         A plot of both channels supplied with horizontal line separating
          debris from other cell populations is also returned.
-}
-\examples{
-\dontrun{
-debris_nc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
-}
-
-
 }
 \seealso{
 \code{\link{debris_inc}}

@@ -16,7 +16,6 @@ flowframe with non-negative values in its expression matrix
 Removes negative values from the expression matrix
 }
 \examples{
-\donttest{
 flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
               mustWork = TRUE)
 flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -24,6 +23,6 @@ flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
                                dataset = 1) #FCS file contains only one data object
 flowfile_nona <- cyanoFilter::nona(x = flowfile)
 noneg(x = flowfile_nona)
-}
+
 
 }

@@ -3,7 +3,7 @@
 #' @param x is the flowframe whose expression matrix contains negative values
 #' @return flowframe with non-negative values in its expression matrix
 #'
-#' @examples \donttest{
+#' @examples
 #' flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -11,7 +11,7 @@
 #'                                dataset = 1) #FCS file contains only one data object
 #' flowfile_nona <- cyanoFilter::nona(x = flowfile)
 #' noneg(x = flowfile_nona)
-#' }
+#'
 #'
 #'@importFrom methods new
 #'@export noneg

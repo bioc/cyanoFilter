@@ -30,7 +30,17 @@ The function uses the \code{\link[flowDensity]{getPeaks}} and \code{\link[flowDe
          debris from other cell populations is also returned.
 }
 \examples{
-\dontrun{
+\donttest{
+flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) #FCS file contains only one data object
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
 debris_inc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
 }
 

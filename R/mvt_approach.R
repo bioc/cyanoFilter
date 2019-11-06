@@ -8,6 +8,8 @@
 #'        of variance-covariance matrix with length equal ncluster. Defaults to NULL and will be computed from the data internally if left as NULL.
 #' @param  ncluster number of cluster desired.
 #' @param  min.itera minimum number of EM iterations.
+#' @param  classifier cells will be assigned to a cluster if belongs to that cluster
+#'                    by at least this probability. Only for plotting purposes.
 #'
 #' @return list containing; \itemize{
 #' \item \strong{percentages -} percentage of cells in each cluster
@@ -27,11 +29,24 @@
 #' @seealso \code{\link{celldebris_nc}}
 #'
 #' @examples
-#' \dontrun{
-#' cyano_emclustering(flowfile = flowfile, channel1 = c("RED.B.HLin",
-#'                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"),
-#'                    ncluster = 5, min.itera = 20)
+#'\donttest{
+#' flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1) #FCS file contains only one data object
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+#' cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#'
+#' emapproach <- celldebris_emclustering(flowfile = cells_nonmargin$reducedflowframe,
+#'                     channels = c("RED.B.HLin", "YEL.B.HLin",
+#'                     "FSC.HLin", "RED.R.HLin"),
+#'                     ncluster = 5, min.itera = 20)
 #' }
+#'
 #'
 #' @importFrom stats var cov quantile runif
 #' @export celldebris_emclustering
@@ -40,11 +55,11 @@
 
 
 celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, ncluster = 5,
-                       min.itera = 20) {
+                       min.itera = 20, classifier = 0.80) {
 
       data <- flowCore::exprs(flowfile)[, channels]
 
-
+      set.seed(123)
       if(is.null(mu)) {
         #generate a uniform data
         rands <- matrix(NA, nrow = length(channels), ncol = ncluster)
@@ -110,7 +125,8 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
     for(i in 1:ncol(lambda)) {
 
       ddata <- data.frame(rbind(ddata, data.frame(name = paste("Cluster_Prob", i, sep = "_"),
-                                                  desc = paste("Cluster_Prob", i, sep = "_"), range = 1, minRange = range(lambda[, i])[1],
+                                                  desc = paste("Cluster_Prob", i, sep = "_"),
+                                                  range = 1, minRange = range(lambda[, i])[1],
                                                   maxRange = range(lambda[, i])[2]))
       )
     }
@@ -119,19 +135,24 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
 
     dvarMetadata <- flowfile@parameters@varMetadata
     ddimnames <- flowfile@parameters@dimLabels
-    paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata, dimLabels = ddimnames)
+    paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata,
+                                         dimLabels = ddimnames)
     describe <- flowfile@description
     row.names(ddata) <- c(row.names(flowfile@parameters@data),
-                          paste("$P", length(row.names(flowfile@parameters@data))+ 1:ncluster, sep = ""))
+                          paste("$P", length(row.names(flowfile@parameters@data))+ 1:ncluster,
+                                sep = ""))
 
-    ### Full flowframe Forming a new expression matrix for the full flowframe with indicator added for BS4 or BS5
+    ### Full flowframe Forming a new expression matrix for the full
+    #flowframe with indicator added for BS4 or BS5
     nexp_mat <- as.matrix(cbind(flowCore::exprs(flowfile), lambda))
     # giving a name to the newly added column to the expression matrix
     colnames(nexp_mat) <- ddata$name
 
     # full flow frame with indicator for particly type
-    fflowframe <- methods::new("flowFrame", exprs = nexp_mat, parameters = paraa, description = describe)
-    cluster_plot(fflowframe, channel1 = channels[1], channel2 = channels[2], mus = mu, tau = tau)
+    fflowframe <- methods::new("flowFrame", exprs = nexp_mat, parameters = paraa,
+                               description = describe)
+    cluster_plot(fflowframe, channels,
+                 mus = mu, tau = tau, classifier = classifier)
 
     return(list(percentages = tau, mus = mu, sigmas = sigma,
                   result = fflowframe))

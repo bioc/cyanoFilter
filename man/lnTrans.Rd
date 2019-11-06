@@ -18,7 +18,6 @@ lnTrans(x, notToTransform = c("SSC.W", "TIME"))
 log transforms the expression matrix of a flowframe
 }
 \examples{
-\donttest{
 flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
               mustWork = TRUE)
 flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -27,6 +26,6 @@ flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 flowfile_nona <- cyanoFilter::nona(x = flowfile)
 flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-}
+
 
 }

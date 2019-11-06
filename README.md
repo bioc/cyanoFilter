@@ -238,8 +238,7 @@ Flow cytometry outcomes can be divided into 3 and they are not entirely
 mutually exclusive but this is normally not a problem as scientists are
 normally interested in a pre-defined outcome.
 
-![Flow Cytometry
-Outcomes](README_files/figure-gfm/flowcytometryOutcome.PNG)
+![](man/figures/README-flowcytometryOutcome.PNG)<!-- -->
 
   - Margin Events are particles too big to be measured
   - Doublets are cells with disproportionate Area, Height relationship
@@ -296,7 +295,7 @@ cyanoFilter::celldebris_nc(flowfile_marginout$reducedflowframe, channel1 = "RED.
                     channel2 = "YEL.B.HLin", interest = "BS4", to_retain = "refined" )
 ```
 
-![](man/figures/README-unnamed-chunk-1-1.png)<!-- -->
+![](man/figures/README-kdapproach-1.png)<!-- -->
 
     > $fullframe
     > flowFrame object ' B4_18_1'
