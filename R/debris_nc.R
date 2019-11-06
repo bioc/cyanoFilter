@@ -7,9 +7,9 @@
 #'           from the rest, e.g. "YEL.B.HLin"
 #'
 #' @return list containing; \itemize{
-#' \item \strong{bs4bs5 - flowframe containing non-debris particles}
+#' \item \strong{syn - flowframe containing non-debris particles}
 #' \item \strong{deb_pos - position of particles that are debris}
-#' \item \strong{bs4bs5_pos - position of particles that are not debris}
+#' \item \strong{syn_pos - position of particles that are not debris}
 #' }
 #'
 #' @description The function takes in a flowframe and identifies debris contained in the

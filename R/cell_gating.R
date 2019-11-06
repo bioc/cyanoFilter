@@ -39,7 +39,7 @@
 #'                                dataset = 1) #FCS file contains only one data object
 #' flowfile_nona <- cyanoFilter::nona(x = flowfile)
 #' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
-#' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
 #' celldebris_nc(flowframe = cells_nonmargin$reducedframe, channel1 = "RED.B.HLin",
