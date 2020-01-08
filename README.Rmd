@@ -4,7 +4,7 @@ output: github_document
 
 # cyanoFilter
 
-[![Travis-CI Build Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter)
+<!---[![Travis-CI Build Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter) -->
 
 ```{r setup, include=FALSE, echo=FALSE}
 library(tidyverse)

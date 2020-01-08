@@ -1,8 +1,7 @@
 
 # cyanoFilter
 
-[![Travis-CI Build
-Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter)
+<!---[![Travis-CI Build Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter) -->
 
 cyaoFilter is a package designed to identify, assign indicators and/or
 filter out synechoccus type cyanobacteria from a water sample examined
