@@ -171,15 +171,15 @@ files.
 
 ## Flow Cytometer File Processing
 
-To input the **text.fcs** file into **R**, we use the **read.FCS()**
-function from the **flowCore** package. The *dataset* option enables the
-specification of the precise file to be read. Since this datafile
-contains one file only, we set this option to 1. If this option is set
-to 2, it gives an error since **text.fcs** contains only one datafile.
+To input the **B4\_18\_1.fcs** file into **R**, we use the
+**read.FCS()** function from the **flowCore** package. The *dataset*
+option enables the specification of the precise file to be read. Since
+this datafile contains one file only, we set this option to 1. If this
+option is set to 2, it gives an error since **text.fcs** contains only
+one datafile.
 
 ``` r
-library(flowCore)
-flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
   mustWork = TRUE)
 flowfile <- read.FCS(flowfile_path, alter.names = TRUE,
   transformation = FALSE, emptyValue = FALSE,
@@ -417,6 +417,102 @@ belonging to the largest cluster with probability of at least 80%.
 Following the same steps or knowledge of these cells, users can filter
 out particles belonging to certain clusters with characteristics of
 interest to them.
+
+### Gating Debris and cyanobacteria with 2 species
+
+The second file used for demonstration contains both BS4 and BS5
+cyanobacteria cells.
+
+``` r
+flowfile2_path <- system.file("extdata", "B4_B5_18_1.fcs", package = "cyanoFilter",
+  mustWork = TRUE)
+flowfile2 <- read.FCS(flowfile2_path, alter.names = TRUE,
+  transformation = FALSE, emptyValue = FALSE,
+  dataset = 1)
+flowfile2
+> flowFrame object ' BI_18_1'
+> with 12665 cells and 11 observables:
+>            name                                desc range    minRange
+> $P1    FSC.HLin          Forward Scatter (FSC-HLin) 1e+05    0.000000
+> $P2    SSC.HLin             Side Scatter (SSC-HLin) 1e+05  -15.474201
+> $P3  GRN.B.HLin   Green-B Fluorescence (GRN-B-HLin) 1e+05  -25.141722
+> $P4  YEL.B.HLin  Yellow-B Fluorescence (YEL-B-HLin) 1e+05  -13.833652
+> $P5  RED.B.HLin     Red-B Fluorescence (RED-B-HLin) 1e+05   -7.098767
+> $P6  NIR.B.HLin Near IR-B Fluorescence (NIR-B-HLin) 1e+05   -7.817278
+> $P7  RED.R.HLin     Red-R Fluorescence (RED-R-HLin) 1e+05  -32.829483
+> $P8  NIR.R.HLin Near IR-R Fluorescence (NIR-R-HLin) 1e+05  -15.511206
+> $P9    SSC.ALin        Side Scatter Area (SSC-ALin) 1e+05    0.000000
+> $P10      SSC.W          Side Scatter Width (SSC-W) 1e+05 -111.000000
+> $P11       TIME                                Time 1e+05    0.000000
+>      maxRange
+> $P1     99999
+> $P2     99999
+> $P3     99999
+> $P4     99999
+> $P5     99999
+> $P6     99999
+> $P7     99999
+> $P8     99999
+> $P9     99999
+> $P10    99999
+> $P11    99999
+> 368 keywords are stored in the 'description' slot
+```
+
+All the steps previously demonstrated remains unchanged, s we carry it
+all out in one huge code chunk.
+
+``` r
+flowfile_nona2 <- nona(x = flowfile2)
+pair_plot(flowfile_nona2, notToPlot = "TIME")
+```
+
+![](man/figures/README-remove_na2-1.png)<!-- -->
+
+``` r
+
+#natural logarithm transformation
+flowfile_noneg2 <- noneg(x = flowfile_nona2)
+flowfile_logtrans2 <- lnTrans(x = flowfile_noneg2, 
+  notToTransform = c("SSC.W", "TIME"))
+pair_plot(flowfile_logtrans2, notToPlot = "TIME")
+```
+
+![](man/figures/README-remove_na2-2.png)<!-- -->
+
+``` r
+
+#gating margin events
+flowfile_marginout2 <- cellmargin(flow.frame = flowfile_logtrans2,
+  Channel = 'SSC.W', type = 'estimate', y_toplot = "FSC.HLin")
+```
+
+![](man/figures/README-remove_na2-3.png)<!-- -->
+
+Again we use the two channels measuring cholorophyll *a* and
+phycoerythrin, but we set the **interest** option to *both-right*. This
+means that we are expecting both of the cyanobacteria cells to be on the
+right of channels 1.
+
+``` r
+bs45_gate1 <- celldebris_nc(flowfile_marginout2$reducedflowframe, 
+  channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin", 
+  interest = "both-right", to_retain = "refined" )
+```
+
+![](man/figures/README-gating3-1.png)<!-- -->
+
+For the *EM* clustering approach, nothing changes as well. However,
+users must analyse to result of the clustering to determine which
+cluster is of interest.
+
+``` r
+bs4_gate2 <- celldebris_emclustering(flowfile_marginout$reducedflowframe, 
+  channels =  c("RED.B.HLin", "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), 
+  ncluster = 4, min.itera = 20, classifier = 0.8)
+```
+
+![](man/figures/README-gating4-1.png)<!-- -->
 
 # License
 

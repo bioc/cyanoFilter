@@ -104,11 +104,10 @@ This function adds another column, *Retained*, to the metafile. The third and si
 
 ## Flow Cytometer File Processing
 
-To input the **text.fcs** file into **R**, we use the **read.FCS()** function from the **flowCore** package. The *dataset* option enables the specification of the precise file to be read. Since this datafile contains one file only, we set this option to 1. If this option is set to 2, it gives an error since **text.fcs** contains only one datafile.
+To input the **B4_18_1.fcs** file into **R**, we use the **read.FCS()** function from the **flowCore** package. The *dataset* option enables the specification of the precise file to be read. Since this datafile contains one file only, we set this option to 1. If this option is set to 2, it gives an error since **text.fcs** contains only one datafile.
 
 ```{r reading, cache=TRUE}
-library(flowCore)
-flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
   mustWork = TRUE)
 flowfile <- read.FCS(flowfile_path, alter.names = TRUE,
   transformation = FALSE, emptyValue = FALSE,
@@ -227,6 +226,52 @@ reduced_frame <- which(bs4_gate2$result[, cluster_name] >= 0.80)
 
 The object *reduced_frame* is a flowframe containing all particles belonging to the largest cluster with probability of at least 80%. Following the same steps or knowledge of these cells, users can filter out particles belonging to certain clusters with characteristics of interest to them.
 
+### Gating Debris and cyanobacteria with 2 species
+
+The second file used for demonstration contains both BS4 and BS5 cyanobacteria cells.
+
+```{r reading2, cache=TRUE}
+flowfile2_path <- system.file("extdata", "B4_B5_18_1.fcs", package = "cyanoFilter",
+  mustWork = TRUE)
+flowfile2 <- read.FCS(flowfile2_path, alter.names = TRUE,
+  transformation = FALSE, emptyValue = FALSE,
+  dataset = 1)
+flowfile2
+```
+
+All the steps previously demonstrated remains unchanged, s we carry it all out in one huge code chunk.
+
+```{r remove_na2, cache=TRUE}
+flowfile_nona2 <- nona(x = flowfile2)
+pair_plot(flowfile_nona2, notToPlot = "TIME")
+
+#natural logarithm transformation
+flowfile_noneg2 <- noneg(x = flowfile_nona2)
+flowfile_logtrans2 <- lnTrans(x = flowfile_noneg2, 
+  notToTransform = c("SSC.W", "TIME"))
+pair_plot(flowfile_logtrans2, notToPlot = "TIME")
+
+#gating margin events
+flowfile_marginout2 <- cellmargin(flow.frame = flowfile_logtrans2,
+  Channel = 'SSC.W', type = 'estimate', y_toplot = "FSC.HLin")
+```
+
+
+Again we use the two channels measuring cholorophyll *a* and phycoerythrin, but we set the **interest** option to *both-right*. This means that we are expecting the cyanobacteria cells to be on the right of channel 1.
+
+```{r gating3, c}
+bs45_gate1 <- celldebris_nc(flowfile_marginout2$reducedflowframe, 
+  channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin", 
+  interest = "both-right", to_retain = "refined" )
+```
+
+For the *EM* clustering approach, nothing changes as well. However, users must analyse the result of the clustering to determine which cluster is of interest.
+
+```{r gating4}
+bs4_gate2 <- celldebris_emclustering(flowfile_marginout$reducedflowframe, 
+  channels =  c("RED.B.HLin", "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), 
+  ncluster = 4, min.itera = 20, classifier = 0.8)
+```
 
 # License
 
