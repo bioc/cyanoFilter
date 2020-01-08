@@ -226,7 +226,7 @@ reduced_frame <- which(bs4_gate2$result[, cluster_name] >= 0.80)
 
 The object *reduced_frame* is a flowframe containing all particles belonging to the largest cluster with probability of at least 80%. Following the same steps or knowledge of these cells, users can filter out particles belonging to certain clusters with characteristics of interest to them.
 
-### Gating Debris and cyanobacteria with 2 species
+### Gating Debris and cyanobacteria in biculture
 
 The second file used for demonstration contains both BS4 and BS5 cyanobacteria cells.
 

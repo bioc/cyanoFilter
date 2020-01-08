@@ -418,7 +418,7 @@ Following the same steps or knowledge of these cells, users can filter
 out particles belonging to certain clusters with characteristics of
 interest to them.
 
-### Gating Debris and cyanobacteria with 2 species
+### Gating Debris and cyanobacteria in biculture
 
 The second file used for demonstration contains both BS4 and BS5
 cyanobacteria cells.
@@ -491,8 +491,8 @@ flowfile_marginout2 <- cellmargin(flow.frame = flowfile_logtrans2,
 
 Again we use the two channels measuring cholorophyll *a* and
 phycoerythrin, but we set the **interest** option to *both-right*. This
-means that we are expecting both of the cyanobacteria cells to be on the
-right of channels 1.
+means that we are expecting the cyanobacteria cells to be on the right
+of channel 1.
 
 ``` r
 bs45_gate1 <- celldebris_nc(flowfile_marginout2$reducedflowframe, 
@@ -500,10 +500,10 @@ bs45_gate1 <- celldebris_nc(flowfile_marginout2$reducedflowframe,
   interest = "both-right", to_retain = "refined" )
 ```
 
-![](man/figures/README-gating3-1.png)<!-- -->
+![](man/figures/README-gating3,%20c-1.png)<!-- -->
 
 For the *EM* clustering approach, nothing changes as well. However,
-users must analyse to result of the clustering to determine which
+users must analyse the result of the clustering to determine which
 cluster is of interest.
 
 ``` r
