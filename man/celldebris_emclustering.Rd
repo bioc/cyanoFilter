@@ -2,7 +2,7 @@
 % Please edit documentation in R/mvt_approach.R
 \name{celldebris_emclustering}
 \alias{celldebris_emclustering}
-\title{identifies BS4, BS5 and Debris in a flowfile using an EM style algorithm.}
+\title{identifies Synechococcus cyanobacteria cells and Debris in a flowfile using an EM style algorithm.}
 \usage{
 celldebris_emclustering(flowfile, channels, mu = NULL, sigma = NULL,
   ncluster = 5, min.itera = 20, classifier = 0.8)

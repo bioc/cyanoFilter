@@ -1,4 +1,4 @@
-#' identifies BS4, BS5 and Debris in a flowfile using an EM style algorithm.
+#' identifies Synechococcus cyanobacteria cells and Debris in a flowfile using an EM style algorithm.
 #'
 #' @param flowfile flowframe to be clustered.
 #' @param channels channels to use for the clustering

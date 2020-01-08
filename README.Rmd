@@ -37,117 +37,110 @@ install(c("Biobase", "flowCore", "flowDensity"))
 
 # Motivation and Background
 
-Flow cytometry is a well-known technique for identifying cell populations in fluids. It is largely applied in biological and medical sciences for cell sorting, counting, biomarker detections and protein engineering.  Identifying cell populations in flow cytometry data often rely on manual gating, a subjective and generally irreproducible method based on expert knowledge. To address this issue, two filtering frameworks were developed in **R**, identifying and filtering out two strains of Synechococcus type cyanobacteria (*BS4* and *BS5*) from flow cytometry data. 
+Flow cytometry (FCM) is a well-known technique for identifying cell populations in fluids. It is largely applied in biological and medical sciences for cell sorting, counting, biomarker detections and protein engineering.  Identifying cell populations in flow cytometry data, a process termed gating can either be done mnually or via automated algorithms. Recenntly, researchers also apply machine learning tools to identify the different cell populations present in FCM data. Manual gating can be quite subjective and often not reproducible, but it aids the use of expert knowledge in the gating process, while machine learning tools and automated algorithms often don't allow the use of expert knowledge in the gating process. To address this issue for cyanobacteria FCM experiments, we develop the cyanoFilter framework in **R**. We also demonstrate its use in filtering out two cyanobacteria strains named BS4 and BS5. 
 
 # Usage
 
-The package comes with 2 internal datasets that is used for demonstrating the usage of the functions contained in the package. The **meta data** file contains *BS4* and *BS5* samples examined with a GUAVAVA flow cytometer at 3 dilution levels (*2000*, *10000* and *20000*) each. The **FCS** file contains the flow cytometer channel measurements for one of these sample.
+The package comes with 2 internal datasets that we use for demonstrating the usage of the functions contained in the package. The **meta data** file contains *BS4* and *BS5* samples measured with a  guava easyCyte HT series at 3 dilution levels (*2000*, *10000* and *20000*) each. The **FCS** file contains the flow cytometer channel measurements for one of these sample.
 
 ## Meta File Preprocessing
 
 ### The Good Measurements 
 
-`goodfcs()` is deigned to check the cells/$\mu$L of the meta file (normally csv) obtained from the flow cytometer and decide if the measurements in the FCS file can be trusted. 
+The **goodfcs()** is deigned to check the $cell/\mu$L of the meta file (normally csv) obtained from the flow cytometer and decide if the measurements in the FCS file can be trusted. This function is essentially useful for flow cytometers that are not equipped to perform automated dilution. 
 
 ```{r the_csvs}
+library(flowCore)
+library(cyanoFilter)
 #internally contained datafile in cyanoFilter
-metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", package = "cyanoFilter",
-               mustWork = TRUE)
-metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE, check.names = TRUE)
-metafile <- metafile[, 1:65] #first 65 columns contains useful information
+metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", 
+  package = "cyanoFilter", 
+  mustWork = TRUE)
+metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE, 
+  check.names = TRUE)
+#columns containing dilution, $\mu l$ and id information
+metafile <- metafile[, c(1:3, 6:8)] 
+knitr::kable(metafile) 
+```
+
+Each row in the csv file corresponds to a measurement from two types of cyanobacteria cells carried out at one of three dilution levels. The columns contain information about the dilution level, the number of cells per micro-litre ($cell/\mu l$), number of particles measured and a unique identification code for each measurement. The *Sample.ID* column is structured in the format cyanobacteria_dilution. We extract the cyanobacteria part of this column into a new column and also rename the $cell/\mu l$ column  with the following code:
+
+```{r }
 #extract the part of the Sample.ID that corresponds to BS4 or BS5
 metafile$Sample.ID2 <- stringr::str_extract(metafile$Sample.ID, "BS*[4-5]")
 #clean up the Cells.muL column
 names(metafile)[which(stringr::str_detect(names(metafile), "Cells."))] <- "CellspML"
-metafile$Status <- cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML", 
-                                        mxd_cellpML = 1000, mnd_cellpML = 50)
-#should work fine with tidyverse setup
-metafile <- metafile %>% mutate(Status = cyanoFilter::goodfcs(metafile = metafile, col_cpml = 
-                                                                "CellspML", mxd_cellpML = 1000,
-                                                              mnd_cellpML = 50))
-#the whole metadata file
-knitr::kable(metafile)
-#some interesting columns and the newly added column
-knitr::kable(metafile %>% 
-              dplyr::select(Sample.ID, Sample.ID2, Number.of.Events, Dilution.Factor, CellspML, Status) )
 ```
 
+### The Good Measurements
 
+To determine the appropriate data file to read from a FCM datafile, the desired minimum, maximum and column containing the $cell\mu l$ values are supplied to the **goodfcs()** function. The code below demonstrates the use of this function for a situation where the desired minimum and maximum for $cell/\mu l$ is 50 and 1000 respectively.
 
-The **Status** columns indicates if the file at the current dilution level is good.
+```{r}
+metafile$Status <- cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML", 
+                                        mxd_cellpML = 1000, mnd_cellpML = 50)
+
+knitr::kable(metafile)
+```
+
+The function adds an extra column, *Status*, with entries *good* or *bad* to the metafile. Rows containing $cell/\mu l$ values outside the desired minimum and maximum are labelled *bad*. Note that the *Status* column for the fourth row is labelled *bad*, because it has a $cell/\mu l$ value outside the desired range. 
 
 ### Files to Retain
 
-Generally, reading **FCS** files with the `read.FCS()` function from the `flowCore` package takes time, hence it can save you considerable amount of time to read only the good files. An **FCS** normally contains data from many experiment or same experiment measured at different dilution levels. Some of these would be determined bad by the `goodfcs()` function and should be avoided. The `retain()` function is especially designed for this.
+Although any of the files labelled good can be read from the FCM file, the **retain()** function can help select either the file with the highest $cell/\mu l$ or that with the smallest $cell/\mu l$ value.  To do this, one supplies the function with the status column, $cell/\mu l$ column and the desired decision. The code below demonstrates this action for a case where we want to select the file with the maximum $cell/\mu l$ from the good measurements for each unique sample ID.
 
-Since each sample, i.e. *BS4* and *BS5* were measured at 3 dilution levels it means that the 3 rows in *metafile* containing the measurements of *BS4* are to be examined together by the `retain()` function and the same should be done for the *BS5* dilution levels. This can easily be achieved by using some `tidyverse` function to break the *metafile* into two based on *Sample.ID2* and apply `retain()` on the broken dataset.  
-
-
-```{r the_csvs2}
-#break csv file into groups (2 in this case) based on sample ID2
-broken <- metafile %>% group_by(Sample.ID2) %>% nest() 
-#this is how broken looks like
-broken
-
-# Let's apply the function
+```{r metafile4}
+broken <- metafile %>% group_by(Sample.ID2) %>% nest()
 metafile$Retained <- unlist(map(broken$data, function(.x) {
-    cyanoFilter::retain(meta_files = .x, make_decision = "maxi",
-                      Status = "Status", 
-                      CellspML = "CellspML")
-  })
-)  
-#the whole metadata file
+  retain(meta_files = .x, make_decision = "maxi",
+  Status = "Status",
+  CellspML = "CellspML")
+ })
+)
 knitr::kable(metafile)
-#some interesting column
-knitr::kable(metafile %>% 
-              dplyr::select(Sample.ID, Sample.ID2, Number.of.Events, Dilution.Factor, CellspML, Status, Retained) )
 ```
 
-Notice that the function suggests you retain only the measurements associated with dilution *2000* since *make_decision = "maxi"* and diltion *2000* happens to have the highest cells/$\mu$L measurement among the dilution levels for both *BS4* and *BS5*. Furthermore, rather than reading in 6 files, we have narrowed down to reading only the 2 needed files.
+This function adds another column, *Retained*, to the metafile. The third and sixth row in the metadata are with the highest $cell/\mu l$ values, thus one can proceed to read the fourth and sixth file from the corresponding FCM datafile for *BS4* and *BS5* respectively. This implies that we are reading in only two FCM files rather than six needed files.
 
 ## Flow Cytometer File Processing
 
-### Removing NAs in Expression Matrix
+To input the **text.fcs** file into **R**, we use the **read.FCS()** function from the **flowCore** package. The *dataset* option enables the specification of the precise file to be read. Since this datafile contains one file only, we set this option to 1. If this option is set to 2, it gives an error since **text.fcs** contains only one datafile.
 
-`nona()` functions removes `NA` values from the inputed flowframe.
-
-```{r nona}
+```{r reading, cache=TRUE}
+library(flowCore)
 flowfile_path <- system.file("extdata", "text.fcs", package = "cyanoFilter",
-                              mustWork = TRUE)
-flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
-                               transformation = FALSE, emptyValue = FALSE,
-                               dataset = 1) #FCS file contains only one data object
-flowfile_nona <- cyanoFilter::nona(x = flowfile)
+  mustWork = TRUE)
+flowfile <- read.FCS(flowfile_path, alter.names = TRUE,
+  transformation = FALSE, emptyValue = FALSE,
+  dataset = 1)
+flowfile
 ```
 
-### Removing Negative Values in Expression Matrix
+The **R** object *flowfile* contains measurements about `r nrow(flowfile)` cells across `r ncol(flowfile) - 1` channels since the time channel does not contain any information about the properties of the measured cells.
 
-Typically negative values are removed from the expression matrix as they are deemed measurement error (there are some arguments against this) so the `noneg()` rids a flowframe of all negative values in its expression matrix.
+### Transformation and visualisation
 
-```{r noneg}
-flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+To examine the need for transformation, a visual representation of the information in the expression matrix is of great use. The **pair_plot()** function produces a panel plot of all measured channels. Each plot is also smoothed to show the cell density at every part of the plot.  
+
+```{r remove_na, cache=TRUE, fig.cap="**Panel plot for all channels measured in flowfile_nona. A bivariate kernel smoothed color density is used to indicate the cell density.**"}
+flowfile_nona <- nona(x = flowfile)
+pair_plot(flowfile_nona, notToPlot = "TIME")
 ```
 
+We obtain Figure  above by using the **pair_plot()** function after removing all NA values from the expression matrix with the **nona()** function.
 
-### Log-Transforming Expression Matrix
-
-`lnTrans()` transforms all values (except those specified in the *notToTransform* option) in an expression matrix to the log scale. This function has a counterpart in the `flowCore()` package but we made things simpler and also give the opportunity for users to specify columns in the flowframe that are not to be transformed.
-
-```{r logtrans}
-flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, notToTransform = c("SSC.W", "TIME"))
+```{r logtrans, cache=TRUE, fig.cap="Panel plot for log-transformed channels for flowfile_logtrans. A bivariate kernel smoothed color density is used to indicate the cell density."}
+#natural logarithm transformation
+flowfile_noneg <- noneg(x = flowfile_nona)
+flowfile_logtrans <- lnTrans(x = flowfile_noneg, 
+  notToTransform = c("SSC.W", "TIME"))
+pair_plot(flowfile_logtrans, notToPlot = "TIME")
 ```
 
-### Plotting
+The second figure is the result of performing a logarithmic transformation in addition to the previous actions taken. The logarithmic transformation appears satisfactory in this case, as it allow a better examination of the information contained in each panel of the figure. Moreover, the clusters are clearly visible in this figure compared to the former figure. Other possible  transformation (linear, bi-exponential and arcsinh) can be pursued if the logarithm transformation is not satisfactory. Functions for these transformations are provided in the **flowCore** package.
 
-pair_plot() gives a scatter plot of all columns in the flowframe, except that specified in the *notToPlot* option. 
 
-```{r plotting}
-cyanoFilter::pair_plot(flowfile_noneg, notToPlot = "TIME") ##untransfrmed
-cyanoFilter::pair_plot(flowfile_logtrans, notToPlot = "TIME") ##logtransformed
-
-```
-
-## Clustering and Gating
+## Gating
 
 Flow cytometry outcomes can be divided into 3 and they are not entirely mutually exclusive but this is normally not a problem as scientists are normally interested in a pre-defined outcome.
 
@@ -157,47 +150,83 @@ Flow cytometry outcomes can be divided into 3 and they are not entirely mutually
 - Doublets are cells with disproportionate Area, Height relationship
 - Singlets are the 'normal cells' but these could either be dead cells/particles (debris) and living (good cells).
 
-The set of functions below identifies margin events and singlets. Doublets are normally pre-filtered during the event acquiring phase in a flow cytometer, especially in new models.
+The set of functions below identifies margin events and singlets. Doublets are normally pre-filtered during the event acquiring phase of measuring.
 
-### Margin Events
+### Gating margin events
 
-Margin Events are particles that are too large for teh flow cytometer to measure. It is desired to eliminate this particles or assign indicators to them in the flow frame to allow its identification. The `cellmargin()` function achieves this. It returns a list containing; 
+To remove margin events, the **cellmargin()** function takes the column in the expression matrix corresponding to measurements about the width of each cell. The code below demonstrates the removal of margin events using the SSC.W column with the option to estimate the cut point between the margin events and the good cells. 
 
-- *fullflowframe* with indicator for margin and non-margin events in th eexpression matrix, 
-- *reducedflowframe* containing only non-margin events
-- *N_margin* number of margin events contained in the input flowframe
-- *N_nonmargin* number of non-margin events
-- *N_particle* number of particles in the input flowframe
+```{r marginEvents, cache=TRUE, fig.cap="Smoothed Scatterplot of measured width (SSC.W) and height (FSC.HLin). The red line is the estimated cut point by flowDensity, and every particle below the red line has their width properly measured. This figure is produced automatically when users call the cellmargin() function."}
+flowfile_marginout <- cellmargin(flow.frame = flowfile_logtrans,
+  Channel = 'SSC.W', type = 'estimate', y_toplot = "FSC.HLin")
+```
 
-```{r marginEvents, cache=TRUE}
-flowfile_marginout <- cyanoFilter::cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
-                                              type = 'estimate', y_toplot = "FSC.HLin")
+The function returns a figure (Figure \@ref(fig:marginEvents)) in this case) and a list containing:
+
+- *fullflowframe*, flowframe with indicator for margin and non-margin events in the expression matrix, 
+- *reducedflowframe*, flowframe containing only non-margin events
+- *N_margin*, number of margin events contained in the input flowframe
+- *N_nonmargin*, number of non-margin events
+- *N_particle*, number of particles in the input flowframe
+
+The code below accesses the number of margin and non-margin particles. 
+
+```{r }
+flowfile_marginout$N_margin
+flowfile_marginout$N_nonmargin
 ```
 
 
-We conceptualized the division of cells into clusters in two ways in cyanoFilter and this is reflected in two main functions that perform the clustering exercise; `celldebris_nc()` and `celldebris_emclustering()`. The `celldebris_nc()` function employs minimum intersection points between peaks in observed in a two dimensional kernel density estimate while `celldebris_emclustering()` employs an EM algorithm which uses a mixture of multivariate normals to assign probabilities to each cell belonging to a cluster. Behind the scenes, `celldebris_nc()` calls the `deGate()` in **flowDensity** package to estimate the intersection point between peaks and `celldebris_emclustering()` calls an internal `mvnorm()` function for the multivariate normals. Both functions produce plots by default to enable users access the results. 
+### Gating debris and cyanobacteria
 
-### cyanobacteria Population Identification (Kernel Density Approach using flowDensity)
+We conceptualized the division of cells into clusters in two ways in cyanoFilter and this is reflected in two main functions that perform the clustering exercise; **celldebris_nc()** and **celldebris_emclustering()**. The **celldebris_nc()** function employs minimum intersection points between peaks observed in a two dimensional kernel density, while **celldebris_emclustering()** employs a finite mixture of multivariate normals to assign probability of belonging to a cluster to each measured particle. Both functions produce plots by default to enable users examine the results of the clustering. 
+
+After removing margin events, it is of interest to identify BS4 cyanobacteria cells contained in the **text.fcs** datafile that we have pre-processed until now. The following code separates BS4 cyanobacteria cells using the two channels measuring the presence of chlorophyll *a*, RED.B.HLin, and phycoerythrin, YEL.B.HLin. We use the knowledge of knowing that the BS4 cells will be on the right part of the RED.B.HLin channel because of the presence of chlorophyll *a*, and also on the lower part of the YEL.B.HLin channel due to low presence of phycoerythrin.
 
 
-```{r kdapproach, cache=TRUE}
+```{r kdapproach, fig.cap="Smoothed Scatterplot of measured chlorophyll *a* channel (RED.B.HLin) and phycoerythrin channel (YEL.B.HLin). The red lines are the estimated minimum intersection points between the detected peaks. Particles to the left of the vertical red line are debris with no chlorophyll *a*, and those below the horizontal red line have low values of phycoerythrin. The plot is produced automatically when users call the celldebris_nc() function."}
 
-cyanoFilter::celldebris_nc(flowfile_marginout$reducedflowframe, channel1 = "RED.B.HLin",
-                    channel2 = "YEL.B.HLin", interest = "BS4", to_retain = "refined" )
+bs4_gate1 <- celldebris_nc(flowfile_marginout$reducedflowframe, 
+  channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin", 
+  interest = "bottom-right", to_retain = "refined" )
 ```
 
-Here, we demonstrate the use of the `celldebris_nc()` function on the result from filtering out of margin events. The dashed red lines in the plot shows the intersection points estimated and the circle comes from the fact that *to_retain* option was set to refined *refined*. This option forces the algorithm to retain only cells that are not more than 1 standard deviations away from the center. If *to_retain* is set to refined *potential*, then all points in the desired section of the 4 sections resulting from the partitions are retained. The functions returns a list containing; a fullflowframe with added column for indicators for each cell type, a reduced flowframe with only *interest* cells retained, cell count and debris counts.
+The resulting object is a figure (Figure \@ref(fig:kdapproach)) and a list containing the following: 
 
-### cyanobacteria Population Identification (EM Approach)
+- *reducedframe*, a flowFrame with all debris removed 
+- *fullframe*, flowFrame with all measured particles and indicator for debris and cyanobacteria cells 
+- *Cell_count*, the number of BS4 cells counted 
+- *Debris_Count*, the number of debris particles. 
+
+An alternative function for identifying BS4 cells is the **celldebris_emclustering()** function. This function tries to identify the number of clusters supplied via the *ncluster* option, but this number is reduced if there are clusters with no particles during the EM iterations. The function can also accept more than two channels as input. The code below demonstrates its use with four channels measuring chlorophyll *a*, phycoerythrin, height and phycocyanin respectively.
 
 
-```{r emapproach, cache=TRUE}
+```{r emapproach, cache=TRUE, fig.cap="Smoothed scatterplot of all channels used for gating. The plot is generated by assigning points to each cluster if their probability of belonging to that cluster is atleast 80%, which is set by the classifier option. Each cluster is assigned a colour, and  bivariate kernel smoothed color density is used to indicate the cell density. The boundaries of the cluster with the highest number of particles is drawn."}
 
-cyanoFilter::celldebris_emclustering(flowfile_marginout$reducedflowframe, channels =  c("RED.B.HLin",
-                    "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), ncluster = 4, min.itera = 20)
+bs4_gate2 <- celldebris_emclustering(flowfile_marginout$reducedflowframe, 
+  channels =  c("RED.B.HLin", "YEL.B.HLin", "FSC.HLin", "RED.R.HLin"), 
+  ncluster = 3, min.itera = 20, classifier = 0.8)
 ```
 
-Here, we demonstrate the `celldebris_emclustering()` function on the result from filtering out of margin events. The red texts in the plot shows the center of each cluster and the boundaries of the cluster with the largest weight is plotted. It is quite difficult to vizualise 5-dimensional clustering in two dimensions hence this option. The function returns a list containing; matrix of means, list of variance-covariance matrices and a flowframe with added columns for the cluster probabilities in the expression matrix.
+The resulting object is a figure (Figure \@ref(fig:emapproach)) and a list containing the following: 
+
+i) *percentages* the final weight for each cluster 
+ii) *mus*, matrix of means for each channel per cluster 
+iii) *sigmas*, list containing variance-covariace matrices for each cluster, 
+iv) *result*, flowfile with an expression matrix containing all the measured particles and the associated probability of each particle belonging to a cluster. 
+
+Users can examine the means or cluster weights to determine which cluster is of interest, and then filter out particles belonging to that cluster with a certain minimum probability. For example, we demonstrate an example below by filtering out particles belonging to the cluster with the highest weight by at least 80%.
+
+```{r filtering}
+max_cluster_weight <- which(bs4_gate2$percentages == 
+  max(bs4_gate2$percentages))
+cluster_name <- paste("Cluster", "Prob", 
+  max_cluster_weight, sep = "_")
+reduced_frame <- which(bs4_gate2$result[, cluster_name] >= 0.80)
+```
+
+The object *reduced_frame* is a flowframe containing all particles belonging to the largest cluster with probability of at least 80%. Following the same steps or knowledge of these cells, users can filter out particles belonging to certain clusters with characteristics of interest to them.
+
 
 # License
 
