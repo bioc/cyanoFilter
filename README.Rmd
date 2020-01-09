@@ -259,7 +259,7 @@ flowfile_marginout2 <- cellmargin(flow.frame = flowfile_logtrans2,
 
 Again we use the two channels measuring cholorophyll *a* and phycoerythrin, but we set the **interest** option to *both-right*. This means that we are expecting the cyanobacteria cells to be on the right of channel 1.
 
-```{r gating3, c}
+```{r gating3}
 bs45_gate1 <- celldebris_nc(flowfile_marginout2$reducedflowframe, 
   channel1 = "RED.B.HLin", channel2 = "YEL.B.HLin", 
   interest = "both-right", to_retain = "refined" )

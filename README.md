@@ -500,7 +500,7 @@ bs45_gate1 <- celldebris_nc(flowfile_marginout2$reducedflowframe,
   interest = "both-right", to_retain = "refined" )
 ```
 
-![](man/figures/README-gating3,%20c-1.png)<!-- -->
+![](man/figures/README-gating3-1.png)<!-- -->
 
 For the *EM* clustering approach, nothing changes as well. However,
 users must analyse the result of the clustering to determine which
