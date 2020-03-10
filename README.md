@@ -267,8 +267,8 @@ Flow cytometry outcomes can be divided into 3 and they are not entirely
 mutually exclusive but this is normally not a problem as scientists are
 normally interested in a pre-defined outcome.
 
-![Flow Cytometry
-Outcomes](README_files/figure-gfm/flowcytometryOutcome.PNG)
+<!---![Flow Cytometry
+Outcomes](README_files/figure-gfm/flowcytometryOutcome.PNG)--->
 
   - Margin Events are particles too big to be measured
   - Doublets are cells with disproportionate Area, Height relationship

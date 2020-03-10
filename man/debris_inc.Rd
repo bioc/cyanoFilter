@@ -4,14 +4,14 @@
 \alias{debris_inc}
 \title{gates out or assign indicators to debris particle.}
 \usage{
-debris_inc(flowframe, p1, p2)
+debris_inc(flowframe, ch1, ch2)
 }
 \arguments{
 \item{flowframe}{flowframe with debris and other cells.}
 
-\item{p1}{first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".}
+\item{ch1}{first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".}
 
-\item{p2}{second flowcytometer channel that can be used to separate debris from the rest, e.g. "YEL.B.HLin"}
+\item{ch2}{second flowcytometer channel that can be used to separate debris from the rest, e.g. "YEL.B.HLin"}
 }
 \value{
 list containing; \itemize{
@@ -41,7 +41,7 @@ flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
            type = 'estimate', y_toplot = "FSC.HLin")
-debris_inc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
+debris_inc(flowframe = flowfile, ch1 = "RED.B.HLin", ch2 = "YEL.B.HLin")
 }
 
 }

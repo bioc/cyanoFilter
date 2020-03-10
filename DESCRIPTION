@@ -18,6 +18,8 @@ Depends: R(>= 3.4), Biobase(>= 2.40.0)
 Imports: 
     flowCore(>= 1.42.3),
     flowDensity (>= 1.10.0),
+    ggplot2(>= 3.2.1),
+    ggpubr(>= 0.2.3),
     graphics(>= 3.6.0),
     grDevices(>= 3.6.0),
     methods(>= 3.5.1),

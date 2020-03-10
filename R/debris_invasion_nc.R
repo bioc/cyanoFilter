@@ -1,8 +1,8 @@
 #' gates out or assign indicators to debris particle.
 #'
 #' @param flowframe flowframe with debris and other cells.
-#' @param p1 first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".
-#' @param p2 second flowcytometer channel that can be used to separate debris from the rest, e.g. "YEL.B.HLin"
+#' @param ch1 first flowcytometer channel that can be used to separate debris from the rest, e.g. "RED.B.HLin".
+#' @param ch2 second flowcytometer channel that can be used to separate debris from the rest, e.g. "YEL.B.HLin"
 #'
 #' @return list containing; \itemize{
 #' \item \strong{syn - flowframe containing non-debris particles}
@@ -31,23 +31,23 @@
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' debris_inc(flowframe = flowfile, p1 = "RED.B.HLin", p2 = "YEL.B.HLin")
+#' debris_inc(flowframe = flowfile, ch1 = "RED.B.HLin", ch2 = "YEL.B.HLin")
 #' }
 #'
 #' @importFrom stats sd
 #' @export debris_inc
 
 
-debris_inc <- function(flowframe, p1, p2) {
+debris_inc <- function(flowframe, ch1, ch2) {
     # plotting
-    flowDensity::plotDens(flowframe, c(p1, p2), main = flowCore::identifier(flowframe), frame.plot = F)
+    flowDensity::plotDens(flowframe, c(ch1, ch2), main = flowCore::identifier(flowframe), frame.plot = F)
     # debris gating
-    p1_peaks <- flowDensity::getPeaks(flowframe, p1)
-    if (length(p1_peaks$Peaks) == 2) {
+    ch1_peaks <- flowDensity::getPeaks(flowframe, ch1)
+    if (length(ch1_peaks$Peaks) == 2) {
         # all is well
-        deb_cut <- flowDensity::deGate(flowframe, p1, bimodal = T)
-        if (p1_peaks$Peaks[1] - (1 * sd(flowframe@exprs[, p1])) > 0 & deb_cut >= p1_peaks$Peaks[1]) {
-            deb_cut <- flowDensity::deGate(flowframe, p1, use.upper = T, upper = F)
+        deb_cut <- flowDensity::deGate(flowframe, ch1, bimodal = T)
+        if (ch1_peaks$Peaks[1] - (1 * sd(flowframe@exprs[, ch1])) > 0 & deb_cut >= ch1_peaks$Peaks[1]) {
+            deb_cut <- flowDensity::deGate(flowframe, ch1, use.upper = T, upper = F)
             ptt <- "1a"
         } else {
 
@@ -56,42 +56,42 @@ debris_inc <- function(flowframe, p1, p2) {
 
         }
 
-    } else if (length(p1_peaks$Peaks) == 3) {
+    } else if (length(ch1_peaks$Peaks) == 3) {
         # invader present
-        deb_cut <- flowDensity::deGate(flowframe, p1, all.cuts = T)
-        if (p1_peaks$Peaks[1] - (1 * sd(flowframe@exprs[, p1])) <= 0) {
+        deb_cut <- flowDensity::deGate(flowframe, ch1, all.cuts = T)
+        if (ch1_peaks$Peaks[1] - (1 * sd(flowframe@exprs[, ch1])) <= 0) {
 
-            deb_cut <- flowDensity::deGate(flowframe, p1, all.cuts = T)[1]
+            deb_cut <- flowDensity::deGate(flowframe, ch1, all.cuts = T)[1]
             ptt <- "2a"
 
-        } else if (p1_peaks$Peaks[1] - (1 * sd(flowframe@exprs[, p1])) > 0) {
+        } else if (ch1_peaks$Peaks[1] - (1 * sd(flowframe@exprs[, ch1])) > 0) {
 
-            deb_cut <- flowDensity::deGate(flowframe, p1, all.cuts = T)[1]
+            deb_cut <- flowDensity::deGate(flowframe, ch1, all.cuts = T)[1]
 
-            flowframe2 <- flowframe[which(flowCore::exprs(flowframe)[, p1] > deb_cut), ]
-            deb_cut <- ifelse(length(flowDensity::getPeaks(flowframe2, p1, tinypeak.removal = 1/5)$Peaks) < 2, flowDensity::deGate(flowframe, p1, use.upper = T,
+            flowframe2 <- flowframe[which(flowCore::exprs(flowframe)[, ch1] > deb_cut), ]
+            deb_cut <- ifelse(length(flowDensity::getPeaks(flowframe2, ch1, tinypeak.removal = 1/5)$Peaks) < 2, flowDensity::deGate(flowframe, ch1, use.upper = T,
                 upper = F), deb_cut)
             ptt <- "2b"
 
         } else {
 
-            deb_cut <- flowDensity::deGate(flowframe, p1, bimodal = F)
+            deb_cut <- flowDensity::deGate(flowframe, ch1, bimodal = F)
             ptt <- "2c"
 
         }
 
 
-    } else if (length(p1_peaks$Peaks) < 2) {
+    } else if (length(ch1_peaks$Peaks) < 2) {
         # not much debris, hence one peak
-        deb_cut <- flowDensity::deGate(flowframe, p1, sd.threshold = T, n.sd = 1)
+        deb_cut <- flowDensity::deGate(flowframe, ch1, sd.threshold = T, n.sd = 1)
         if (deb_cut < 2) {
 
-            deb_cut <- flowDensity::deGate(flowframe, p1, after.peak = T)
+            deb_cut <- flowDensity::deGate(flowframe, ch1, after.peak = T)
             ptt <- "3a"
 
-        } else if (p1_peaks$Peaks[1] - (2 * sd(flowframe@exprs[, p1])) > 0 & deb_cut >= p1_peaks$Peaks[1]) {
+        } else if (ch1_peaks$Peaks[1] - (2 * sd(flowframe@exprs[, ch1])) > 0 & deb_cut >= ch1_peaks$Peaks[1]) {
 
-            deb_cut <- flowDensity::deGate(flowframe, p1, use.upper = T, upper = F)
+            deb_cut <- flowDensity::deGate(flowframe, ch1, use.upper = T, upper = F)
             ptt <- "3b"
 
         } else {
@@ -101,20 +101,20 @@ debris_inc <- function(flowframe, p1, p2) {
         }
     } else {
 
-        deb_cut <- flowDensity::deGate(flowframe, p1, all.cuts = T)[2]  #p1_peaks$Peaks[2] - (0.5 * sd(flowframe@exprs[, p1]))
+        deb_cut <- flowDensity::deGate(flowframe, ch1, all.cuts = T)[2]  #ch1_peaks$Peaks[2] - (0.5 * sd(flowframe@exprs[, ch1]))
         ptt <- "4"
     }
 
     abline(v = deb_cut, lty = 2, col = 2)
-    # abline(v = flowDensity::deGate(flowframe, p1, all.cuts = T), lty = 2, col = 1)
+    # abline(v = flowDensity::deGate(flowframe, ch1, all.cuts = T), lty = 2, col = 1)
 
-    bs4bs5 <- flowframe[which(flowCore::exprs(flowframe)[, p1] > deb_cut), ]
-    other_pos <- which(flowCore::exprs(flowframe)[, p1] > deb_cut)
-    deb_pos <- which(flowCore::exprs(flowframe)[, p1] <= deb_cut)
+    bs4bs5 <- flowframe[which(flowCore::exprs(flowframe)[, ch1] > deb_cut), ]
+    other_pos <- which(flowCore::exprs(flowframe)[, ch1] > deb_cut)
+    deb_pos <- which(flowCore::exprs(flowframe)[, ch1] <= deb_cut)
 
-    text(x = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, p1] <= deb_cut), p1]),
-         y = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, p2] <=
-        deb_cut), p2]), "Deb", col = 2)
+    text(x = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, ch1] <= deb_cut), ch1]),
+         y = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, ch2] <=
+        deb_cut), ch2]), "Deb", col = 2)
 
     return(list(syn = bs4bs5, deb_pos = deb_pos, syn_all_pos = other_pos))
 }

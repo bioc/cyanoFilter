@@ -152,7 +152,8 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
     fflowframe <- methods::new("flowFrame", exprs = nexp_mat, parameters = paraa,
                                description = describe)
     cluster_plot(fflowframe, channels,
-                 mus = mu, tau = tau, classifier = classifier)
+                 mus = mu, tau = tau,
+                 classifier = classifier)
 
     return(list(percentages = tau, mus = mu, sigmas = sigma,
                   result = fflowframe))

@@ -16,6 +16,7 @@
 #'           notToPlot = c("TIME", "FSC.HLin", "RED.R.HLin", "NIR.R.HLin"))
 #'
 #' }
+#' @import ggplot2
 #' @importFrom grDevices colorRampPalette
 #' @importFrom graphics abline points panel.smooth pairs smoothScatter text
 #' @export pair_plot
@@ -28,6 +29,89 @@ pair_plot <- function(flowfile, notToPlot = c("TIME")) {
           panel = function(...) smoothScatter(..., nrpoints = 0,
                   colramp = col.palette,
                   add = TRUE), gap = 0.2, main = flowCore::identifier(flowfile))
+}
+
+
+#' plots two channels of a flowframe. Note that, it takes some time to display the plot.
+#'
+#' @param flowfile flowframe to be plotted
+#' @param channels a character vector of length 2, must contain channel names in the flowfile.
+#' @param ... not used at the moment
+#'
+#' @return a ggplot object
+#'
+#' @export ggplotDens
+
+ggplotDens <- function(flowfile, channels, ...) {
+
+  plotdata <- as.data.frame(flowfile@exprs[, channels])
+  d <- densCols(plotdata, colramp = colorRampPalette(c("white", "blue", "cyan",
+                                                       "green", "orange", "red"),
+                                                     space = "Lab"))
+
+    plotdata <- cbind(plotdata, d = d)
+    ggplot(data = plotdata, aes(x = get(channels[1], plotdata), y = get(channels[2], plotdata), color = d)) +
+      geom_point(pch = ".", size = 25) +
+      theme_minimal() +
+      scale_color_identity() +
+      theme(axis.line.x = element_line(color = "black", size = 0.8),
+            axis.line.y = element_line(color = "black", size = 0.8),
+            plot.title = element_text(hjust = 0.5, size = 25, face = "bold")) +
+      labs(x = channels[1], y = channels[2]) +
+      ggtitle(identifier(flowfile))
+
+}
+
+
+#' plots two channels of a flowframe. Note that, it takes some time to display the plot.
+#'
+#' @param flowfile flowframe to be plotted
+#' @param channels a character vector of length 2, must contain channel names in the flowfile.
+#' @param group cluster groups. must be equal to the number of particles in the flow cytometer.
+#' @param ... not used at the moment
+#'
+#' @return a ggplot object
+#'
+#' @export ggplotDens2
+
+ggplotDens2 <- function(flowfile, channels, group, ...) {
+
+  Group <- unique(flowfile@exprs[, group])
+
+  plotdata <- as.data.frame(flowfile@exprs[, c(channels, group)])
+
+  hulls <- lapply(Group, function(x) {
+
+    pd <- plotdata[plotdata[, group] == x, ]
+    pd[chull(pd[, 1:2]), ]
+
+  })
+
+  hulldata <- do.call(rbind.data.frame, hulls)
+
+  d <- densCols(plotdata, colramp = colorRampPalette(c("white", "blue", "cyan",
+                                                       "green", "orange", "red"),
+                                                     space = "Lab"))
+
+  hull_data <- flowfile@exprs[, channels]
+
+  plotdata <- cbind(plotdata, d = d)
+  ggplot(data = plotdata, aes(x = get(channels[1], plotdata), y = get(channels[2], plotdata), color = d)) +
+    geom_point(pch = ".", size = 25) +
+    theme_minimal() +
+    scale_color_identity() +
+    theme(axis.line.x = element_line(color = "black", size = 0.8),
+          axis.line.y = element_line(color = "black", size = 0.8),
+          plot.title = element_text(hjust = 0.5, size = 25, face = "bold")) +
+    labs(x = channels[1], y = channels[2]) +
+    ggtitle(identifier(flowfile)) +
+    geom_polygon(data = hulldata, aes(x = get(channels[1], hulldata),
+                                      y = get(channels[2], hulldata)),
+                 linetype = "dashed", color = get(group, hulldata),
+                 group = get(group, hulldata),
+                 inherit.aes = FALSE, fill = NA,
+                 size = 1.5)
+
 }
 
 

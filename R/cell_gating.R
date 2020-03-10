@@ -56,15 +56,7 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
                           to_retain = c("refined", "potential")) {
 
 
-    if (interest == "both-right") {
-
-        ddata <- data.frame(rbind(flowframe@parameters@data, c("Indicator",
-                                                               "Indicator", 1, 0, 1)))
-        row.names(ddata) <- c(row.names(flowframe@parameters@data),
-                              paste("$P", length(row.names(flowframe@parameters@data))+1,
-                                    sep = ""))
-
-    } else if (interest == "bottom-right" | interest == "top-right") {
+    if (interest %in% c("both-right", "bottom-right", "top-right")) {
 
         ddata <- data.frame(rbind(flowframe@parameters@data, c("Indicator",
                                                                "Indicator", 1, 0, 1)))
@@ -79,14 +71,14 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
     paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = dvarMetadata,
                                          dimLabels = ddimnames)
     describe <- flowframe@description
-    BS4BS5_ind <- rep(NA, flowCore::nrow(flowframe))
+    cyb_ind <- rep(NA, flowCore::nrow(flowframe))
 
     # gating debris
     if (interest == "both-right") {
 
-        debris <- debris_inc(flowframe = flowframe, p1 = channel1, p2 = channel2)
+        debris <- debris_inc(flowframe = flowframe, ch1 = channel1, ch2 = channel2)
 
-    } else debris <- debris_nc(flowframe = flowframe, p1 = channel1, p2 = channel2)
+    } else debris <- debris_nc(flowframe = flowframe, ch_chlorophyll = channel1, ch_p2 = channel2)
 
     # BS4s and BS5s
     bs4bs5 <- debris$syn
@@ -98,7 +90,7 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
 
     if (interest == "bottom-right") {
 
-        bs4s <- bs4_nc(bs4bs5, p1 = channel1, p2 = channel2, others = bs4bs5_pos,
+        bs4s <- bs4_nc(bs4bs5, ch1 = channel1, ch2 = channel2, others = bs4bs5_pos,
                        to_retain = to_retain)
 
         ### indicators for each cell type
@@ -111,7 +103,7 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
 
     } else if (interest == "top-right") {
 
-        bs5s <- bs5_nc(bs4bs5, p1 = channel1, p2 = channel2, others = bs4bs5_pos,
+        bs5s <- bs5_nc(bs4bs5, ch1 = channel1, ch2 = channel2, others = bs4bs5_pos,
                        to_retain = to_retain)
 
         ### indicators for each cell type
@@ -125,10 +117,10 @@ celldebris_nc <- function(flowframe, channel1 = "RED.B.HLin", channel2 = "YEL.B.
     } else if (interest == "both-right") {
 
         # BS4
-        bs4s <- bs4_nc(bs4bs5, p1 = channel1, p2 = channel2, others = bs4bs5_pos,
+        bs4s <- bs4_nc(bs4bs5, ch1 = channel1, ch2 = channel2, others = bs4bs5_pos,
                        to_retain = to_retain)
         # BS5
-        bs5s <- bs5_nc(bs4bs5, p1 = channel1, p2 = channel2, others = bs4bs5_pos,
+        bs5s <- bs5_nc(bs4bs5, ch1 = channel1, ch2 = channel2, others = bs4bs5_pos,
                        to_retain = to_retain)
 
         ### indicators for each cell type

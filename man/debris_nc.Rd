@@ -2,18 +2,24 @@
 % Please edit documentation in R/debris_nc.R
 \name{debris_nc}
 \alias{debris_nc}
-\title{gates out or assign indicators to debris particle.}
+\title{gates out or assign indicators to debris particle based on their chlorophyll expression.}
 \usage{
-debris_nc(flowframe, p1, p2)
+debris_nc(flowframe, ch_chlorophyll, ch_p2, ph = 0.09, n_sd = 2)
 }
 \arguments{
 \item{flowframe}{flowframe with debris and other cells.}
 
-\item{p1}{first flowcytometer channel that can be used to separate debris
+\item{ch_chlorophyll}{first flowcytometer channel that can be used to separate debris
 from the rest, e.g. "RED.B.HLin".}
 
-\item{p2}{second flowcytometer channel that can be used to separate debris
+\item{ch_p2}{second flowcytometer channel use for plotting
 from the rest, e.g. "YEL.B.HLin"}
+
+\item{ph}{the minimum peak height that should be considered. This aids the removal of
+tiny peaks. Defaults to 0.1}
+
+\item{n_sd}{number of standard deviations away from peak should be considered to filter out
+debris}
 }
 \value{
 list containing; \itemize{
@@ -29,7 +35,7 @@ The function takes in a flowframe and identifies debris contained in the
 \details{
 The function uses the \code{\link[flowDensity]{getPeaks}} and
          \code{\link[flowDensity]{deGate}} functions in the flowDensity package to
-         identify peaks between peaks and identify cut-off points between these peaks.
+         identify peaks in ch_chlorophyll, and identify cut-off points between these peaks.
          A plot of both channels supplied with horizontal line separating
          debris from other cell populations is also returned.
 }
