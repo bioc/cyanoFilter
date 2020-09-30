@@ -1,0 +1,38 @@
+Package: cyanoFilter
+Title: Phytoplankton Population Identification using pigment data
+Version: 0.1.4
+Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.be", role = c("aut", "cre")),
+    person("Aerts", "Marc", email = "marc.aerts@uhasselt.be", role = "ctb"),
+    person("Delaender", "Frederik", email = "frederik.delaender@unamur.be", role = "ctb"),
+    person("Neyens", "Thomas", email = "thomas.neyens@uhasselt.be", role = "ctb"),
+    person("Spaak", "jurg", email = "jurg.spaak@unamur.be", role = "aut"))
+Maintainer: Oluwafemi Olusoji <oluwafemi.olusoji@uhasselt.be>
+Description: An approach to filter out and/or identify phytoplankton cells from all particles measured via flow cytometry.
+    It combines pigment and cell complexity information with gating techniques developed by Mehrnoush, M. et al. (2015) <doi:10.1093/bioinformatics/btu677> 
+    in the 'flowDensity' package to identify and separate these phytoplankton population.
+    Aside the gating techniques in the 'flowDensity' package, an EM style clustering technique
+    is also developed to identify these phytoplankton population as well.
+URL: https://github.com/fomotis/cyanoFilter
+BugReports: https://github.com/fomotis/cyanoFilter/issues
+Depends: R(>= 4.0.0)
+Imports: 
+    Biobase(>= 2.48.0),
+    flowCore(>= 2.0.1),
+    flowDensity (>= 1.22.0),
+    ggplot2(>= 3.3.2),
+    GGally(>= 2.0.0),
+    graphics(>= 4.0.1),
+    grDevices(>= 4.0.1),
+    methods(>= 4.0.1),
+    RColorBrewer(>= 1.1-2),
+    Rdpack(>= 1.0.0),
+    stats(>= 4.0.1),
+    stringr(>= 1.4.0),
+    utils(>= 4.0.1)
+RdMacros: Rdpack
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
+Suggests: dplyr, magrittr, knitr, rmarkdown, tidyr
+VignetteBuilder: knitr

@@ -1,0 +1,10 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+cache: packages
+sudo: false
+r: bioc-devel
+
+script:
+  - R -e 'install.packages("BiocManager")'
+  - R -e 'BiocManager::install(version = "3.10")'

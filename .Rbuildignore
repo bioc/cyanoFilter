@@ -1,0 +1,11 @@
+^.*\.Rproj$
+^.*\.Renviron$
+^\.Rproj\.user$
+^README\.Rmd$
+^README-.*\.png$
+^README\_files$
+^README\_cache$
+^doc$
+^Meta$
+^\.travis\.yml$
+^cran-comments\.md$
