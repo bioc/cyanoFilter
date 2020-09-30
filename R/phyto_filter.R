@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #' gates out and assign indicators to phytoplankton cells based on the expression of
 #' measured cell complexity channels.
 #'
@@ -145,5 +146,22 @@ phyto_filter <- function(flowfile, pig_channels = NULL, com_channels = NULL,
 
     }
 
+=======
+
+
+
+phyto_filter <- function(flowfile, pig_channels, com_channels, ph = 0.05, width_channel = "SSC.W") {
+
+  #gate based on the pigments
+  pigment_gating <- pigment_gate(flowfile = flowfile, pig_channels = pig_channels,
+                                 ph = ph, width_channel = width_channel)
+
+  #gate based on the complexity channels
+  sizecomp_gating <- complexity_gate(flowfile = flowfile, com_channels = com_channels,
+                                     ph = ph, width_channel = width_channel
+                                    )
+
+  ### formulate a master full flow file
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 
  }

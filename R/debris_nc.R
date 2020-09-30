@@ -25,6 +25,7 @@
 #'          A plot of both channels supplied with horizontal line separating
 #'          debris from other cell populations is also returned.
 #'
+<<<<<<< HEAD
 #' @examples
 #'
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
@@ -40,6 +41,11 @@
 #' debris_nc(flowframe = cells_nonmargin$reducedflowframe, ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
+=======
+#' @seealso \code{\link{debris_inc}}
+#'
+#'
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #'
 #' @export debris_nc
 
@@ -116,13 +122,18 @@ debris_nc <- function(flowframe, ch_chlorophyll, ch_p2, ph = 0.09, n_sd = 2) {
                                                ch_chlorophyll]),
                       y = mean(flowframe@exprs[which(flowCore::exprs(flowframe)[, ch_p2] <=
                      deb_cut), ch_p2])), inherit.aes = FALSE,
+<<<<<<< HEAD
                   label = paste0("Debris"), colour = "blue", size = 6)
+=======
+                  label = paste0("Debris-", lp2), colour = "blue", size = 6)
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 
 
     syn <- flowframe[which(flowCore::exprs(flowframe)[, ch_chlorophyll] > deb_cut), ]
     other_pos <- which(flowCore::exprs(flowframe)[, ch_chlorophyll] > deb_cut)
     deb_pos <- which(flowCore::exprs(flowframe)[, ch_chlorophyll] <= deb_cut)
 
+<<<<<<< HEAD
     ret_result <- list(syn = syn,
                        deb_pos = deb_pos,
                        syn_all_pos = other_pos,
@@ -131,4 +142,7 @@ debris_nc <- function(flowframe, ch_chlorophyll, ch_p2, ph = 0.09, n_sd = 2) {
     #cyanoFilterDebris(ret_result)
     return(ret_result)
 
+=======
+    return(list(syn = syn, deb_pos = deb_pos, syn_all_pos = other_pos, plot = plott1))
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }

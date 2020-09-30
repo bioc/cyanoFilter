@@ -4,12 +4,21 @@
 \alias{new_flowframe2}
 \title{takes a list of flowframes or a flowSet with similar annotations but different expression matrices and stacks them.}
 \usage{
+<<<<<<< HEAD
 new_flowframe2(flowframes, mode = c("list", "set"))
 }
 \arguments{
 \item{flowframes}{a list of flowframes or a flowSet}
 
 \item{mode}{the type of object flowframe is. Can either be "list" or "set".}
+=======
+new_flowframe2(flowframes, mode = "list")
+}
+\arguments{
+\item{mode}{the type of object flowframe is. Can either be "list" or "set".}
+
+\item{flowframe}{a list of flowframes or a flowSet}
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \description{
 takes a list of flowframes or a flowSet with similar annotations but different expression matrices and stacks them.

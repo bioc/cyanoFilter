@@ -1,6 +1,10 @@
 #' takes a list of flowframes or a flowSet with similar annotations but different expression matrices and stacks them.
 #'
+<<<<<<< HEAD
 #' @param flowframes a list of flowframes or a flowSet
+=======
+#' @param flowframe a list of flowframes or a flowSet
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #' @param mode the type of object flowframe is. Can either be "list" or "set".
 #'
 #'
@@ -8,9 +12,13 @@
 #'
 #' @export new_flowframe2
 
+<<<<<<< HEAD
 new_flowframe2 <- function(flowframes, mode = c("list", "set")) {
 
   mode <- match.arg(mode)
+=======
+new_flowframe2 <- function(flowframes, mode = "list") {
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 
   if(mode == "list") {
 

@@ -4,12 +4,17 @@
 \alias{retain}
 \title{Decides if a file should be retiained or removed based on its status.}
 \usage{
+<<<<<<< HEAD
 retain(
   meta_files,
   make_decision = c("maxi", "mini", "unique"),
   Status = "Status",
   CellspML = "CellspML"
 )
+=======
+retain(meta_files, make_decision = c("maxi", "mini", "unique"),
+  Status = "Status", CellspML = "CellspML")
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \arguments{
 \item{meta_files}{dataframe from meta file that has been preprocessed by the \code{\link{goodfcs}} function.}

@@ -1,0 +1,117 @@
+#' gates out or assign indicators to Synechococcus cyanobacteria cells in the top right of the
+#' 2-D space.
+#'
+#' @param bs4bs5 flowframe with debris (left) removed.
+#' @param ch1 first flowcytometer channel that can be used to separate cells of interest
+#'           from the rest, e.g. "RED.B.HLin".
+#' @param ch2 second flowcytometer channel that can be used to separate cells of interest
+#'           from the rest, e.g. "YEL.B.HLin"
+#' @param others row numbers for non-debris events. This is provided by the debris_nc or
+#'               debris_inc function.
+#' @param  to_retain should potential candidates be retained or further gating be applied to
+#'                   filter out only certain Synechococcus cyanobacteria cells.
+#'  @return list containing; \itemize{
+#' \item \strong{syn_reduced -} flowframe containing only BS5s
+#' \item \strong{others_nk -} unidentified particle positions
+#' \item \strong{syn_pos -} Synechococcus cyanobacteria cells positions
+#' \item \strong{others_nk2 -} other unidentified particle positions
+#' }
+#'
+#' @description This function takes in a flowframe with debris removed and identifies
+#'              ynechococcus cyanobacteria cell population in the provided frame.
+#'
+#' @details The function uses the \code{\link[flowDensity]{getPeaks}} and
+#'          \code{\link[flowDensity]{deGate}} functions in the \emph{flowDensity} package to
+#'          identify peaks and identify cut-off points between these peaks.
+#'          This function is not designed to be called in isolation, if called
+#'          in isolation an error will be returned. It is preferably called on the results
+#'          from \code{\link{debris_nc}} or \code{\link{debris_inc}} function.
+#'          A graph with horizontal and vertical lines used in separating the populations
+#'          is returned and if \emph{to_retain="refined"}, a circle made of dashed lines is drawn around
+#'          Synechococcus cyanobacteria cell population points.
+#'
+#'
+#' @import Rdpack
+#' @importFrom stats sd
+#' @importFrom utils capture.output
+#' @export bs5_nc
+
+
+bs5_nc <- function(bs4bs5, ch1, ch2, others, ph = 0.1, to_retain = "potential") {
+
+    yel.bhlin_peaks <- flowDensity::getPeaks(bs4bs5, ch2, tinypeak.removal = ph)
+    red.bhlin_peaks <- flowDensity::getPeaks(bs4bs5, ch1, tinypeak.removal = ph)
+    msg <- capture.output(flowDensity::deGate(bs4bs5, ch1, all.cuts = T))[1]
+    msg_yel <- capture.output(flowDensity::deGate(bs4bs5, ch2, all.cuts = T))[1]
+
+    ## checking for invasion on the YEL.B.HLin axis
+    if (stringr::str_detect(msg_yel, "Only one peak") == T) {
+
+        yel_cuts <- flowDensity::deGate(bs4bs5, ch2, use.percentile = T, percentile = 0.03)
+        bs5_pot <- bs4bs5[which(bs4bs5@exprs[, ch2] > yel_cuts), ]
+        others_pot <- others[which(bs4bs5@exprs[, ch2] > yel_cuts)]
+        others_nk <- others[which(!(bs4bs5@exprs[, ch2] > yel_cuts))]
+        ptt <- "1"
+
+    } else if (length(yel.bhlin_peaks$Peaks) == 2) {
+
+
+        yel_cuts <- flowDensity::deGate(bs4bs5, ch2, all.cuts = T, tinypeak.removal = ph)
+        bs5_pot <- bs4bs5[which(bs4bs5@exprs[, ch2] > yel_cuts), ]
+        others_pot <- others[which(bs4bs5@exprs[, ch2] > yel_cuts)]
+        others_nk <- others[which(!(bs4bs5@exprs[, ch2] > yel_cuts))]
+        ptt <- "2a"
+        # mgrouch1 <- yel.bhlin_peaks$Peaks[1] - 0
+        # if (mgrouch1 > 2.9) {
+        #     yel_cuts <- flowDensity::deGate(bs4bs5, ch2, use.percentile = T, percentile = 0.03)
+        #     bs5_pot <- bs4bs5[which(bs4bs5@exprs[, ch2] > yel_cuts), ]
+        #     others_pot <- others[which(bs4bs5@exprs[, ch2] > yel_cuts)]
+        #     others_nk <- others[which(!(bs4bs5@exprs[, ch2] > yel_cuts))]
+        #     ptt <- "2a"
+        #
+        # } else {
+        #
+        #     yel_cuts <- flowDensity::deGate(bs4bs5, ch2, all.cuts = T)
+        #     bs5_pot <- bs4bs5[which(bs4bs5@exprs[, ch2] > yel_cuts), ]
+        #     others_pot <- others[which(bs4bs5@exprs[, ch2] > yel_cuts)]
+        #     others_nk <- others[which(!(bs4bs5@exprs[, ch2] > yel_cuts))]
+        #     ptt <- "2b"
+        #
+        # }
+    } else {
+
+        yel_cuts <- min(yel.bhlin_peaks$Peaks) + 0.5 * sd(bs4bs5@exprs[, ch2])
+        bs5_pot <- bs4bs5[which(bs4bs5@exprs[, ch2] > yel_cuts), ]
+        others_pot <- others[which(bs4bs5@exprs[, ch2] > yel_cuts)]
+        others_nk <- others[which(!(bs4bs5@exprs[, ch2] > yel_cuts))]
+        ptt <- "3"
+
+    }
+
+    abline(h = yel_cuts, lty = 2, col = 2)
+    # points(bs5_pot@exprs[, c(ch1, ch2)], pch = '.', col = 2) text(0, 2.5, paste('BS5', ptt, sep = ':'), col = 2)
+
+    if (to_retain == "refined") {
+        bs5s <- flowDensity::flowDensity(bs5_pot, channels = c(ch1, ch2), position = c(F, F),
+                                         ellip.gate = T, use.upper = c(T, T),
+                                         upper = c(T, T))
+        # plotting BS5
+        points(bs5s@filter, type = "l", col = 2, lwd = 2, lty = 4)
+        text(mean(bs5s@filter[, 1]), mean(bs5s@filter[, 2]), "Syn", col = 2)
+        bs5_reduced <- bs5_pot[which(!is.na(bs5s@flow.frame@exprs[, 1])), ]
+        bs5_pos <- others_pot[which(!is.na(bs5s@flow.frame@exprs[, 1]))]
+        others_nk2 <- others_pot[which(is.na(bs5s@flow.frame@exprs[, 1]))]
+
+    } else if (to_retain == "potential") {
+
+        text(mean(bs5_pot@exprs[, ch1]), mean(bs5_pot@exprs[, ch2]), "Syn", col = "red4")
+        bs5_reduced <- bs5_pot
+        bs5_pos <- others_pot
+        others_nk2 <- NA
+
+    } else stop("supply to_retain")
+
+
+    return(list(syn_reduced = bs5_reduced, others_nk = others_nk,
+                others_nk2 = others_nk2, syn_pos = bs5_pos))
+}

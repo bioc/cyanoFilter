@@ -2,7 +2,11 @@
 % Please edit documentation in R/plotting_functions.R
 \name{ggplotDens}
 \alias{ggplotDens}
+<<<<<<< HEAD
 \title{plots two channels of a flowframe.}
+=======
+\title{plots two channels of a flowframe. Note that, it takes some time to display the plot.}
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 \usage{
 ggplotDens(flowfile, channels, ...)
 }
@@ -17,6 +21,7 @@ ggplotDens(flowfile, channels, ...)
 a ggplot object
 }
 \description{
+<<<<<<< HEAD
 plots two channels of a flowframe.
 }
 \examples{
@@ -31,4 +36,7 @@ flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME')
 ggplotDens(flowfile_logtrans,
            channels = c("FSC.HLin", "RED.R.HLin"))
 
+=======
+plots two channels of a flowframe. Note that, it takes some time to display the plot.
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }

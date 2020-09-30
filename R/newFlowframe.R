@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 #' takes a flowframe, a group indicator and formulates another flowframe with group indicator as part of the
+=======
+#' takes a flowframes, a group indicator and formulates another flowframe with group indicator as part of the
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #' expression matrix of the new flowframe.
 #'
 #' @param flowfile flowframe after debris are removed.
@@ -10,6 +14,7 @@
 new_flowframe <- function(flowfile, group, togate) {
 
 
+<<<<<<< HEAD
   if(!is.null(togate)) {
 
     ddata <- data.frame(name = paste(togate, "Cluster", sep = "_"),
@@ -30,6 +35,14 @@ new_flowframe <- function(flowfile, group, togate) {
 
   }
 
+=======
+  ddata <- data.frame(name = paste(togate, "Cluster", sep = "_"),
+                      desc = paste("Cluster Group for", togate),
+                      range = max(group) - min(group),
+                      minRange = range(group)[1],
+                      maxRange = range(group)[2]
+                      )
+>>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
   ddata <- rbind(flowfile@parameters@data, ddata)
   row.names(ddata) <- c(row.names(flowfile@parameters@data),
                         paste("$P", length(row.names(flowfile@parameters@data))+1,
