@@ -15,14 +15,10 @@
 #' \item \strong{percentages -} percentage of cells in each cluster
 #' \item \strong{mus -} matrix of mean vectors for each cluster
 #' \item \strong{sigmas -} list of variance-covariance matrix for each cluster
-<<<<<<< HEAD
 #' \item \strong{full_flowframe -} flowframe with particles assigned to clusters based on calssifier.
 #' \item \strong{flowframe_proportion -} flowframe with probabilities of each cluster added as
 #'              columns to the expression matrix of the flowfile
 #'
-=======
-#' \item \strong{result -} flowframe with probabilities of each cluster added as columns to the expression matrix of the flowfile
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #' }
 #'
 #' @description separates BS4, BS5 and Debris population in a flowfile using an EM style algorithm.
@@ -33,10 +29,6 @@
 #'          function is used to compute the densities and only the probabilites of each point belonging to a cluster are returned as additional columns to the
 #'          expression matrix of \emph{result}.
 #'
-<<<<<<< HEAD
-=======
-#' @seealso \code{\link{celldebris_nc}}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #'
 #' @examples
 #'\donttest{
@@ -48,11 +40,7 @@
 #' flowfile_nona <- cyanoFilter::nona(x = flowfile)
 #' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-<<<<<<< HEAD
 #' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
-=======
-#' cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #'            type = 'estimate', y_toplot = "FSC.HLin")
 #'
 #' emapproach <- celldebris_emclustering(flowfile = cells_nonmargin$reducedflowframe,
@@ -71,10 +59,7 @@
 celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL, ncluster = 5,
                        min.itera = 20, classifier = 0.80) {
 
-<<<<<<< HEAD
       chs <- channels
-=======
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
       data <- flowCore::exprs(flowfile)[, channels]
 
       set.seed(123)
@@ -116,11 +101,7 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
       }
       if(anyNA(lambda)) { # one cluster has size 0, repeat algorithm
         #clusters.pres <- clusters.pres[!is.na(lambda[1,clusters.pres])]
-<<<<<<< HEAD
         return(celldebris_emclustering(flowfile, channels = chs, ncluster = ncluster - 1))
-=======
-        return( celldebris_emclustering(flowfile, ncluster = ncluster - 1))
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
     }
 
     # each cell should have probability 1
@@ -173,7 +154,6 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
     # full flow frame with indicator for particly type
     fflowframe <- methods::new("flowFrame", exprs = nexp_mat, parameters = paraa,
                                description = describe)
-<<<<<<< HEAD
     #classify particles based on desired probability
     grp <- cluster_assign(flowfile = fflowframe, classifier = classifier)
     #construct a new flowframe based on cut_off
@@ -189,12 +169,4 @@ celldebris_emclustering <- function(flowfile, channels, mu = NULL, sigma = NULL,
                 full_flowframe = fflowframe,
                 flowframe_proportion = fflowframe2,
                 plot = plott1))
-=======
-    cluster_plot(fflowframe, channels,
-                 mus = mu, tau = tau,
-                 classifier = classifier)
-
-    return(list(percentages = tau, mus = mu, sigmas = sigma,
-                  result = fflowframe))
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }

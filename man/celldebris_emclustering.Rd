@@ -4,7 +4,6 @@
 \alias{celldebris_emclustering}
 \title{identifies Synechococcus cyanobacteria cells and Debris in a flowfile using an EM style algorithm.}
 \usage{
-<<<<<<< HEAD
 celldebris_emclustering(
   flowfile,
   channels,
@@ -14,10 +13,6 @@ celldebris_emclustering(
   min.itera = 20,
   classifier = 0.8
 )
-=======
-celldebris_emclustering(flowfile, channels, mu = NULL, sigma = NULL,
-  ncluster = 5, min.itera = 20, classifier = 0.8)
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \arguments{
 \item{flowfile}{flowframe to be clustered.}
@@ -42,14 +37,10 @@ list containing; \itemize{
 \item \strong{percentages -} percentage of cells in each cluster
 \item \strong{mus -} matrix of mean vectors for each cluster
 \item \strong{sigmas -} list of variance-covariance matrix for each cluster
-<<<<<<< HEAD
 \item \strong{full_flowframe -} flowframe with particles assigned to clusters based on calssifier.
 \item \strong{flowframe_proportion -} flowframe with probabilities of each cluster added as
              columns to the expression matrix of the flowfile
 
-=======
-\item \strong{result -} flowframe with probabilities of each cluster added as columns to the expression matrix of the flowfile
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 }
 \description{
@@ -72,11 +63,7 @@ flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 flowfile_nona <- cyanoFilter::nona(x = flowfile)
 flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-<<<<<<< HEAD
 cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
-=======
-cells_nonmargin <- cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
            type = 'estimate', y_toplot = "FSC.HLin")
 
 emapproach <- celldebris_emclustering(flowfile = cells_nonmargin$reducedflowframe,
@@ -87,9 +74,3 @@ emapproach <- celldebris_emclustering(flowfile = cells_nonmargin$reducedflowfram
 
 
 }
-<<<<<<< HEAD
-=======
-\seealso{
-\code{\link{celldebris_nc}}
-}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a

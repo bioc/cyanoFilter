@@ -2,11 +2,7 @@
 % Please edit documentation in R/newFlowframe.R
 \name{new_flowframe}
 \alias{new_flowframe}
-<<<<<<< HEAD
 \title{takes a flowframe, a group indicator and formulates another flowframe with group indicator as part of the
-=======
-\title{takes a flowframes, a group indicator and formulates another flowframe with group indicator as part of the
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 expression matrix of the new flowframe.}
 \usage{
 new_flowframe(flowfile, group, togate)
@@ -19,10 +15,6 @@ new_flowframe(flowfile, group, togate)
 \item{togate}{channel detected to have more than one peak based on \code{\link{get_channel}}}
 }
 \description{
-<<<<<<< HEAD
 takes a flowframe, a group indicator and formulates another flowframe with group indicator as part of the
-=======
-takes a flowframes, a group indicator and formulates another flowframe with group indicator as part of the
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 expression matrix of the new flowframe.
 }

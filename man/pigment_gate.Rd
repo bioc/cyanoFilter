@@ -5,12 +5,7 @@
 \title{gates out or assign indicators to phytoplankton cells based on the expression of
 the measured pigments.}
 \usage{
-<<<<<<< HEAD
 pigment_gate(flowfile, pig_channels, ph = 0.05)
-=======
-pigment_gate(flowfile, pig_channels, ph = 0.05,
-  width_channel = "SSC.W")
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \arguments{
 \item{flowfile}{flowframe after debris are removed.}
@@ -19,23 +14,12 @@ pigment_gate(flowfile, pig_channels, ph = 0.05,
 
 \item{ph}{maximum peak height to be ignored. This allows ignoring of tiny peaks that could
 affect the gating process.}
-<<<<<<< HEAD
-=======
-
-\item{width_channel}{a second channel with only one peak present.}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \value{
 list containing; \itemize{
 \item \strong{full_flowframe -} flowframe containing only phytoplankton cells
-<<<<<<< HEAD
 \item \strong{phy_ind -} indicator for phytoplankton clusters found
 \item \strong{gated_channels -} pigment channels with more than one peak
-=======
-\item \strong{phy_pos_nk -} unidentified particle positions
-\item \strong{syn_pos -} phytoplankton cells positions
-\item \strong{phy_pos_nk2 -} other unidentified particle positions
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 }
 \description{
@@ -45,18 +29,5 @@ This function takes in a flowframe with debris removed and identifies
 \details{
 The function uses the \code{\link[flowDensity]{getPeaks}} and
          \code{\link[flowDensity]{deGate}} functions in the \emph{flowDensity} package to
-<<<<<<< HEAD
          identify peaks and identify cut-off points between these peaks.
-=======
-         identify peaks and identify cut-off points between these peaks. This function is
-         not designed to be called in isolation, if called in isolation an error will be
-         returned. It is preferably called on the results from \code{\link{debris_nc}} or
-         \code{\link{debris_inc}} function. A graph with horizontal
-         and vertical lines used in separating the populations is returned and
-         if \emph{to_retain = "refined"}, a circle made of dashed lines is drawn around
-         phytoplankton cell population points.
-}
-\seealso{
-
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }

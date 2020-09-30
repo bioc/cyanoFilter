@@ -4,7 +4,6 @@
 \alias{row_numbers}
 \title{returns the position of the cells below, above or between estimated gates}
 \usage{
-<<<<<<< HEAD
 row_numbers(flowframe, gates, ch)
 }
 \arguments{
@@ -13,16 +12,6 @@ row_numbers(flowframe, gates, ch)
 \item{gates}{cut point between the identified clusters}
 
 \item{ch}{gated channel}
-=======
-row_numbers(flowfile, gates, ch)
-}
-\arguments{
-\item{gates}{cut point between the identified clusters}
-
-\item{ch}{gated channel}
-
-\item{flowframe}{after debris are removed.}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \description{
 returns the position of the cells below, above or between estimated gates

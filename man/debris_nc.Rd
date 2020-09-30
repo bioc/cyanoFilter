@@ -39,7 +39,6 @@ The function uses the \code{\link[flowDensity]{getPeaks}} and
          A plot of both channels supplied with horizontal line separating
          debris from other cell populations is also returned.
 }
-<<<<<<< HEAD
 \examples{
 
 flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
@@ -56,8 +55,4 @@ debris_nc(flowframe = cells_nonmargin$reducedflowframe, ch_chlorophyll = "RED.B.
                             ch_p2 = "YEL.B.HLin",
                             ph = 0.05)
 
-=======
-\seealso{
-\code{\link{debris_inc}}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }

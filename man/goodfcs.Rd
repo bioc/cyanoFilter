@@ -4,12 +4,7 @@
 \alias{goodfcs}
 \title{indicates if measurement from a flowfile is good or bad.}
 \usage{
-<<<<<<< HEAD
 goodfcs(metafile, col_cpml = "CellspML", mxd_cellpML = 1000, mnd_cellpML = 50)
-=======
-goodfcs(metafile, col_cpml = "CellspML", mxd_cellpML = 1000,
-  mnd_cellpML = 50)
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \arguments{
 \item{metafile}{associated metafile to the supplied fcsfile. This is a csv file containig computed stats from the flow cytometer.}

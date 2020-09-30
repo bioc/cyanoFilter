@@ -4,7 +4,6 @@
 \alias{cellmargin}
 \title{Removes or assign indicators to margin events.}
 \usage{
-<<<<<<< HEAD
 cellmargin(
   flowframe,
   Channel = "SSC.W",
@@ -15,13 +14,6 @@ cellmargin(
 }
 \arguments{
 \item{flowframe}{Flowframe containing margin events to be filtered out}
-=======
-cellmargin(flow.frame, Channel = "SSC.W", type = c("manual",
-  "estimate"), cut = NULL, y_toplot = "FSC,HLin")
-}
-\arguments{
-\item{flow.frame}{Flowframe containing margin events to be filtered out}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 
 \item{Channel}{The channel on which margin events are. Defaults to SSC.W (side scatter width)}
 
@@ -33,11 +25,7 @@ user supplies a cut off point on the channel, 1 = not margin 0 = margin}
 \item{y_toplot}{channel on y-axis of plot with \emph{Channel} used to gate out margin events}
 }
 \value{
-<<<<<<< HEAD
 an object of cyanoFilter:MarginEvents class containing; \itemize{
-=======
-list containing; \itemize{
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 \item \strong{reducedflowframe -} flowframe without margin events
 \item \strong{fullflowframe -} flowframe with an Margin.Indicator added as an extra column added to the expression matrix
 to indicate which particles are margin events. 1 = not margin event, 0 = margin event
@@ -50,15 +38,10 @@ to indicate which particles are margin events. 1 = not margin event, 0 = margin 
 The function identifies margin events, i.e. cells that are too large for the flow cytometer to measure.
 }
 \details{
-<<<<<<< HEAD
 Users can either supply a cut-off point along the channel describing particle width
          or allow the function to estimate the cut-off point using the
          \code{\link[flowDensity]{deGate}} function from the \emph{flowDensity} package.
          A plot of channel against "FSC.HLin" is provided with a vertical line showing the
-=======
-Users can either supply a cut-off point along the channel describing particle width or allow the function to estimate the cut-off point using the
-         \code{\link[flowDensity]{deGate}} function from the \emph{flowDensity} package. A plot of channel against "FSC.HLin" is provided with a vertical line showing the
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
          cut-off point separating margin events from other cells.
 }
 \examples{
@@ -70,11 +53,7 @@ flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 flowfile_nona <- cyanoFilter::nona(x = flowfile)
 flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-<<<<<<< HEAD
 cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
-=======
-cellmargin(flow.frame = flowfile_logtrans, Channel = 'SSC.W',
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
            type = 'estimate', y_toplot = "FSC.HLin")
 
 

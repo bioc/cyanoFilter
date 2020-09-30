@@ -1,11 +1,7 @@
 ---
 title: "cyanoFilter"
 subtitle: "An Automated Framework for Identifying synechoccus type cyanobacteria population in Flow Cytometry"
-<<<<<<< HEAD
 author: "Olusoji O. D.,  Spaak J., Neyens T.,De Laender F., Aerts M."
-=======
-author: "Olusoji O. D., De Laender F., Spaak J., Neyens T., Aerts M."
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >

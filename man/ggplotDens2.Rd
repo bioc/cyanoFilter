@@ -2,11 +2,7 @@
 % Please edit documentation in R/plotting_functions.R
 \name{ggplotDens2}
 \alias{ggplotDens2}
-<<<<<<< HEAD
 \title{plots two channels of a flowframe with different colors for clusters identified.}
-=======
-\title{plots two channels of a flowframe. Note that, it takes some time to display the plot.}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 \usage{
 ggplotDens2(flowfile, channels, group, ...)
 }
@@ -23,9 +19,5 @@ ggplotDens2(flowfile, channels, group, ...)
 a ggplot object
 }
 \description{
-<<<<<<< HEAD
 plots two channels of a flowframe with different colors for clusters identified.
-=======
-plots two channels of a flowframe. Note that, it takes some time to display the plot.
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }

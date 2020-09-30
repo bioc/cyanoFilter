@@ -5,11 +5,8 @@
 #' @param ph maximum peak height to be ignored. This allows ignoring of tiny peaks that could
 #'           affect the gating process.
 #'
-<<<<<<< HEAD
 #'
 #'
-=======
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 #' @export get_channel
 
 get_channel <- function(flowfile, ch, ph) {

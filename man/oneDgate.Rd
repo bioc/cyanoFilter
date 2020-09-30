@@ -4,22 +4,13 @@
 \alias{oneDgate}
 \title{returns the labels stating the cluster of each row in a flowfile.}
 \usage{
-<<<<<<< HEAD
 oneDgate(flowfile, togate)
-=======
-oneDgate(flowfile, togate, width_channel)
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \arguments{
 \item{flowfile}{flowframe after debris are removed.}
 
 \item{togate}{channels detected to have more than one peak present. Provide by the
 \code{\link{get_channel}} function.}
-<<<<<<< HEAD
-=======
-
-\item{width_channel}{a second channel with only one peak present.}
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 }
 \description{
 returns the labels stating the cluster of each row in a flowfile.
