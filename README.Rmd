@@ -42,13 +42,12 @@ install(c("Biobase", "flowCore", "flowDensity", 'flowViz))
 
 The package comes with 2 internal datasets that we use for demonstrating the usage of the functions contained in the package. The **meta data** file contains *BS4* and *BS5* samples measured with a guava easyCyte HT series at 3 dilution levels (*2000*, *10000* and *20000*) each. The **FCS** file contains the flow cytometer channel measurements for one of these sample.
 
-install(c("Biobase", "flowCore", "flowDensity"))
+# Monoculture experiment
 
 ## Meta File Preprocessing
 
 ### The Good Measurements 
 
-<<<<<<< HEAD
 The **goodfcs()** is deigned to check the $cell/\mu$L of the meta file (normally csv) obtained from the flow cytometer and decide if the measurements in the FCS file can be trusted. This function is especially useful for flow cytometers that are not equipped to perform automated dilution. 
 
 ```{r the_csvs}
@@ -67,7 +66,6 @@ knitr::kable(metafile)
 
 Each row in the csv file corresponds to a measurement from two types of cyanobacteria cells carried out at one of three dilution levels. The columns contain information about the dilution level, the number of cells per micro-litre ($cell/\mu l$), number of particles measured and a unique identification code for each measurement. The *Sample.ID* column is structured in the format cyanobacteria_dilution. We extract the cyanobacteria part of this column into a new column and also rename the $cell/\mu l$ column  with the following code:
 
-<<<<<<< HEAD
 ```{r metafile1}
 #extract the part of the Sample.ID that corresponds to BS4 or BS5
 metafile <- metafile %>% dplyr::mutate(Sample.ID2 = 
@@ -85,9 +83,6 @@ To determine the appropriate data file to read from a FCM datafile, the desired 
 metafile <- metafile %>% mutate(Status = cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML", 
                                         mxd_cellpML = 1000, mnd_cellpML = 50)
                                 )
-
-metafile$Status <- cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML", 
-                                        mxd_cellpML = 1000, mnd_cellpML = 50)
 knitr::kable(metafile)
 ```
 
@@ -135,13 +130,6 @@ ggpairsDens(flowfile_nona, notToPlot = "TIME")
 ```
 
 We obtain Figure  above by using the **ggpairsDens()** function after removing all `NA` values from the expression matrix with the **nona()** function. There is a version of the function, **pairs_plot()** that produces standard base scatter plots also smoothed to indicate cell density.
-
-```{r logtrans, fig.cap="Panel plot for log-transformed channels for flowfile_logtrans. A bivariate kernel smoothed color density is used to indicate the cell density."}
-flowfile_nona <- nona(x = flowfile)
-pair_plot(flowfile_nona, notToPlot = "TIME")
-```
-
-We obtain Figure  above by using the **pair_plot()** function after removing all NA values from the expression matrix with the **nona()** function.
 
 ```{r logtrans, cache=TRUE, fig.cap="Panel plot for log-transformed channels for flowfile_logtrans. A bivariate kernel smoothed color density is used to indicate the cell density."}
 
@@ -237,6 +225,7 @@ The resulting object is a figure (Figure \@ref(fig:kdapproach)) and a list conta
 - *Cell_count*, the number of BS4 cells counted 
 - *Debris_Count*, the number of debris particles. 
 
+# Gating a bi-culture experiment
 
 # License
 
