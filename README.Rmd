@@ -27,7 +27,7 @@ Phytoplankton are primary producers responsible for about 50\% of global primary
 Run the `code` below to install the package and all its dependencies.
 
 ```{r cran-installation2, eval=FALSE}
-install.packages("cyanoFilter")
+remotes::install_github("https://github.com/fomotis/cyanoFilter")
 ```
 
 All dependencies both on **CRAN** and **bioconductor** should be installed when you install the package itself. However, do install the following needed **bioconductor** packages should you run into errors while attempting to use the functions in this package.
@@ -229,6 +229,6 @@ The resulting object is a figure (Figure \@ref(fig:kdapproach)) and a list conta
 
 # License
 
-This is a free to use package for anyone who has the need.
+This is a free to use package for anyone who has the need. However, users must adhere to the licensing agreement of some dependencies that require that their packages be used only for educational and research purposes.
 
 

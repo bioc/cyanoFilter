@@ -32,7 +32,7 @@ differentiating phytoplankton cells.
 Run the `code` below to install the package and all its dependencies.
 
 ``` r
-install.packages("cyanoFilter")
+remotes::install_github("https://github.com/fomotis/cyanoFilter")
 ```
 
 All dependencies both on **CRAN** and **bioconductor** should be
@@ -411,4 +411,7 @@ list containing the following:
 
 # License
 
-This is a free to use package for anyone who has the need.
+This is a free to use package for anyone who has the need. However,
+users must adhere to the licensing agreement of some dependencies that
+require that their packages be used only for educational and research
+purposes.
