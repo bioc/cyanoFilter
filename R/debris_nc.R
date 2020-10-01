@@ -26,7 +26,7 @@
 #'          debris from other cell populations is also returned.
 #'
 #' @examples
-#'
+#' \donttest{
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -40,6 +40,7 @@
 #' debris_nc(flowframe = cells_nonmargin$reducedflowframe, ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
+#' }
 #'
 #' @export debris_nc
 

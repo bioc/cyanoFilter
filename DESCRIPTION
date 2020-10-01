@@ -1,5 +1,5 @@
 Package: cyanoFilter
-Title: Phytoplankton Population Identification using pigment data
+Title: Phytoplankton Population Identification using Cell Pigment and Complexity Information
 Version: 0.1.4
 Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.be", role = c("aut", "cre")),
     person("Aerts", "Marc", email = "marc.aerts@uhasselt.be", role = "ctb"),
@@ -29,8 +29,7 @@ Imports:
     stats(>= 4.0.1),
     stringr(>= 1.4.0),
     utils(>= 4.0.1)
-RdMacros: Rdpack
-License: GPL-3
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0

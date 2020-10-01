@@ -1,12 +1,7 @@
 Version: 1.0
 
-<<<<<<< HEAD
 RestoreWorkspace: Default
 SaveWorkspace: Default
-=======
-RestoreWorkspace: No
-SaveWorkspace: No
->>>>>>> 74ebbc1f0b57e1f0410570dfc73e0a04247a1d3a
 AlwaysSaveHistory: Default
 
 EnableCodeIndexing: Yes
@@ -17,10 +12,6 @@ Encoding: UTF-8
 RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
-AutoAppendNewline: Yes
-StripTrailingWhitespace: Yes
-
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
-PackageRoxygenize: rd,collate,namespace

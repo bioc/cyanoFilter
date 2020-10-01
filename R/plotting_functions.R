@@ -54,6 +54,7 @@ pairs_plot <- function(x, notToPlot = c("TIME"), ...) {
 #' @param ... not used at the moment
 #'
 #' @examples
+#' \donttest{
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -64,7 +65,7 @@ pairs_plot <- function(x, notToPlot = c("TIME"), ...) {
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' ggplotDens(flowfile_logtrans,
 #'            channels = c("FSC.HLin", "RED.R.HLin"))
-#'
+#' }
 #' @return a ggplot object
 #'
 #' @export ggplotDens
@@ -197,8 +198,6 @@ ggplotDens2 <- function(flowfile, channels, group, ...) {
 #' ggpairsDens(flowfile = fin$flowframe_proportion,
 #'                     channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin", "FSC.HLin"),
 #'                     cluster_var = "Clusters")
-#'
-#'
 #'
 #'  }
 #'

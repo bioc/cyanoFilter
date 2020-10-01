@@ -31,7 +31,7 @@
 #'          identify peaks and identify cut-off points between these peaks.
 #'
 #'  @examples
-#'
+#' \donttest{
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
@@ -49,7 +49,7 @@
 #' phyto_filter(flowfile = cells_nodebris$syn,
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
-#'
+#' }
 #'
 #'
 #' @export phyto_filter
