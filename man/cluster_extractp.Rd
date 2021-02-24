@@ -2,17 +2,51 @@
 % Please edit documentation in R/cluster_extract.R
 \name{cluster_extractp}
 \alias{cluster_extractp}
-\title{takes a flowframe, name of cluster column and extracts part of flowframe that makes up proportion.}
+\title{takes a flowframe, name of cluster column and extracts part of flowframe 
+that makes up proportion.}
 \usage{
 cluster_extractp(flowfile, cluster_var = "Clusters", proportion = 0.8)
 }
 \arguments{
 \item{flowfile}{flowframe after debris are removed.}
 
-\item{cluster_var}{column name in expression matrix containing the cluter indicators}
+\item{cluster_var}{column name in expression matrix containing the 
+cluter indicators}
 
-\item{proportion}{value between 0 and 1 indicating percentage of the total particles wanted}
+\item{proportion}{value between 0 and 1 indicating percentage of the total 
+particles wanted}
+}
+\value{
+a list containing \itemize{
+\item \strong{particles_per_cluster}
+\item \strong{clusters_proportion}
+\item \strong{flowfile_proportion}
+}
 }
 \description{
-takes a flowframe, name of cluster column and extracts part of flowframe that makes up proportion.
+takes a flowframe, name of cluster column and extracts part of flowframe 
+that makes up proportion.
+}
+\examples{
+
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                             package = "cyanoFilter",
+                             mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+                                         c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+                              Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
+fin <- phyto_filter(flowfile = reducedFlowframe(cells_nonmargin),
+              pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
+              com_channels = c("FSC.HLin", "SSC.HLin"))
+
+cluster_extractp(flowfile = reducedFlowframe(fin),
+    cluster_var = "Clusters",
+    proportion = 0.80)
 }

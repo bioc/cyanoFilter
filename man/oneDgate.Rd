@@ -9,9 +9,26 @@ oneDgate(flowfile, togate)
 \arguments{
 \item{flowfile}{flowframe after debris are removed.}
 
-\item{togate}{channels detected to have more than one peak present. Provide by the
-\code{\link{get_channel}} function.}
+\item{togate}{channels detected to have more than one peak present. 
+Provide by the \code{\link{get_channel}} function.}
+}
+\value{
+list of indicators for cells above and below an estimated threshold
 }
 \description{
 returns the labels stating the cluster of each row in a flowfile.
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+oneDgate(flowfile, 'RED.B.HLin')
+
 }

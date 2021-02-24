@@ -9,34 +9,37 @@ cluster_extract(flowfile, cluster_var = "Clusters", cluster_val = NULL)
 \arguments{
 \item{flowfile}{flowframe containing cluster indicators as well}
 
-\item{cluster_var}{column name in expression matrix containing the cluter indicators, cannot be NULL.}
+\item{cluster_var}{column name in expression matrix containing the cluter 
+indicators, cannot be NULL.}
 
 \item{cluster_val}{cluster number, cannot be NULL.}
+}
+\value{
+flowFrame containing the clusters
 }
 \description{
 extract clusters based on supplied cluster indicator
 }
 \examples{
 
-flowfile_path <- system.file("extdata", "B4_18_1.fcs", package = "cyanoFilter",
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                             package = "cyanoFilter",
                              mustWork = TRUE)
 flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
                                transformation = FALSE, emptyValue = FALSE,
-                               dataset = 1) #FCS file contains only one data object
+                               dataset = 1) 
 flowfile_nona <- cyanoFilter::nona(x = flowfile)
 flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
-flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+                                         c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+                              Channel = 'SSC.W',
            type = 'estimate', y_toplot = "FSC.HLin")
-cells_nodebris <- debris_nc(flowframe = cells_nonmargin$reducedflowframe,
-                            ch_chlorophyll = "RED.B.HLin",
-                            ch_p2 = "YEL.B.HLin",
-                            ph = 0.05)
-fin <- phyto_filter(flowfile = cells_nodebris$syn,
+fin <- phyto_filter(flowfile = reducedFlowframe(cells_nonmargin),
               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
               com_channels = c("FSC.HLin", "SSC.HLin"))
 
-cluster_extract(flowfile = fin$flowframe_proportion,
+cluster_extract(flowfile = reducedFlowframe(fin),
     cluster_var = "Clusters",
     cluster_val = 1)
 

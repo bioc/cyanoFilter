@@ -1,37 +1,46 @@
 Package: cyanoFilter
-Title: Phytoplankton Population Identification using Cell Pigment and Complexity Information
+Type: Package
+Title: Phytoplankton Population Identification using Cell Pigment and 
+    Complexity Information
 Version: 0.1.4
-Authors@R: c(person("Oluwafemi", "Olusoji", email = "oluwafemi.olusoji@uhasselt.be", role = c("aut", "cre")),
+Authors@R: c(person("Oluwafemi", "Olusoji", 
+    email = "oluwafemi.olusoji@uhasselt.be", 
+    role = c("cre", "aut")),
     person("Aerts", "Marc", email = "marc.aerts@uhasselt.be", role = "ctb"),
-    person("Delaender", "Frederik", email = "frederik.delaender@unamur.be", role = "ctb"),
-    person("Neyens", "Thomas", email = "thomas.neyens@uhasselt.be", role = "ctb"),
+    person("Delaender", "Frederik", email = "frederik.delaender@unamur.be", 
+    role = "ctb"),
+    person("Neyens", "Thomas", email = "thomas.neyens@uhasselt.be", 
+    role = "ctb"),
     person("Spaak", "jurg", email = "jurg.spaak@unamur.be", role = "aut"))
-Maintainer: Oluwafemi Olusoji <oluwafemi.olusoji@uhasselt.be>
-Description: An approach to filter out and/or identify phytoplankton cells from all particles measured via flow cytometry.
-    It combines pigment and cell complexity information with gating techniques developed by Mehrnoush, M. et al. (2015) <doi:10.1093/bioinformatics/btu677> 
-    in the 'flowDensity' package to identify and separate these phytoplankton population.
-    Aside the gating techniques in the 'flowDensity' package, an EM style clustering technique
-    is also developed to identify these phytoplankton population as well.
+Description: An approach to filter out and/or identify phytoplankton cells from 
+    all particles measured via flow cytometry pigment and cell complexity 
+    information. It does this using a sequence of one-dimensional gating on 
+    predefined channels measuring certain pigmentation and complexity. The package is especially
+    tuned for cyanobacteria, but will work fone for plankton communities that consist of specialists.
 URL: https://github.com/fomotis/cyanoFilter
 BugReports: https://github.com/fomotis/cyanoFilter/issues
-Depends: R(>= 4.0.0)
+Depends: R(>= 4.1.0), Biobase(>= 2.48.0)
 Imports: 
-    Biobase(>= 2.48.0),
     flowCore(>= 2.0.1),
-    flowDensity (>= 1.22.0),
+    flowDensity(>= 1.22.0),
     ggplot2(>= 3.3.2),
     GGally(>= 2.0.0),
     graphics(>= 4.0.1),
     grDevices(>= 4.0.1),
     methods(>= 4.0.1),
-    RColorBrewer(>= 1.1-2),
-    Rdpack(>= 1.0.0),
     stats(>= 4.0.1),
-    stringr(>= 1.4.0),
     utils(>= 4.0.1)
 License: MIT + file LICENSE
+biocViews: FlowCytometry, Clustering, OneChannel
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
-Suggests: dplyr, magrittr, knitr, rmarkdown, tidyr
+RoxygenNote: 7.1.1
+Suggests: 
+    dplyr,
+    magrittr,
+    knitr,
+    stringr,
+    rmarkdown,
+    tidyr
 VignetteBuilder: knitr
+Config/testthat/edition: 3

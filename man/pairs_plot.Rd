@@ -2,7 +2,8 @@
 % Please edit documentation in R/plotting_functions.R
 \name{pairs_plot}
 \alias{pairs_plot}
-\title{produces a scatter plot of the expression matrix of a flowframe. Note that, it takes some time to display the plot.}
+\title{produces a scatter plot of the expression matrix of a flowframe. Note that, 
+it takes some time to display the plot.}
 \usage{
 pairs_plot(x, notToPlot = c("TIME"), ...)
 }
@@ -13,6 +14,27 @@ pairs_plot(x, notToPlot = c("TIME"), ...)
 
 \item{...}{other arguments. Not used at the moment}
 }
+\value{
+a plot object
+}
 \description{
-produces a scatter plot of the expression matrix of a flowframe. Note that, it takes some time to display the plot.
+produces a scatter plot of the expression matrix of a flowframe. Note that, 
+it takes some time to display the plot.
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+              package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+                      c('SSC.W', 'TIME'))
+pairs_plot(flowfile_logtrans,
+           notToPlot = c("TIME", "SSC.W",
+           "SSC.HLin", "NIR.R.HLin", 
+           "FSC.HLin"))  
+           
 }

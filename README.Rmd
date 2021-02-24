@@ -35,7 +35,7 @@ All dependencies both on **CRAN** and **bioconductor** should be installed when 
 ```{r cran-installation, eval=FALSE}
 install.packages("BiocManager")
 library(BiocManager)
-install(c("Biobase", "flowCore", "flowDensity", 'flowViz))
+install(c("Biobase", "flowCore", "flowDensity"))
 ```
 
 # Usage
@@ -52,6 +52,7 @@ The **goodfcs()** is deigned to check the $cell/\mu$L of the meta file (normally
 
 ```{r the_csvs}
 library(flowCore)
+library(flowDensity)
 library(cyanoFilter)
 #internally contained datafile in cyanoFilter
 metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", 
@@ -190,7 +191,7 @@ To identify debris, we leverage on the presence of chlorophyll *a*
 
 ```{r Debris, fig.cap="Smoothed Scatterplot of measured chlorophyll *a* channel (RED.B.HLin) and phycoerythrin channel (YEL.B.HLin). The red lines are the estimated minimum intersection points between the detected peaks."}
 
-cells_nodebris <-  debris_nc(flowframe = flowfile_marginout$reducedflowframe, 
+cells_nodebris <-  debris_nc(flowframe = reducedFlowframe(flowfile_marginout), 
                              ch_chlorophyll = "RED.B.HLin", ch_p2 = "YEL.B.HLin",
                              ph = 0.05)
 plot(cells_nodebris)
@@ -211,7 +212,7 @@ We conceptualized the division of cells into clusters in two ways in cyanoFilter
 
 ```{r kdapproach, fig.cap="Smoothed Scatterplot of all channels used in the gating process."}
 
-bs4_gate1 <- phyto_filter(flowfile = cells_nodebris$syn,
+bs4_gate1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
                pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
                com_channels = c("FSC.HLin", "SSC.HLin"))
 
@@ -229,6 +230,6 @@ The resulting object is a figure (Figure \@ref(fig:kdapproach)) and a list conta
 
 # License
 
-This is a free to use package for anyone who has the need. However, users must adhere to the licensing agreement of some dependencies that require that their packages be used only for educational and research purposes.
+This is a free to use package for anyone who has the need. However, users must adhere to the licensing agreement of `flowDensity` that require that their packages be used only for educational and research purposes.
 
 

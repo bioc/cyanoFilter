@@ -2,7 +2,8 @@
 % Please edit documentation in R/newFlowframe2.R
 \name{new_flowframe2}
 \alias{new_flowframe2}
-\title{takes a list of flowframes or a flowSet with similar annotations but different expression matrices and stacks them.}
+\title{takes a list of flowframes or a flowSet with similar annotations but 
+different expression matrices and stacks them.}
 \usage{
 new_flowframe2(flowframes, mode = c("list", "set"))
 }
@@ -11,6 +12,24 @@ new_flowframe2(flowframes, mode = c("list", "set"))
 
 \item{mode}{the type of object flowframe is. Can either be "list" or "set".}
 }
+\value{
+flowframe with indicators for particle cluster
+}
 \description{
-takes a list of flowframes or a flowSet with similar annotations but different expression matrices and stacks them.
+takes a list of flowframes or a flowSet with similar annotations but 
+different expression matrices and stacks them.
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+oneDgate(flowfile, 'RED.B.HLin')
+
 }

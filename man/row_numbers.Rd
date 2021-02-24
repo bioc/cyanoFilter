@@ -13,6 +13,23 @@ row_numbers(flowframe, gates, ch)
 
 \item{ch}{gated channel}
 }
+\value{
+a numeric vector
+}
 \description{
 returns the position of the cells below, above or between estimated gates
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+oneDgate(flowfile, 'RED.B.HLin')
+
 }

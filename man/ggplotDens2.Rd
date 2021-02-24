@@ -2,16 +2,19 @@
 % Please edit documentation in R/plotting_functions.R
 \name{ggplotDens2}
 \alias{ggplotDens2}
-\title{plots two channels of a flowframe with different colors for clusters identified.}
+\title{plots two channels of a flowframe with different colors for clusters 
+ identified.}
 \usage{
 ggplotDens2(flowfile, channels, group, ...)
 }
 \arguments{
 \item{flowfile}{flowframe to be plotted}
 
-\item{channels}{a character vector of length 2, must contain channel names in the flowfile.}
+\item{channels}{a character vector of length 2, must contain channel names 
+in the flowfile.}
 
-\item{group}{cluster groups. must be equal to the number of particles in the flow cytometer.}
+\item{group}{cluster groups. must be equal to the number of particles in the 
+flow cytometer.}
 
 \item{...}{not used at the moment}
 }
@@ -19,5 +22,32 @@ ggplotDens2(flowfile, channels, group, ...)
 a ggplot object
 }
 \description{
-plots two channels of a flowframe with different colors for clusters identified.
+plots two channels of a flowframe with different colors for clusters 
+ identified.
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, 
+                               emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+                      c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+                              Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
+cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+                            ch_chlorophyll = "RED.B.HLin",
+                            ch_p2 = "YEL.B.HLin",
+                            ph = 0.05)
+cct <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+              pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
+              com_channels = c("FSC.HLin", "SSC.HLin"))
+ggplotDens2(reducedFlowframe(cct), 
+c("RED.B.HLin", "YEL.B.HLin"),
+group = "Clusters")
 }

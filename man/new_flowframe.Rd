@@ -2,7 +2,8 @@
 % Please edit documentation in R/newFlowframe.R
 \name{new_flowframe}
 \alias{new_flowframe}
-\title{takes a flowframe, a group indicator and formulates another flowframe with group indicator as part of the
+\title{takes a flowframe, a group indicator and formulates another flowframe with 
+group indicator as part of the
 expression matrix of the new flowframe.}
 \usage{
 new_flowframe(flowfile, group, togate)
@@ -12,9 +13,28 @@ new_flowframe(flowfile, group, togate)
 
 \item{group}{cluster group to be added to the expression matrix}
 
-\item{togate}{channel detected to have more than one peak based on \code{\link{get_channel}}}
+\item{togate}{channel detected to have more than one peak based on 
+\code{\link{get_channel}}}
+}
+\value{
+flowframe with indicators for particle cluster
 }
 \description{
-takes a flowframe, a group indicator and formulates another flowframe with group indicator as part of the
+takes a flowframe, a group indicator and formulates another flowframe with 
+group indicator as part of the
 expression matrix of the new flowframe.
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+oneDgate(flowfile, 'RED.B.HLin')
+
 }

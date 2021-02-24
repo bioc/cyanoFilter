@@ -2,7 +2,8 @@
 % Please edit documentation in R/getChannels.R
 \name{get_channel}
 \alias{get_channel}
-\title{returns the channel with more than one peak present. It returns NA if there is only one peak present.}
+\title{returns the channel with more than one peak present. 
+It returns NA if there is only one peak present.}
 \usage{
 get_channel(flowfile, ch, ph)
 }
@@ -11,9 +12,28 @@ get_channel(flowfile, ch, ph)
 
 \item{ch}{channel to be checked for multiple peaks.}
 
-\item{ph}{maximum peak height to be ignored. This allows ignoring of tiny peaks that could
+\item{ph}{maximum peak height to be ignored. This allows 
+ignoring of tiny peaks that could
 affect the gating process.}
 }
+\value{
+name of channel with more than one peak
+
+ @examples 
+ flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, 
+                               emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+get_channel(flowfile_logtrans, 'RED.B.HLin', 0.05)
+}
 \description{
-returns the channel with more than one peak present. It returns NA if there is only one peak present.
+returns the channel with more than one peak present. 
+It returns NA if there is only one peak present.
 }

@@ -2,7 +2,8 @@
 % Please edit documentation in R/pigment_gate.R
 \name{pigment_gate}
 \alias{pigment_gate}
-\title{gates out or assign indicators to phytoplankton cells based on the expression of
+\title{gates out or assign indicators to phytoplankton cells based 
+on the expression of
 the measured pigments.}
 \usage{
 pigment_gate(flowfile, pig_channels, ph = 0.05)
@@ -10,9 +11,11 @@ pigment_gate(flowfile, pig_channels, ph = 0.05)
 \arguments{
 \item{flowfile}{flowframe after debris are removed.}
 
-\item{pig_channels}{flowcytometer channels measuring phytoplankton pigmentations.}
+\item{pig_channels}{flowcytometer channels measuring phytoplankton 
+pigmentations.}
 
-\item{ph}{maximum peak height to be ignored. This allows ignoring of tiny peaks that could
+\item{ph}{maximum peak height to be ignored. This allows ignoring of 
+tiny peaks that could
 affect the gating process.}
 }
 \value{
@@ -23,11 +26,31 @@ list containing; \itemize{
 }
 }
 \description{
-This function takes in a flowframe with debris removed and identifies
+This function takes in a flowframe with debris removed and 
+             identifies
              phytoplankton cell population in the provided frame.
 }
 \details{
 The function uses the \code{\link[flowDensity]{getPeaks}} and
-         \code{\link[flowDensity]{deGate}} functions in the \emph{flowDensity} package to
-         identify peaks and identify cut-off points between these peaks.
+         \code{\link[flowDensity]{deGate}} functions in the 
+         \emph{flowDensity}  package to identify peaks and identify cut-off 
+         points between these peaks.
+}
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+pigment_gate(flowfile = flowfile_logtrans,
+pig_channels = c("RED.B.HLin", "YEL.B.HLin",
+                    "FSC.HLin", "RED.R.HLin"),
+ph = 0.06)
+
+
 }

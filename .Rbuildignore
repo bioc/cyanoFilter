@@ -1,5 +1,6 @@
 ^.*\.Rproj$
 ^.*\.Renviron$
+^.*\.RData$
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
@@ -7,5 +8,6 @@
 ^README\_cache$
 ^doc$
 ^Meta$
+^\.github$
 ^\.travis\.yml$
 ^cran-comments\.md$
