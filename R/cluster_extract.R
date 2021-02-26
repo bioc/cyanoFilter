@@ -45,7 +45,7 @@ cluster_extract <- function(flowfile,
 
   } else {
 
-          return(flowfile[flowfile@exprs[, cluster_var] %in% cluster_val, ])
+    return(flowfile[flowfile@exprs[, cluster_var] %in% cluster_val, ])
 
   }
 
@@ -94,7 +94,7 @@ cluster_extract <- function(flowfile,
 
 
 cluster_extractp <- function(flowfile, cluster_var = "Clusters", 
-                             proportion = 0.80) {
+  proportion = 0.80) {
 
   if(is.null(proportion)) {
 

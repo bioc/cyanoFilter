@@ -15,3 +15,19 @@ reduced Flowframe method for MarginEvents
 \description{
 accesor method for reduced flowframe (MarginEvent class)
 }
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+                  package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
+reducedFlowframe(cells_nonmargin)
+}

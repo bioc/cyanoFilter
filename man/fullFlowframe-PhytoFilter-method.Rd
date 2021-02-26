@@ -15,3 +15,27 @@ fullFlowframe method for PhytoFilter
 \description{
 accesor method for reduced flowframe(PhytoFilter class)
 }
+\examples{
+flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+package = "cyanoFilter",
+              mustWork = TRUE)
+flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+                               transformation = FALSE, 
+                               emptyValue = FALSE,
+                               dataset = 1) 
+flowfile_nona <- cyanoFilter::nona(x = flowfile)
+flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+                      c('SSC.W', 'TIME'))
+cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+                              Channel = 'SSC.W',
+           type = 'estimate', y_toplot = "FSC.HLin")
+cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+                            ch_chlorophyll = "RED.B.HLin",
+                            ch_p2 = "YEL.B.HLin",
+                            ph = 0.05)
+phy1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+              pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
+              com_channels = c("FSC.HLin", "SSC.HLin"))
+fullFlowframe(phy1)
+}

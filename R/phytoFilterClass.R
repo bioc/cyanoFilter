@@ -39,6 +39,29 @@ PhytoFilter <- setClass('PhytoFilter',
 #' @param gated_channels the names of channels with multiple peaks 
 #' @param channels the names of all channels supplied to the function
 #' @return object of class PhytoFilter
+#' 
+#'@examples
+#'  flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#' package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, 
+#'                                emptyValue = FALSE,
+#'                                dataset = 1) 
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+#'                       c('SSC.W', 'TIME'))
+#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#'                               Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#'                             ch_chlorophyll = "RED.B.HLin",
+#'                             ch_p2 = "YEL.B.HLin",
+#'                             ph = 0.05)
+#' phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
+#'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #' @export PhytoFilter
 PhytoFilter <- function(fullflowframe, flowframe_proportion, 
                         clusters_proportion, particles_per_cluster,
@@ -67,6 +90,29 @@ setGeneric("fullFlowframe", function(x){
 #' accesor method for reduced flowframe(PhytoFilter class)
 #' @param x an object of class PhytoFilter
 #' @return fullFlowframe method for PhytoFilter
+#' @examples 
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#' package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, 
+#'                                emptyValue = FALSE,
+#'                                dataset = 1) 
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+#'                       c('SSC.W', 'TIME'))
+#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#'                               Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#'                             ch_chlorophyll = "RED.B.HLin",
+#'                             ch_p2 = "YEL.B.HLin",
+#'                             ph = 0.05)
+#' phy1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
+#'               com_channels = c("FSC.HLin", "SSC.HLin"))
+#' fullFlowframe(phy1)
 #' @export
 
 setMethod("fullFlowframe", "PhytoFilter", 
@@ -84,6 +130,29 @@ setGeneric("reducedFlowframe", function(x){
 #' accesor method for reduced flowframe(PhytoFilter class)
 #' @param x an object of class PhytoFilter
 #' @return reduced flowFrame method for PhytoFilter
+#' #' @examples 
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#' package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, 
+#'                                emptyValue = FALSE,
+#'                                dataset = 1) 
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+#'                       c('SSC.W', 'TIME'))
+#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#'                               Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#'                             ch_chlorophyll = "RED.B.HLin",
+#'                             ch_p2 = "YEL.B.HLin",
+#'                             ph = 0.05)
+#' phy1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
+#'               com_channels = c("FSC.HLin", "SSC.HLin"))
+#' reducedFlowframe(phy1)
 #' @export
 
 setMethod("reducedFlowframe", "PhytoFilter", 
@@ -254,6 +323,7 @@ setMethod("summary", "PhytoFilter",
 #' @slot y_toplot object of class character representing plot variable 
 #' @slot cut object of class numberic representing estimated inflection point or
 #'           supplied cut-off point 
+#'           
 #' @export MarginEvents
 
 MarginEvents <- setClass('MarginEvents',
@@ -280,6 +350,21 @@ MarginEvents <- setClass('MarginEvents',
 #' @param y_toplot another channel to use in a bivariate plot
 #' @param cut the cut-off point estimated or supplied.
 #' @return object of class MarginEvents
+#' 
+#' @examples
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#'                  package = "cyanoFilter",
+#'                  mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1)
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+#' cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' 
+#' 
 #' @export MarginEvents
 
 MarginEvents <- function(fullflowframe, reducedflowframe, 
@@ -298,17 +383,47 @@ MarginEvents <- function(fullflowframe, reducedflowframe,
   
 }
 
-#' accesor method for reduced flowframe (MarginEvent class)
+#' accesor method for the fullflowframe (MarginEvent class)
 #' @param x an object of class MarginEvents
 #' @return full Flowframe method for MarginEvents
+#' @examples
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#'                   package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1) 
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+#' c('SSC.W', 'TIME'))
+#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' fullFlowframe(cells_nonmargin)
 #' @export
 
 setMethod("fullFlowframe", "MarginEvents", 
-          function(x) { x@fullFlowframe })
+          function(x) { x@fullflowframe })
 
 #' accesor method for reduced flowframe (MarginEvent class)
 #' @param x an object of class MarginEvents
 #' @return reduced Flowframe method for MarginEvents
+#' @examples 
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#'                   package = "cyanoFilter",
+#'               mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1) 
+#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
+#' c('SSC.W', 'TIME'))
+#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' reducedFlowframe(cells_nonmargin)
 #' @export
 
 setMethod("reducedFlowframe", "MarginEvents", 
