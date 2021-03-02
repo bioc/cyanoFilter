@@ -48,7 +48,13 @@ metadata <- system.file("extdata", "2019-03-25_Rstarted.csv",
 metafile <- read.csv(metadata, skip = 7, stringsAsFactors = FALSE, 
   check.names = TRUE)
 #columns containing dilution, $\mu l$ and id information
-metafile <- metafile[, c(1:3, 6:8)] 
+metafile <- metafile %>% 
+  dplyr::select(Sample.Number, 
+                Sample.ID,
+                Number.of.Events,
+                Dilution.Factor,
+                Original.Volume,
+                Cells.L)
 ```
 
 Each row in the csv file corresponds to a measurement from two types of cyanobacteria cells carried out at one of three dilution levels. The columns contain information about the dilution level, the number of cells per micro-litre ($cell/\mu l$), number of particles measured and a unique identification code for each measurement. The *Sample.ID* column is structured in the format cyanobacteria_dilution. We extract the cyanobacteria part of this column into a new column and also rename the $cell/\mu l$ column  with the following code:
