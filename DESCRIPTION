@@ -1,7 +1,7 @@
 Package: cyanoFilter
 Type: Package
-Title: Phytoplankton Population Identification using Cell Pigment and 
-    Complexity Information
+Title: Phytoplankton Population Identification using Cell Pigmentation and/or
+    Complexity
 Version: 0.99.4
 Authors@R: c(person("Oluwafemi", "Olusoji", 
     email = "oluwafemi.olusoji@uhasselt.be", 
@@ -14,9 +14,10 @@ Authors@R: c(person("Oluwafemi", "Olusoji",
     person("Spaak", "jurg", email = "jurg.spaak@unamur.be", role = "aut"))
 Description: An approach to filter out and/or identify phytoplankton cells from 
     all particles measured via flow cytometry pigment and cell complexity 
-    information. It does this using a sequence of one-dimensional gating on 
-    predefined channels measuring certain pigmentation and complexity. The package is especially
-    tuned for cyanobacteria, but will work fone for plankton communities that consist of specialists.
+    information. It does this using a sequence of one-dimensional gates on 
+    pre-defined channels measuring certain pigmentation and complexity. The package is especially
+    tuned for cyanobacteria, but will work fine for phytoplankton communities where there is at least
+    one cell characteristic that differentiates every phytoplankton in the community.
 URL: https://github.com/fomotis/cyanoFilter
 BugReports: https://github.com/fomotis/cyanoFilter/issues
 Depends: R(>= 4.1.0), Biobase(>= 2.48.0)
