@@ -9,6 +9,7 @@ dplyr
 stringr
 forcats
 flowCore
+flowDensity
 BiocGenerics
 Biobase
 cyanoFilter

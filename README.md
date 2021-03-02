@@ -43,7 +43,7 @@ while attempting to use the functions in this package.
 ``` r
 install.packages("BiocManager")
 library(BiocManager)
-install(c("Biobase", "flowCore", "flowDensity", 'flowViz))
+install(c("Biobase", "flowCore", "flowDensity"))
 ```
 
 # Usage
@@ -61,14 +61,16 @@ these sample.
 
 ### The Good Measurements
 
-The **goodfcs()** is deigned to check the \(cell/\mu\)L of the meta file
-(normally csv) obtained from the flow cytometer and decide if the
+The **goodfcs()** is deigned to check the *c**e**l**l*/*μ*L of the meta
+file (normally csv) obtained from the flow cytometer and decide if the
 measurements in the FCS file can be trusted. This function is especially
 useful for flow cytometers that are not equipped to perform automated
 dilution.
 
 ``` r
+library(tidyverse)
 library(flowCore)
+library(flowDensity)
 library(cyanoFilter)
 #internally contained datafile in cyanoFilter
 metadata <- system.file("extdata", "2019-03-25_Rstarted.csv", 
@@ -82,7 +84,7 @@ knitr::kable(metafile)
 ```
 
 | Sample.Number | Sample.ID  | Number.of.Events | Dilution.Factor | Original.Volume |   Cells.L |
-| ------------: | :--------- | ---------------: | --------------: | --------------: | --------: |
+|--------------:|:-----------|-----------------:|----------------:|----------------:|----------:|
 |             1 | BS4\_20000 |             6918 |           20000 |              10 |  62.02270 |
 |             2 | BS4\_10000 |             6591 |           10000 |              10 | 116.76311 |
 |             3 | BS4\_2000  |             6508 |            2000 |              10 | 517.90008 |
@@ -93,11 +95,11 @@ knitr::kable(metafile)
 Each row in the csv file corresponds to a measurement from two types of
 cyanobacteria cells carried out at one of three dilution levels. The
 columns contain information about the dilution level, the number of
-cells per micro-litre (\(cell/\mu l\)), number of particles measured and
-a unique identification code for each measurement. The *Sample.ID*
-column is structured in the format cyanobacteria\_dilution. We extract
-the cyanobacteria part of this column into a new column and also rename
-the \(cell/\mu l\) column with the following code:
+cells per micro-litre (*c**e**l**l*/*μ**l*), number of particles
+measured and a unique identification code for each measurement. The
+*Sample.ID* column is structured in the format cyanobacteria\_dilution.
+We extract the cyanobacteria part of this column into a new column and
+also rename the *c**e**l**l*/*μ**l* column with the following code:
 
 ``` r
 #extract the part of the Sample.ID that corresponds to BS4 or BS5
@@ -111,10 +113,10 @@ names(metafile)[which(stringr::str_detect(names(metafile), "Cells."))] <- "Cells
 ### Good Measurements
 
 To determine the appropriate data file to read from a FCM datafile, the
-desired minimum, maximum and column containing the \(cell\mu l\) values
-are supplied to the **goodfcs()** function. The code below demonstrates
-the use of this function for a situation where the desired minimum and
-maximum for \(cell/\mu l\) is 50 and 1000 respectively.
+desired minimum, maximum and column containing the *c**e**l**l**μ**l*
+values are supplied to the **goodfcs()** function. The code below
+demonstrates the use of this function for a situation where the desired
+minimum and maximum for *c**e**l**l*/*μ**l* is 50 and 1000 respectively.
 
 ``` r
 metafile <- metafile %>% mutate(Status = cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML", 
@@ -124,7 +126,7 @@ knitr::kable(metafile)
 ```
 
 | Sample.Number | Sample.ID  | Number.of.Events | Dilution.Factor | Original.Volume |  CellspML | Sample.ID2 | Status |
-| ------------: | :--------- | ---------------: | --------------: | --------------: | --------: | :--------- | :----- |
+|--------------:|:-----------|-----------------:|----------------:|----------------:|----------:|:-----------|:-------|
 |             1 | BS4\_20000 |             6918 |           20000 |              10 |  62.02270 | BS4        | good   |
 |             2 | BS4\_10000 |             6591 |           10000 |              10 | 116.76311 | BS4        | good   |
 |             3 | BS4\_2000  |             6508 |            2000 |              10 | 517.90008 | BS4        | good   |
@@ -133,21 +135,21 @@ knitr::kable(metafile)
 |             6 | BS5\_2000  |             5829 |            2000 |              10 | 400.72498 | BS5        | good   |
 
 The function adds an extra column, *Status*, with entries *good* or
-*bad* to the metafile. Rows containing \(cell/\mu l\) values outside the
-desired minimum and maximum are labelled *bad*. Note that the *Status*
-column for the fourth row is labelled *bad*, because it has a
-\(cell/\mu l\) value outside the desired range.
+*bad* to the metafile. Rows containing *c**e**l**l*/*μ**l* values
+outside the desired minimum and maximum are labelled *bad*. Note that
+the *Status* column for the fourth row is labelled *bad*, because it has
+a *c**e**l**l*/*μ**l* value outside the desired range.
 
 ### Files to Retain
 
 Although any of the files labelled good can be read from the FCM file,
 the **retain()** function can help select either the file with the
-highest \(cell/\mu l\) or that with the smallest \(cell/\mu l\) value.
-To do this, one supplies the function with the status column,
-\(cell/\mu l\) column and the desired decision. The code below
-demonstrates this action for a case where we want to select the file
-with the maximum \(cell/\mu l\) from the good measurements for each
-unique sample ID.
+highest *c**e**l**l*/*μ**l* or that with the smallest
+*c**e**l**l*/*μ**l* value. To do this, one supplies the function with
+the status column, *c**e**l**l*/*μ**l* column and the desired decision.
+The code below demonstrates this action for a case where we want to
+select the file with the maximum *c**e**l**l*/*μ**l* from the good
+measurements for each unique sample ID.
 
 ``` r
 broken <- metafile %>% group_by(Sample.ID2) %>% nest()
@@ -161,20 +163,20 @@ knitr::kable(metafile)
 ```
 
 | Sample.Number | Sample.ID  | Number.of.Events | Dilution.Factor | Original.Volume |  CellspML | Sample.ID2 | Status | Retained |
-| ------------: | :--------- | ---------------: | --------------: | --------------: | --------: | :--------- | :----- | :------- |
-|             1 | BS4\_20000 |             6918 |           20000 |              10 |  62.02270 | BS4        | good   | No\!     |
-|             2 | BS4\_10000 |             6591 |           10000 |              10 | 116.76311 | BS4        | good   | No\!     |
+|--------------:|:-----------|-----------------:|----------------:|----------------:|----------:|:-----------|:-------|:---------|
+|             1 | BS4\_20000 |             6918 |           20000 |              10 |  62.02270 | BS4        | good   | No!      |
+|             2 | BS4\_10000 |             6591 |           10000 |              10 | 116.76311 | BS4        | good   | No!      |
 |             3 | BS4\_2000  |             6508 |            2000 |              10 | 517.90008 | BS4        | good   | Retain   |
-|             4 | BS5\_20000 |             5976 |           20000 |              10 |  48.31036 | BS5        | bad    | No\!     |
-|             5 | BS5\_10000 |             5844 |           10000 |              10 |  90.51666 | BS5        | good   | No\!     |
+|             4 | BS5\_20000 |             5976 |           20000 |              10 |  48.31036 | BS5        | bad    | No!      |
+|             5 | BS5\_10000 |             5844 |           10000 |              10 |  90.51666 | BS5        | good   | No!      |
 |             6 | BS5\_2000  |             5829 |            2000 |              10 | 400.72498 | BS5        | good   | Retain   |
 
 This function adds another column, *Retained*, to the metafile. The
-third and sixth row in the metadata are with the highest \(cell/\mu l\)
-values, thus one can proceed to read the fourth and sixth file from the
-corresponding FCS file for *BS4* and *BS5* respectively. This implies
-that we are reading in only two FCS files rather than the six measured
-files.
+third and sixth row in the metadata are with the highest
+*c**e**l**l*/*μ**l* values, thus one can proceed to read the fourth and
+sixth file from the corresponding FCS file for *BS4* and *BS5*
+respectively. This implies that we are reading in only two FCS files
+rather than the six measured files.
 
 ## Flow Cytometer File Processing
 
@@ -193,24 +195,24 @@ flowfile <- read.FCS(flowfile_path, alter.names = TRUE,
 flowfile
 > flowFrame object ' B4_18_1'
 > with 8729 cells and 11 observables:
->            name                                desc range    minRange maxRange
-> $P1    FSC.HLin          Forward Scatter (FSC-HLin) 1e+05    0.000000    99999
-> $P2    SSC.HLin             Side Scatter (SSC-HLin) 1e+05  -34.479282    99999
-> $P3  GRN.B.HLin   Green-B Fluorescence (GRN-B-HLin) 1e+05  -21.194536    99999
-> $P4  YEL.B.HLin  Yellow-B Fluorescence (YEL-B-HLin) 1e+05  -10.327441    99999
-> $P5  RED.B.HLin     Red-B Fluorescence (RED-B-HLin) 1e+05   -5.347203    99999
-> $P6  NIR.B.HLin Near IR-B Fluorescence (NIR-B-HLin) 1e+05   -4.307983    99999
-> $P7  RED.R.HLin     Red-R Fluorescence (RED-R-HLin) 1e+05  -25.490185    99999
-> $P8  NIR.R.HLin Near IR-R Fluorescence (NIR-R-HLin) 1e+05  -16.020023    99999
-> $P9    SSC.ALin        Side Scatter Area (SSC-ALin) 1e+05    0.000000    99999
-> $P10      SSC.W          Side Scatter Width (SSC-W) 1e+05 -111.000000    99999
-> $P11       TIME                                Time 1e+05    0.000000    99999
+>             name                   desc     range   minRange  maxRange
+> $P1     FSC.HLin Forward Scatter (FSC..     1e+05    0.00000     99999
+> $P2     SSC.HLin Side Scatter (SSC-HL..     1e+05  -34.47928     99999
+> $P3   GRN.B.HLin Green-B Fluorescence..     1e+05  -21.19454     99999
+> $P4   YEL.B.HLin Yellow-B Fluorescenc..     1e+05  -10.32744     99999
+> $P5   RED.B.HLin Red-B Fluorescence (..     1e+05   -5.34720     99999
+> $P6   NIR.B.HLin Near IR-B Fluorescen..     1e+05   -4.30798     99999
+> $P7   RED.R.HLin Red-R Fluorescence (..     1e+05  -25.49018     99999
+> $P8   NIR.R.HLin Near IR-R Fluorescen..     1e+05  -16.02002     99999
+> $P9     SSC.ALin Side Scatter Area (S..     1e+05    0.00000     99999
+> $P10       SSC.W Side Scatter Width (..     1e+05 -111.00000     99999
+> $P11        TIME                   Time     1e+05    0.00000     99999
 > 368 keywords are stored in the 'description' slot
 ```
 
-The **R** object *flowfile* contains measurements about cells across 10
-channels since the time channel does not contain any information about
-the properties of the measured cells.
+The **R** object *flowfile* contains measurements about 8729 cells
+across 10 channels since the time channel does not contain any
+information about the properties of the measured cells.
 
 ### Transformation and visualisation
 
@@ -236,7 +238,6 @@ produces standard base scatter plots also smoothed to indicate cell
 density.
 
 ``` r
-
 flowfile_noneg <- noneg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, 
   notToTransform = c("SSC.W", "TIME"))
@@ -266,10 +267,10 @@ interested in a pre-defined outcome.
 ![Flow Cytometry
 Outcomes](README_files/figure-gfm/flowcytometryOutcome.PNG)
 
-  - Margin Events are particles too big to be measured
-  - Doublets/Multiplets are cells with disproportionate Area, Height
+-   Margin Events are particles too big to be measured
+-   Doublets/Multiplets are cells with disproportionate Area, Height
     relationship
-  - Singlets are the ‘normal cells’ but these could either be dead
+-   Singlets are the ‘normal cells’ but these could either be dead
     cells/particles (debris) or living cells (good cells).
 
 The set of functions below identifies margin events and singlets.
@@ -300,7 +301,6 @@ particle below the red line has their width properly
 measured.](man/figures/README-marginEvents-1.png)
 
 ``` r
-
 summary(flowfile_marginout, 
        channels = c('FSC.HLin', 'SSC.HLin', 
                     'SSC.W'))
@@ -325,23 +325,21 @@ summary(flowfile_marginout,
 > [1] 3831
 ```
 
-*flowfile\_marginout* is an S3 object of class `cyanoFilter` with
-**summary()** and **plot()** method. This object can be subsetted like a
-normal list. Running **plot()** on *flowfile\_marginout* produces a plot
-of the width channel against the channel supplied in *y\_toplot*. This
-action returns the figure @ref(fig:marginEvents). flowfile\_marginout
-contains the following sub-objects:
+*flowfile\_marginout* is an S4 object of class `MarginEvents` with
+**summary()**, **plot()**, **fullFlowframe()** and
+**reducedFlowframe()** methods. Running **plot()** on
+*flowfile\_marginout* produces a plot of the width channel against the
+channel supplied in *y\_toplot*. This action returns the figure
+@ref(fig:marginEvents). flowfile\_marginout contains the following
+slots:
 
-The function returns a figure (Figure @ref(fig:marginEvents)) in this
-case) and a list containing:
-
-  - *fullflowframe*, flowframe with indicator for margin and non-margin
+-   *fullflowframe*, flowframe with indicator for margin and non-margin
     events in the expression matrix,
-  - *reducedflowframe*, flowframe containing only non-margin events
-  - *N\_margin*, number of margin events contained in the input
+-   *reducedflowframe*, flowframe containing only non-margin events
+-   *N\_margin*, number of margin events contained in the input
     flowframe
-  - *N\_nonmargin*, number of non-margin events
-  - *N\_particle*, number of particles in the input flowframe
+-   *N\_nonmargin*, number of non-margin events
+-   *N\_particle*, number of particles in the input flowframe
 
 Running **plot()** on *flowfile\_marginout* gives you the number of
 margin and non-margin particles as well as descriptives on channels
@@ -353,8 +351,7 @@ margin events have been removed.
 To identify debris, we leverage on the presence of chlorophyll *a*
 
 ``` r
-
-cells_nodebris <-  debris_nc(flowframe = flowfile_marginout$reducedflowframe, 
+cells_nodebris <-  debris_nc(flowframe = reducedFlowframe(flowfile_marginout), 
                              ch_chlorophyll = "RED.B.HLin", ch_p2 = "YEL.B.HLin",
                              ph = 0.05)
 plot(cells_nodebris)
@@ -367,11 +364,8 @@ peaks.](man/figures/README-Debris-1.png)
 
 ### Gating cyanobacteria
 
-We conceptualized the division of cells into clusters in two ways in
-cyanoFilter and this is reflected in two main functions that perform the
-clustering exercise; **phyto\_filter()** and
-**celldebris\_emclustering()**. The **phyto\_filter()** function employs
-the following algorithm to separate particles into different clusters;
+The **phyto\_filter()** function employs the following algorithm to
+separate particles into different clusters;
 
 1.  Search for peaks along the supplied pigment and cell complexity
     channels.
@@ -384,11 +378,8 @@ the following algorithm to separate particles into different clusters;
 6.  Retain clusters that make up a desired proportion of the total
     number of particles clustered.
 
-<!-- end list -->
-
 ``` r
-
-bs4_gate1 <- phyto_filter(flowfile = cells_nodebris$syn,
+bs4_gate1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
                pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
                com_channels = c("FSC.HLin", "SSC.HLin"))
 
@@ -401,17 +392,17 @@ process.](man/figures/README-kdapproach-1.png)
 The resulting object is a figure (Figure @ref(fig:kdapproach)) and a
 list containing the following:
 
-  - *reducedframe*, a flowFrame with all debris removed
-  - *fullframe*, flowFrame with all measured particles and indicator for
+-   *reducedframe*, a flowFrame with all debris removed
+-   *fullframe*, flowFrame with all measured particles and indicator for
     debris and cyanobacteria cells
-  - *Cell\_count*, the number of BS4 cells counted
-  - *Debris\_Count*, the number of debris particles.
+-   *Cell\_count*, the number of BS4 cells counted
+-   *Debris\_Count*, the number of debris particles.
 
 # Gating a bi-culture experiment
 
 # License
 
 This is a free to use package for anyone who has the need. However,
-users must adhere to the licensing agreement of some dependencies that
+users must adhere to the licensing agreement of `flowDensity` that
 require that their packages be used only for educational and research
 purposes.

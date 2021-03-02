@@ -7,14 +7,14 @@ output: github_document
 <!---[![Travis-CI Build Status](https://travis-ci.org/fomotis/cyanoFilter.svg?branch=master)](https://travis-ci.org/fomotis/cyanoFilter) -->
 
 ```{r setup, include=FALSE, echo=FALSE}
-library(tidyverse)
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = ">",
+knitr::opts_chunk$set(echo = TRUE, 
+                      collapse = TRUE, 
+                      comment = ">",
                       warning = FALSE, 
                       message = FALSE, 
                       cache = FALSE,
                       fig.width = 19,
                       fig.height = 11,
-                      cache = TRUE,
                       fig.path = "man/figures/README-")
 ```
 
@@ -51,6 +51,7 @@ The package comes with 2 internal datasets that we use for demonstrating the usa
 The **goodfcs()** is deigned to check the $cell/\mu$L of the meta file (normally csv) obtained from the flow cytometer and decide if the measurements in the FCS file can be trusted. This function is especially useful for flow cytometers that are not equipped to perform automated dilution. 
 
 ```{r the_csvs}
+library(tidyverse)
 library(flowCore)
 library(flowDensity)
 library(cyanoFilter)
@@ -173,9 +174,7 @@ summary(flowfile_marginout,
                     'SSC.W'))
 ```
 
-*flowfile_marginout* is an S3 object of class `cyanoFilter` with **summary()** and **plot()** method. This object can be subsetted like a normal list. Running **plot()** on *flowfile_marginout* produces a plot of the width channel against the channel supplied in *y_toplot*. This action returns the figure \@ref(fig:marginEvents). flowfile_marginout contains the following sub-objects:
-
-The function returns a figure (Figure \@ref(fig:marginEvents)) in this case) and a list containing:
+*flowfile_marginout* is an S4 object of class `MarginEvents` with **summary()**,  **plot()**, **fullFlowframe()** and **reducedFlowframe()** methods. Running **plot()** on *flowfile_marginout* produces a plot of the width channel against the channel supplied in *y_toplot*. This action returns the figure \@ref(fig:marginEvents). flowfile_marginout contains the following slots:
 
 - *fullflowframe*, flowframe with indicator for margin and non-margin events in the expression matrix, 
 - *reducedflowframe*, flowframe containing only non-margin events
@@ -199,8 +198,7 @@ plot(cells_nodebris)
 
 ### Gating cyanobacteria
 
-
-We conceptualized the division of cells into clusters in two ways in cyanoFilter and this is reflected in two main functions that perform the clustering exercise; **phyto_filter()** and **celldebris_emclustering()**. The **phyto_filter()** function employs the following algorithm to separate particles into different clusters;
+The **phyto_filter()** function employs the following algorithm to separate particles into different clusters;
 
 1. Search for peaks along the supplied pigment and cell complexity channels. 
 2. Idneify the minimum intersection point between the peaks observed these channels.
