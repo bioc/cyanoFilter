@@ -4,8 +4,7 @@
 #'
 #' @param flowfile flowframe after debris are removed.
 #' @param group cluster group to be added to the expression matrix
-#' @param togate channel detected to have more than one peak based on 
-#' \code{\link{getChannel}}
+#' @param togate channel detected to have more than one peak
 #' @return flowframe with indicators for particle cluster
 #' 
 #' @examples

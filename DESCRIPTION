@@ -2,7 +2,7 @@ Package: cyanoFilter
 Type: Package
 Title: Phytoplankton Population Identification using Cell Pigmentation and/or
     Complexity
-Version: 0.99.7
+Version: 0.99.8
 Authors@R: c(person("Oluwafemi", "Olusoji", 
     email = "oluwafemi.olusoji@uhasselt.be", 
     role = c("cre", "aut")),
