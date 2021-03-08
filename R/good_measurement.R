@@ -36,14 +36,14 @@
 #'  #clean up the Cells.muL column
 #'  names(metafile)[which(stringr::str_detect(names(metafile), 
 #'  "Cells."))] <- "CellspML"
-#'  goodfcs(metafile = metafile, col_cpml = "CellspML", mxd_cellpML = 1000, 
+#'  goodFcs(metafile = metafile, col_cpml = "CellspML", mxd_cellpML = 1000, 
 #'  mnd_cellpML = 50)
 #'
-#' @export goodfcs
+#' @export goodFcs
 
-goodfcs <- function(metafile, col_cpml = "CellspML", mxd_cellpML = 1000, 
+goodFcs <- function(metafile, col_cpml = "CellspML", mxd_cellpML = 1000, 
                     mnd_cellpML = 50) {
-    if (!is.null(metafile) & !is.null(mxd_cellpML & !is.null(mnd_cellpML))) {
+    if (!is.null(metafile) & !is.null(mxd_cellpML) & !is.null(mnd_cellpML)) {
 
         goodfile <- ifelse((metafile[, col_cpml] < mxd_cellpML & metafile[, 
                             col_cpml] > mnd_cellpML), "good", "bad")

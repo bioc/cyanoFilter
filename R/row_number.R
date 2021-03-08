@@ -13,15 +13,15 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
 #' oneDgate(flowfile, 'RED.B.HLin')
 #'
-#' @export row_numbers
+#' @export rowNumbers
 
-row_numbers <- function(flowframe, gates, ch) {
+rowNumbers <- function(flowframe, gates, ch) {
 
   if(length(gates) == 1) {
 

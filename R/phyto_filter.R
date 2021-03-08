@@ -43,27 +43,27 @@
 #'                                transformation = FALSE, 
 #'                                emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                       c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #'                               Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#' cells_nodebris <- debrisNc(flowframe = reducedFlowframe(cells_nonmargin),
 #'                             ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
-#' phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#' phytoFilter(flowfile = reducedFlowframe(cells_nodebris),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #' 
 #'
 #'
-#' @export phyto_filter
+#' @export phytoFilter
 
 
-phyto_filter <- function(flowfile, pig_channels = NULL, 
+phytoFilter <- function(flowfile, pig_channels = NULL, 
                          com_channels = NULL,
                          ph = 0.05, proportion = 0.80) {
 
@@ -72,24 +72,16 @@ phyto_filter <- function(flowfile, pig_channels = NULL,
     stop("both pigment and cell complecity channels cannot be NULL. 
          Check your input")
 
-  } else if(!is.null(pig_channels) & is.null(com_channels)) {
-
-    channels <- pig_channels
-    #gate based on the pigments
-
-  } else if(is.null(pig_channels) & !is.null(com_channels)) {
-
-    channels <- com_channels
-    #gate based on the complexity channels
-
   } else {
 
-    channels <- c(pig_channels, com_channels)
+    
     #gate based on the pigments
-
+    channels <- c(pig_channels, com_channels)
   }
+  
+  
 
-  pigment_gating <- pigment_gate(flowfile = flowfile, pig_channels = channels,
+  pigment_gating <- pigmentGate(flowfile = flowfile, pig_channels = channels,
                                  ph = ph)
   gen_togate <- pigment_gating$gated_channels
   fgate <- pigment_gating
@@ -98,8 +90,8 @@ phyto_filter <- function(flowfile, pig_channels = NULL,
   if(sum(is.na(gen_togate)) == length(gen_togate)) {
         # no channel was gated here
 
-        full_flowframe <- new_flowframe(flowfile, group = rep(1, 
-                                                              nrow(flowfile)), 
+        full_flowframe <- newFlowframe(flowfile,
+                                       group = rep(1, nrow(flowfile)), 
                                         togate = NULL)
         #plott1 <- ggpairsDens(full_flowframe, channels = channels, 
         #group = "Clusters")
@@ -116,7 +108,7 @@ phyto_filter <- function(flowfile, pig_channels = NULL,
 
     } else {
 
-      clusters <- fgate$full_flowframe@exprs[, 
+      clusters <- flowCore::exprs(fgate$full_flowframe)[, 
                                              paste(gen_togate[
                                                !is.na(gen_togate)], 
                                                "Cluster", sep = "_")]
@@ -143,9 +135,9 @@ phyto_filter <- function(flowfile, pig_channels = NULL,
       }
 
       ### formulate a master full flow file
-      full_flowframe <- new_flowframe(fgate$full_flowframe, group = is, 
+      full_flowframe <- newFlowframe(fgate$full_flowframe, group = is, 
                                       togate = NULL)
-      needed_proportion <- cluster_extractp(full_flowframe, 
+      needed_proportion <- clusterExtractp(full_flowframe, 
                                             cluster_var = "Clusters",
                                             proportion = proportion)
       flowframe_proportion <- needed_proportion$flowfile_proportion
@@ -167,6 +159,6 @@ phyto_filter <- function(flowfile, pig_channels = NULL,
 
       #attr(ret_result, 'class') <- c('cyanoFilter', 'phytoFilter')
       #cyanoFilterPhyto(ret_result)
-      return(ret_result)
+      #return(ret_result)
     }
 }

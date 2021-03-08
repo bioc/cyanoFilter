@@ -17,20 +17,20 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                       c('SSC.W', 'TIME'))
-#' pairs_plot(flowfile_logtrans,
+#' pairsPlot(flowfile_logtrans,
 #'            notToPlot = c("TIME", "SSC.W",
 #'            "SSC.HLin", "NIR.R.HLin", 
 #'            "FSC.HLin"))  
 #'            
 #' @importFrom stats var cov quantile runif
 #' @importFrom grDevices chull densCols
-#' @export pairs_plot
+#' @export pairsPlot
 
-pairs_plot <- function(x, notToPlot = c("TIME"), ...) {
+pairsPlot <- function(x, notToPlot = c("TIME"), ...) {
 
   toplot <- setdiff(flowCore::colnames(x), notToPlot)
   col.palette <- colorRampPalette(c("white", "blue", "cyan", "green", "orange", 
@@ -74,8 +74,8 @@ pairs_plot <- function(x, notToPlot = c("TIME"), ...) {
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                       c('SSC.W', 'TIME'))
 #' ggplotDens(flowfile_logtrans,
@@ -127,18 +127,18 @@ ggplotDens <- function(flowfile, channels, ...) {
 #'                                transformation = FALSE, 
 #'                                emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                       c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #'                               Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#' cells_nodebris <- debrisNc(flowframe = reducedFlowframe(cells_nonmargin),
 #'                             ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
-#' cct <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#' cct <- phytoFilter(flowfile = reducedFlowframe(cells_nodebris),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #' ggplotDens2(reducedFlowframe(cct), 
@@ -228,8 +228,8 @@ ggplotDens2 <- function(flowfile, channels, group, ...) {
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' ggpairsDens(flowfile = flowfile_logtrans,
 #'             channels = c("FSC.HLin", "RED.R.HLin", "RED.B.HLin", 

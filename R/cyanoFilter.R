@@ -7,14 +7,14 @@
 #' \emph{fcsfile} processing functions.
 #'
 #' @section  metafile preprocessing functions:
-#'           This set of functions (\code{\link{goodfcs}} and 
+#'           This set of functions (\code{\link{goodFcs}} and 
 #'           \code{\link{retain}}) helps to
 #'           identify the appropriate fcs file to read.
 #'
 #' @section fcsfile processing functions:
-#'          These functions (\code{\link{nona}} and 
-#'          \code{\link{noneg}}, \code{\link{noneg}},
-#'          \code{\link{phyto_filter}})
+#'          These functions (\code{\link{noNA}} and 
+#'          \code{\link{noNeg}},
+#'          \code{\link{phytoFilter}})
 #'          works on the fcs file to identify the 
 #'          phytoplankton populations contained in
 #'          the fcs file.

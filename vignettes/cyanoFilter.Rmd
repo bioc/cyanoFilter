@@ -33,7 +33,10 @@ Flow cytometry is a well-known technique for identifying cell populations contai
 We load the package and necessary dependencies below. We also load tidyverse for some data cleaning steps that we need to carry out. 
 
 ```{r packages}
-library(tidyverse)
+library(dplyr)
+library(magrittr)
+library(tidyr)
+library(purrr)
 library(flowCore)
 library(flowDensity)
 library(cyanoFilter)
@@ -73,8 +76,10 @@ names(metafile)[which(stringr::str_detect(names(metafile), "Cells."))] <- "Cells
 To determine the appropriate data file to read from a FCM datafile, the desired minimum, maximum and column containing the $cell\mu l$ values are supplied to the **goodfcs()** function. The code below demonstrates the use of this function for a situation where the desired minimum and maximum for $cell/\mu l$ is 50 and 1000 respectively.
 
 ```{r metafile2}
-metafile <- metafile %>% mutate(Status = cyanoFilter::goodfcs(metafile = metafile, col_cpml = "CellspML", 
-                                        mxd_cellpML = 1000, mnd_cellpML = 50)
+metafile <- metafile %>% mutate(Status = cyanoFilter::goodFcs(metafile = metafile, 
+                                                              col_cpml = "CellspML", 
+                                        mxd_cellpML = 1000, 
+                                        mnd_cellpML = 50)
                                 )
 knitr::kable(metafile)
 ```
@@ -118,7 +123,7 @@ The **R** object *flowfile* contains measurements about `r nrow(flowfile)` cells
 To examine the need for transformation, a visual representation of the information in the expression matrix is of great use. The **ggpairsDens()** function produces a panel plot of all measured channels. Each plot is also smoothed to show the cell density at every part of the plot.  
 
 ```{r remove_na, fig.cap="**Panel plot for all channels measured in flowfile_nona. A bivariate kernel smoothed color density is used to indicate the cell density.**"}
-flowfile_nona <- nona(x = flowfile)
+flowfile_nona <- noNA(x = flowfile)
 ggpairsDens(flowfile_nona, notToPlot = "TIME")
 ```
 
@@ -126,7 +131,7 @@ We obtain Figure  above by using the **ggpairsDens()** function after removing a
 
 ```{r logtrans, cache=TRUE, fig.cap="Panel plot for log-transformed channels for flowfile_logtrans. A bivariate kernel smoothed color density is used to indicate the cell density."}
 
-flowfile_noneg <- noneg(x = flowfile_nona)
+flowfile_noneg <- noNeg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, 
   notToTransform = c("SSC.W", "TIME"))
 ggpairsDens(flowfile_logtrans, notToPlot = "TIME")
@@ -139,8 +144,6 @@ The second figure is the result of performing a logarithmic transformation in ad
 
 Flow cytometry outcomes can be divided into 3 and they are not entirely mutually exclusive but this is not a problem as scientists are often interested in a pre-defined outcome.
 
-
-![Flow Cytometry Outcomes](flowcytometryOutcome.PNG)
 
 - Margin Events are particles too big to be measured
 - Doublets/Multiplets are cells with disproportionate Area, Height relationship
@@ -155,7 +158,7 @@ The set of functions below identifies margin events and singlets. Doublets are n
 To remove margin events, the **cellmargin()** function takes the column in the expression matrix corresponding to measurements about the width of each cell. The code below demonstrates the removal of margin events using the SSC.W column with the option to estimate the cut point between the margin events and the good cells. 
 
 ```{r marginEvents, cache=TRUE, fig.cap="Smoothed Scatterplot of measured width (SSC.W) and height (FSC.HLin). The red line is the estimated cut point by flowDensity, and every particle below the red line has their width properly measured."}
-flowfile_marginout <- cellmargin(flowframe = flowfile_logtrans,
+flowfile_marginout <- cellMargin(flowframe = flowfile_logtrans,
                                  Channel = 'SSC.W', type = 'estimate', 
                                  y_toplot = "FSC.HLin")
 plot(flowfile_marginout)
@@ -181,7 +184,7 @@ To identify debris, we leverage on the presence of chlorophyll *a*
 
 ```{r Debris, fig.cap="Smoothed Scatterplot of measured chlorophyll *a* channel (RED.B.HLin) and phycoerythrin channel (YEL.B.HLin). The red lines are the estimated minimum intersection points between the detected peaks."}
 
-cells_nodebris <-  debris_nc(flowframe = reducedFlowframe(flowfile_marginout), 
+cells_nodebris <-  debrisNc(flowframe = reducedFlowframe(flowfile_marginout), 
                              ch_chlorophyll = "RED.B.HLin", ch_p2 = "YEL.B.HLin",
                              ph = 0.05)
 plot(cells_nodebris)
@@ -201,7 +204,7 @@ The **phyto_filter()** function employs the following algorithm to separate part
 
 ```{r kdapproach, fig.cap="Smoothed Scatterplot of all channels used in the gating process."}
 
-bs4_gate1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+bs4_gate1 <- phytoFilter(flowfile = reducedFlowframe(cells_nodebris),
                pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
                com_channels = c("FSC.HLin", "SSC.HLin"))
 

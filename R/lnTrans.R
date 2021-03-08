@@ -11,8 +11,8 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #'
 #' @importFrom methods new
@@ -24,8 +24,8 @@ lnTrans <- function(x, notToTransform = c("SSC.W", "TIME")) {
                  flowCore::exprs(x)[, which(flowCore::colnames(x) %in% 
                                                 notToTransform)])
     colnames(exx) <- flowCore::colnames(x)
-    paraa <- x@parameters
-    describe <- x@description
+    paraa <- flowCore::parameters(x)
+    describe <- flowCore::keyword(x)
     return(flowCore::flowFrame(exprs = exx, parameters = paraa, 
                                description = describe))
 }

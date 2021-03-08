@@ -13,13 +13,13 @@ retain(
 }
 \arguments{
 \item{meta_files}{dataframe from meta file that has been preprocessed by the 
-\code{\link{goodfcs}} function.}
+\code{\link{goodFcs}} function.}
 
 \item{make_decision}{decision to be made should more than one 
 \eqn{cells/\mu L} be good.}
 
 \item{Status}{column name in meta_files containing status obtained from the 
-\code{\link{goodfcs}} function.}
+\code{\link{goodFcs}} function.}
 
 \item{CellspML}{column name in meta_files containing \eqn{cells/\mu L} 
 measurements.}
@@ -38,7 +38,7 @@ It is typically not known in advance which dilution level would
          the samples are ran through the flow cytometer at two or more 
          dilution levels. Out of these, one has to decide which
          to retain and finally use for further analysis. This function and 
-         \code{\link{goodfcs}} are to help you decide that.
+         \code{\link{goodFcs}} are to help you decide that.
          If more than one of the dilution levels are judged good, 
          the option \emph{make_decision = "maxi"} will give "Retain" to the
          row with the maximum \eqn{cells/\mu L} while the opposite occurs 
@@ -61,7 +61,7 @@ It is typically not known in advance which dilution level would
  #clean up the Cells.muL column
  names(metafile)[which(stringr::str_detect(names(metafile), "Cells."))] <- 
  "CellspML"
- metafile$Status <- cyanoFilter::goodfcs(metafile = metafile, col_cpml = 
+ metafile$Status <- cyanoFilter::goodFcs(metafile = metafile, col_cpml = 
  "CellspML",
  mxd_cellpML = 1000, mnd_cellpML = 50)
  metafile$Retained <- NULL
@@ -79,5 +79,5 @@ It is typically not known in advance which dilution level would
 
 }
 \seealso{
-\code{\link{goodfcs}}
+\code{\link{goodFcs}}
 }

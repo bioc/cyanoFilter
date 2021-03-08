@@ -15,26 +15,26 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                                          c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #'                               Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' fin <- phyto_filter(flowfile = reducedFlowframe(cells_nonmargin),
+#' fin <- phytoFilter(flowfile = reducedFlowframe(cells_nonmargin),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #'
-#' cluster_extract(flowfile = reducedFlowframe(fin),
+#' clusterExtract(flowfile = reducedFlowframe(fin),
 #'     cluster_var = "Clusters",
 #'     cluster_val = 1)
 #'
-#' @export cluster_extract
+#' @export clusterExtract
 
 
 
-cluster_extract <- function(flowfile,
+clusterExtract <- function(flowfile,
                             cluster_var = "Clusters",
                             cluster_val = NULL) {
 
@@ -76,29 +76,28 @@ cluster_extract <- function(flowfile,
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                                          c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cyanoFilter::cellMargin(flowframe = flowfile_logtrans, 
 #'                               Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' fin <- phyto_filter(flowfile = reducedFlowframe(cells_nonmargin),
+#' fin <- phytoFilter(flowfile = reducedFlowframe(cells_nonmargin),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #'
-#' cluster_extractp(flowfile = reducedFlowframe(fin),
+#' clusterExtractp(flowfile = reducedFlowframe(fin),
 #'     cluster_var = "Clusters",
 #'     proportion = 0.80)
-#' @export cluster_extractp
+#' @export clusterExtractp
 
 
-cluster_extractp <- function(flowfile, cluster_var = "Clusters", 
-  proportion = 0.80) {
+clusterExtractp <- function(flowfile, cluster_var = "Clusters", 
+  proportion = 1) {
 
   if(is.null(proportion)) {
 
-    proportion <- 1
     message("Proportion set to 1, hence attempt to recover all 
             particles measured")
 
@@ -110,7 +109,7 @@ cluster_extractp <- function(flowfile, cluster_var = "Clusters",
 
   } else {
 
-    cluster_n <- data.frame(table(flowfile@exprs[,cluster_var]))
+    cluster_n <- data.frame(table(exprs(flowfile)[,cluster_var]))
     names(cluster_n) <- c("Cluster", "Frequency")
     cluster_n$Percentage <- cluster_n$Frequency/sum(cluster_n$Frequency)
     cluster_n <- cluster_n[order(cluster_n$Percentage, decreasing = TRUE),]
@@ -118,7 +117,7 @@ cluster_extractp <- function(flowfile, cluster_var = "Clusters",
     c1 <- cluster_n$Cluster[which(cluster_n$CPercentage < proportion)]
     c2 <- cluster_n$Cluster[which(cluster_n$CPercentage >= proportion)[1]]
     needed_clusters <- c(c1, c2)
-    needed_flowfile <- flowfile[flowfile@exprs[, cluster_var] %in% 
+    needed_flowfile <- flowfile[exprs(flowfile)[, cluster_var] %in% 
                                   needed_clusters, ]
 
     return(list(particles_per_cluster = cluster_n,

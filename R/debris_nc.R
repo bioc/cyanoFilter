@@ -35,21 +35,22 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #' Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' debris_nc(flowframe = reducedFlowframe(cells_nonmargin), 
+#' debrisNc(flowframe = reducedFlowframe(cells_nonmargin), 
 #'           ch_chlorophyll = "RED.B.HLin",
 #'           ch_p2 = "YEL.B.HLin",
 #'           ph = 0.05)
 #'
-#' @export debris_nc
+#' @export debrisNc
 
-debris_nc <- function(flowframe, ch_chlorophyll, ch_p2, 
+debrisNc <- function(flowframe, ch_chlorophyll, 
+                     ch_p2, 
                       ph = 0.09, n_sd = 2) {
 
     # debris gating
@@ -80,19 +81,9 @@ debris_nc <- function(flowframe, ch_chlorophyll, ch_p2,
     lp2 <- length(ch_chlorophyll_peaks2$Peaks[ch_chlorophyll_peaks2$Peaks >= 0])
     pks <- ch_chlorophyll_peaks2$Peaks[ch_chlorophyll_peaks2$Peaks >= 0]
 
-    if(lp2 >= 2) {
-
-        pks_ci <- min(pks) + c(-n_sd, n_sd)*sd(flowframe@exprs[, 
-                                                               ch_chlorophyll])
-
-    } else {
-
-        pks_ci <- pks + c(-n_sd, n_sd)*sd(flowframe@exprs[, ch_chlorophyll])
-
-    }
-
-
-
+    pkks <- ifelse(lp2 >= 2, min(pks), pks)
+    pks_ci <- pkks + c(-n_sd, n_sd) * sd(exprs(flowframe[, ch_chlorophyll]))
+    
     if (lp2 >= 2 & (min(pks_ci) <= 0 )) {
 
         # at least 2 peaks with confience interval for smallest 

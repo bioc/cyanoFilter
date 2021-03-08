@@ -13,8 +13,23 @@
 #'                      channels with multiple peaks
 #' @slot channels object of class "character" representing the names of the 
 #'                channels 
+#'                
+#' @examples
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#'                  package = "cyanoFilter",
+#'                  mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
+#' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+#' cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#'            
 #' @import methods
-#' @export PhytoFilter            
+#' @importFrom stats aggregate median sd
+#' @export PhytoFilter
 
 PhytoFilter <- setClass('PhytoFilter',
          slots = list(
@@ -28,55 +43,6 @@ PhytoFilter <- setClass('PhytoFilter',
         )
 )
 
-#' constructor for the PhytoFilter class
-#' 
-#' @param fullflowframe same as the input flowFrame
-#' @param flowframe_proportion a partial flowframe containing a proportion of 
-#'                             the measured particles
-#' @param clusters_proportion is the proportion of particles in each cluster
-#' @param particles_per_cluster number of particles in each cluster
-#' @param Cluster_ind labels for each cluster
-#' @param gated_channels the names of channels with multiple peaks 
-#' @param channels the names of all channels supplied to the function
-#' @return object of class PhytoFilter
-#' 
-#'@examples
-#'  flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
-#' package = "cyanoFilter",
-#'               mustWork = TRUE)
-#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
-#'                                transformation = FALSE, 
-#'                                emptyValue = FALSE,
-#'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
-#' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
-#'                       c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
-#'                               Channel = 'SSC.W',
-#'            type = 'estimate', y_toplot = "FSC.HLin")
-#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
-#'                             ch_chlorophyll = "RED.B.HLin",
-#'                             ch_p2 = "YEL.B.HLin",
-#'                             ph = 0.05)
-#' phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
-#'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
-#'               com_channels = c("FSC.HLin", "SSC.HLin"))
-#' @export PhytoFilter
-PhytoFilter <- function(fullflowframe, flowframe_proportion, 
-                        clusters_proportion, particles_per_cluster,
-                        Cluster_ind, gated_channels, channels) {
-  
-  new('PhytoFilter', fullflowframe = fullflowframe, 
-      flowframe_proportion = flowframe_proportion, 
-      clusters_proportion = clusters_proportion, 
-      particles_per_cluster = particles_per_cluster,
-      Cluster_ind = Cluster_ind, 
-      gated_channels = gated_channels,
-      channels = channels
-    )
-  
-}
 
 #' generic function for extracting the full flowframe
 #' 
@@ -98,34 +64,32 @@ setGeneric("fullFlowframe", function(x){
 #'                                transformation = FALSE, 
 #'                                emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                       c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #'                               Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#' cells_nodebris <- debrisNc(flowframe = reducedFlowframe(cells_nonmargin),
 #'                             ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
-#' phy1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#' phy1 <- phytoFilter(flowfile = reducedFlowframe(cells_nodebris),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #' fullFlowframe(phy1)
 #' @export
 
+
 setMethod("fullFlowframe", "PhytoFilter", 
           function(x) { x@fullflowframe })
 
-#' generic function for extracting the reduced flowframe
-#' 
-#' @param x an object of either class PhytoFilter, MarginEvents or DebrisFilter
-#' @return generic for reduced flowFrame
 
 setGeneric("reducedFlowframe", function(x){
   standardGeneric("reducedFlowframe")
 })
+
 
 #' accesor method for reduced flowframe(PhytoFilter class)
 #' @param x an object of class PhytoFilter
@@ -138,18 +102,18 @@ setGeneric("reducedFlowframe", function(x){
 #'                                transformation = FALSE, 
 #'                                emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #'                       c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #'                               Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#' cells_nodebris <- debrisNc(flowframe = reducedFlowframe(cells_nonmargin),
 #'                             ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
-#' phy1 <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#' phy1 <- phytoFilter(flowfile = reducedFlowframe(cells_nodebris),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #' reducedFlowframe(phy1)
@@ -169,6 +133,14 @@ setMethod("plot", "PhytoFilter",
                         group = "Clusters") 
 })
 
+
+
+setGeneric("summaries", function(object, channels, 
+                                 cluster_var,
+                                 summary) {
+  standardGeneric("summaries")
+})
+
 #' takes a flowframes, a vector of channels, cluster indicator and return 
 #' desired summaries per cluster
 #'
@@ -178,7 +150,6 @@ setMethod("plot", "PhytoFilter",
 #'                    indicators
 #' @param summary summary statistic of interest. Only mean and 
 #'                variance-covariance matrix supported at the moment.
-#' @param ... other arguments. Not used at the moment
 #' @return list containing computed summaires
 #'
 #' @examples
@@ -188,32 +159,31 @@ setMethod("plot", "PhytoFilter",
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #' Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' cells_nodebris <- debris_nc(flowframe = reducedFlowframe(cells_nonmargin),
+#' cells_nodebris <- debrisNc(flowframe = reducedFlowframe(cells_nonmargin),
 #'                            ch_chlorophyll = "RED.B.HLin",
 #'                             ch_p2 = "YEL.B.HLin",
 #'                             ph = 0.05)
-#' fin <- phyto_filter(flowfile = reducedFlowframe(cells_nodebris),
+#' fin <- phytoFilter(flowfile = reducedFlowframe(cells_nodebris),
 #'               pig_channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #'
-#' summary(object = reducedFlowframe(fin),
+#' summaries(object = fin,
 #'         channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"),
 #'         cluster_var = "Clusters",
 #'         summary = 'mean')
 #'
-#' @importFrom stats aggregate median sd
-#' @export
-setMethod("summary", "PhytoFilter", 
+
+setMethod("summaries", "PhytoFilter", 
           function(object, channels = NULL,
                    cluster_var = "Clusters",
-                   summary = c("mean", "median" , "cov", "n"), ...) {
+                   summary = c("mean", "median" , "cov", "n")) {
             if(sum(summary %in% c("mean", "median", "cov", "n")) == 0) {
               
               stop("wrong summary option supplied")
@@ -307,6 +277,8 @@ setMethod("summary", "PhytoFilter",
 
 
 
+
+
 #' the marginEvent class
 #' 
 #' @slot fullflowframe object of class "flowFrame" same as the input flowFrame
@@ -358,10 +330,10 @@ MarginEvents <- setClass('MarginEvents',
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1)
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-#' cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+#' cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
 #' 
 #' 
@@ -393,11 +365,11 @@ MarginEvents <- function(fullflowframe, reducedflowframe,
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #' Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
 #' fullFlowframe(cells_nonmargin)
@@ -416,11 +388,11 @@ setMethod("fullFlowframe", "MarginEvents",
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #' Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
 #' reducedFlowframe(cells_nonmargin)
@@ -440,12 +412,12 @@ setMethod("plot", "MarginEvents",
               geom_vline(xintercept = x@cut, linetype = 'dashed')
           })
 
+
 #' takes a flowframes, a vector of channels, cluster indicator and return 
 #' desired summaries per cluster
 #'
 #' @param object An object of class MarginEvents to be summarised.
 #' @param channels channels whose summaries are to be computed
-#' @param ... other arguments. Not used at the moment
 #' @return list containing the required summaries
 #' @examples 
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
@@ -454,19 +426,19 @@ setMethod("plot", "MarginEvents",
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' cells_nonmargin <- cellmargin(flowframe = flowfile_logtrans, 
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
 #' Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' summary(object = reducedFlowframe(cells_nonmargin),
-#'         channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"))
+#' summaries(cells_nonmargin, 
+#' c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"))
 #' 
 #' @export
-setMethod("summary", "MarginEvents", 
-          function(object, channels = NULL, ...) {
+setMethod("summaries", "MarginEvents", 
+          function(object, channels = NULL) {
             if(is.MarginEvents(object) & is.null(channels) ) {
               
               stop("You must supply channels for objects 
@@ -498,8 +470,7 @@ setMethod("summary", "MarginEvents",
               
               
             } else stop('object of wrong class supplied')
-          })
-
+      })
 
 
 #' the Debris class
@@ -594,53 +565,50 @@ setMethod("plot", "DebrisFilter",
                   which(flowCore::exprs(y)[, x@ch_p2] <=
                           x@deb_cut), x@ch_p2])), inherit.aes = FALSE,
                 label = paste0("Debris"), colour = "blue", size = 6)
-          })
+      })
+
 
 #' takes a flowframes, a vector of channels, cluster indicator and return 
 #' desired summaries per cluster
 #'
-#' @param object An object of class DebrisFilter to be summarised.
+#' @param object An object of class MarginEvents to be summarised.
 #' @param channels channels whose summaries are to be computed
-#' @param ... other arguments. Not used at the moment
-#' @return list containing required summaries
-#' @examples
+#' @return list containing the required summaries
+#' @examples 
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
 #'               package = "cyanoFilter",
 #'               mustWork = TRUE)
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' cells_nodeb <- debris_nc(flowframe = flowfile_logtrans, 
-#'           ch_chlorophyll = "RED.B.HLin",
-#'           ch_p2 = "YEL.B.HLin",
-#'           ph = 0.05)
-#' 
-#' summary(object = reducedFlowframe(cells_nodeb),
-#'         channels = c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"))
+#' cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
+#' Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' summaries(cells_nonmargin, 
+#' c("RED.B.HLin", "YEL.B.HLin", "RED.R.HLin"))
 #' 
 #' @export
-setMethod("summary", "DebrisFilter", 
-          function(object, channels = NULL, ...) {
-            if(is.DebrisFilter(object) & is.null(channels)  ) {
+setMethod("summaries", "DebrisFilter", 
+          function(object, channels = NULL) {
+            if(is.DebrisFilter(object) & is.null(channels) ) {
               
-              stop("You must supply channels and cluster_var for objects 
+              stop("You must supply channels for objects 
                     of class DebrisFilter")
             }
             
             if(is.DebrisFilter(object)) {
-              
               ff <- reducedFlowframe(object) 
-              
               #calculate overall mean
               mns <- apply(ff@exprs[, channels],2,
-                           mean, na.rm = TRUE)
-              #calculate overall mean
+                           mean,
+                           na.rm = TRUE)
+              #calculate overall meadian
               mns2 <- apply(ff@exprs[, channels],2,
-                            median,
+                            median,  
                             na.rm = TRUE)
               #calculate overall variance covariance
               vars_list <- cov(ff@exprs[, channels])
@@ -651,7 +619,6 @@ setMethod("summary", "DebrisFilter",
               
             } else stop('object of wrong class supplied')
           })
-
 
 #' function to check if object is of class cyanoFilter(PhytoFilter)
 #' @param x any R object

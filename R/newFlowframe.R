@@ -5,7 +5,7 @@
 #' @param flowfile flowframe after debris are removed.
 #' @param group cluster group to be added to the expression matrix
 #' @param togate channel detected to have more than one peak based on 
-#' \code{\link{get_channel}}
+#' \code{\link{getChannel}}
 #' @return flowframe with indicators for particle cluster
 #' 
 #' @examples
@@ -15,15 +15,15 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
 #' oneDgate(flowfile, 'RED.B.HLin')
 #' 
-#' @export new_flowframe
+#' @export newFlowframe
 
-new_flowframe <- function(flowfile, group, togate) {
+newFlowframe <- function(flowfile, group, togate) {
 
 
   if(!is.null(togate)) {
@@ -45,20 +45,23 @@ new_flowframe <- function(flowfile, group, togate) {
     )
 
   }
+  
+  pd <- pData(flowCore::parameters(flowfile))
+  dvarMetadata <- flowCore::varMetadata(flowCore::parameters(flowfile))
+  ddimnames <- dimLabels(flowCore::parameters(flowfile))
 
-  ddata <- rbind(flowfile@parameters@data, ddata)
-  row.names(ddata) <- c(row.names(flowfile@parameters@data),
+  ddata <- rbind(pd, ddata)
+  row.names(ddata) <- c(row.names(pd),
                         paste("$P", 
-                              length(row.names(flowfile@parameters@data))+1,
+                              length(row.names(pd))+1,
                               sep = ""))
 
-
-  dvarMetadata <- flowfile@parameters@varMetadata
-  ddimnames <- flowfile@parameters@dimLabels
+  
   paraa <- Biobase::AnnotatedDataFrame(data = ddata, 
                                        varMetadata = dvarMetadata,
-                                       dimLabels = ddimnames)
-  describe <- flowfile@description
+                                       dimLabels = ddimnames
+                                      )
+  describe <- flowCore::keyword(flowfile)
 
 
   #flowframe with indicator added for each cluster

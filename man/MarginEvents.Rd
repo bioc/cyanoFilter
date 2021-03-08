@@ -84,10 +84,10 @@ flowfile_path <- system.file("extdata", "B4_18_1.fcs",
 flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
                                transformation = FALSE, emptyValue = FALSE,
                                dataset = 1)
-flowfile_nona <- cyanoFilter::nona(x = flowfile)
-flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
            type = 'estimate', y_toplot = "FSC.HLin")
 
 

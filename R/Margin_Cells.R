@@ -43,22 +43,23 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1)
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
-#' cellmargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+#' cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
 #'
 #' @importFrom methods new
-#' @export cellmargin
+#' @export cellMargin
 
-cellmargin <- function(flowframe, Channel = "SSC.W",
+cellMargin <- function(flowframe, Channel = "SSC.W",
                        type = c("manual", "estimate"),
                        cut = NULL, y_toplot = "FSC,HLin") {
 
-    dvarMetadata <- flowframe@parameters@varMetadata
-    ddimnames <- flowframe@parameters@dimLabels
-    describe <- flowframe@description
+    dvarMetadata <- flowCore::varMetadata(flowCore::parameters(flowframe))
+    ddimnames <- Biobase::dimLabels(flowCore::parameters(flowframe))
+    describe <- flowCore::keyword(flowframe)
+    pd <- pData(flowCore::parameters(flowframe))
 
     if (type == "manual" & !is.null(cut)) {
         margin.ind <- ifelse(flowCore::exprs(flowframe)[, Channel] <= cut, 
@@ -75,14 +76,16 @@ cellmargin <- function(flowframe, Channel = "SSC.W",
         colnames(exx)[ncol(exx)] <- "Margin.Indicator"
 
         # constructing the annotated data frame for the parameter
-        ddata <- data.frame(rbind(flowframe@parameters@data, 
+        ddata <- data.frame(rbind(pd, 
                                   c("Margin.Indicator", "Margin Indicator", 
                                     1, 0, 1)))
-        paraa <- Biobase::AnnotatedDataFrame(data = ddata, varMetadata = 
-                                                 dvarMetadata, 
-                                             dimLabels = ddimnames)
-        row.names(ddata) <- c(row.names(flowframe@parameters@data), 
-                              paste0("$", "P", ncol(exx)))
+        paraa <- Biobase::AnnotatedDataFrame(data = ddata, 
+                                             varMetadata = dvarMetadata, 
+                                             dimLabels = ddimnames
+                                             )
+        row.names(ddata) <- c(row.names(pd), 
+                              paste0("$", "P", ncol(exx))
+                              )
 
         fflowframe <- flowCore::flowFrame(exprs = exx, parameters = paraa, 
                                           description = describe)
@@ -121,15 +124,15 @@ cellmargin <- function(flowframe, Channel = "SSC.W",
          colnames(exx)[ncol(exx)] <- "Margin.Indicator"  
         #
          # constructing the annotated data frame for the parameter
-         ddata <- data.frame(rbind(flowframe@parameters@data, 
+         ddata <- data.frame(rbind(pd, 
                                    c("Margin.Indicator", "Margin Indicator", 
                                      1, 0, 1)))
          paraa <- Biobase::AnnotatedDataFrame(data = ddata, 
                                               varMetadata = dvarMetadata,
                                               dimLabels = ddimnames)
-         row.names(ddata) <- c(row.names(flowframe@parameters@data),
+         row.names(ddata) <- c(row.names(pd),
                                paste("$P", 
-                               length(row.names(flowframe@parameters@data))+1,
+                               length(row.names(pd))+1,
                                      sep = "")
                                )
 
@@ -141,7 +144,7 @@ cellmargin <- function(flowframe, Channel = "SSC.W",
         exx2 <- exx[exx[, "Margin.Indicator"] == 1, ]
         rflowframe <- flowCore::flowFrame(exprs = exx2, parameters = paraa, 
                                           description = describe)
-    } else stop("Error: check your inputs")
+    } else stop("check your inputs")
 
     ret_result <- MarginEvents(fullflowframe = fflowframe,
                        reducedflowframe = rflowframe,
@@ -150,7 +153,9 @@ cellmargin <- function(flowframe, Channel = "SSC.W",
                        N_particle = flowCore::nrow(fflowframe),
                        Channel = Channel,
                        y_toplot = y_toplot,
-                       cut = ifelse(type == "manual", cut, infl_point1)
+                       cut = ifelse(type == "manual", 
+                                    cut, 
+                                    infl_point1)
                       )
     
     return(ret_result)

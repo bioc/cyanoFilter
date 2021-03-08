@@ -10,18 +10,18 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' noNeg(x = flowfile_nona)
 #'
 #'
 #'@importFrom methods new
-#'@export noneg
+#'@export noNeg
 
-noneg <- function(x) {
+noNeg <- function(x) {
     dtest <- !apply(flowCore::exprs(x), 1, function(row) any(row <= 0))
     exx <- flowCore::exprs(x)[dtest == TRUE, ]
-    paraa <- x@parameters
-    describe <- x@description
+    paraa <- flowCore::parameters(x)
+    describe <- flowCore::keyword(x)
     return(flowCore::flowFrame(exprs = exx, parameters = paraa, 
                                description = describe))
 }

@@ -17,15 +17,15 @@
 #'                                transformation = FALSE, 
 #'                                emptyValue = FALSE,
 #'                                dataset = 1) 
-#' flowfile_nona <- cyanoFilter::nona(x = flowfile)
-#' flowfile_noneg <- cyanoFilter::noneg(x = flowfile_nona)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 #' flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg, 
 #' c('SSC.W', 'TIME'))
-#' get_channel(flowfile_logtrans, 'RED.B.HLin', 0.05) 
+#' getChannel(flowfile_logtrans, 'RED.B.HLin', 0.05) 
 #'
-#' @export get_channel
+#' @export getChannel
 
-get_channel <- function(flowfile, ch, ph) {
+getChannel <- function(flowfile, ch, ph) {
 
   ptt <- flowDensity::getPeaks(flowfile, ch, tinypeak.removal = ph)
   if(length(ptt$Peaks) == 1) {

@@ -10,18 +10,19 @@
 #' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
 #'                                transformation = FALSE, emptyValue = FALSE,
 #'                                dataset = 1) 
-#' nona(x = flowfile)
+#' noNA(x = flowfile)
 #'
 #'
 #' @importFrom methods new
-#' @export nona
+#' @export noNA
 
-nona <- function(x) {
+noNA <- function(x) {
     dtest <- !apply(flowCore::exprs(x), 1, 
                     function(row) any(is.na(row) | is.nan(row)))
     exx <- flowCore::exprs(x)[dtest == TRUE, ]
-    paraa <- x@parameters
-    describe <- x@description
-    return(flowCore::flowFrame(exprs = exx, parameters = paraa, 
+    paraa <- flowCore::parameters(x)
+    describe <- flowCore::keyword(x)
+    return(flowCore::flowFrame(exprs = exx, 
+                               parameters = paraa, 
                                description = describe))
 }
