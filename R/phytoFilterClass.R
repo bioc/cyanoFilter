@@ -29,6 +29,7 @@
 #'            
 #' @import methods
 #' @importFrom stats aggregate median sd
+#' @export
 
 PhytopFilter <- setClass('PhytopFilter',
          slots = list(
@@ -67,7 +68,6 @@ PhytopFilter <- setClass('PhytopFilter',
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' @export PhytopFilter
 
 PhytopFilter <- function(fullflowframe, flowframe_proportion, 
                         clusters_proportion, particles_per_cluster,
@@ -203,7 +203,7 @@ setMethod("reducedFlowframe", "PhytopFilter",
 #' plot method for PhytoFilter objects
 #' 
 #' @param x an object of class PhytoFilter
-#' @return object of calss ggplot
+#' @return object of class ggplot
 #' @export
 setMethod("plot", "PhytopFilter", 
           function(x) {
