@@ -29,9 +29,8 @@
 #'            
 #' @import methods
 #' @importFrom stats aggregate median sd
-#' @export PhytoFilter
 
-PhytoFilter <- setClass('PhytoFilter',
+PhytopFilter <- setClass('PhytopFilter',
          slots = list(
          fullflowframe = 'flowFrame',
          flowframe_proportion = 'flowFrame',
@@ -42,6 +41,49 @@ PhytoFilter <- setClass('PhytoFilter',
          channels = 'character'
         )
 )
+
+#' constructor for the PhytoFilter class
+#' 
+#' @param fullflowframe same as the input flowFrame
+#' @param flowframe_proportion a partial flowframe containing containing a 
+#'                             proportion of the measured particles
+#' @param clusters_proportion number of margin particles measured
+#' @param particles_per_cluster number of particles in each cluster
+#' @param Cluster_ind labels for each cluster
+#' @param gated_channels channels used for gating
+#' @param channels all channels supplied
+#' 
+#' @return object of class PhytoFilter
+#' 
+#' @examples
+#' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
+#'                  package = "cyanoFilter",
+#'                  mustWork = TRUE)
+#' flowfile <- flowCore::read.FCS(flowfile_path, alter.names = TRUE,
+#'                                transformation = FALSE, emptyValue = FALSE,
+#'                                dataset = 1)
+#' flowfile_nona <- cyanoFilter::noNA(x = flowfile)
+#' flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
+#' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
+#' cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
+#'            type = 'estimate', y_toplot = "FSC.HLin")
+#' @export PhytopFilter
+
+PhytopFilter <- function(fullflowframe, flowframe_proportion, 
+                        clusters_proportion, particles_per_cluster,
+                        Cluster_ind, gated_channels, channels) {
+  
+  new('PhytopFilter', 
+      fullflowframe = fullflowframe, 
+      flowframe_proportion = flowframe_proportion, 
+      clusters_proportion = clusters_proportion, 
+      particles_per_cluster = particles_per_cluster,
+      Cluster_ind = Cluster_ind,
+      gated_channels = gated_channels,
+      channels = channels
+  )
+ 
+}
 
 
 #' generic function for extracting the full flowframe
@@ -98,7 +140,7 @@ setGeneric("fullFlowframe", function(x){
 #' @export
 
 
-setMethod("fullFlowframe", "PhytoFilter", 
+setMethod("fullFlowframe", "PhytopFilter", 
           function(x) { x@fullflowframe })
 
 #' generic function for extracting the full flowframe
@@ -155,7 +197,7 @@ setGeneric("reducedFlowframe", function(x){
 #' reducedFlowframe(phy1)
 #' @export
 
-setMethod("reducedFlowframe", "PhytoFilter", 
+setMethod("reducedFlowframe", "PhytopFilter", 
           function(x) { x@flowframe_proportion })
 
 #' plot method for PhytoFilter objects
@@ -163,7 +205,7 @@ setMethod("reducedFlowframe", "PhytoFilter",
 #' @param x an object of class PhytoFilter
 #' @return object of calss ggplot
 #' @export
-setMethod("plot", "PhytoFilter", 
+setMethod("plot", "PhytopFilter", 
           function(x) {
             ggpairsDens(reducedFlowframe(x), channels = x@channels, 
                         group = "Clusters") 
@@ -244,7 +286,7 @@ setGeneric("summaries", function(object, channels,
 #'         summary = 'mean')
 #'
 
-setMethod("summaries", "PhytoFilter", 
+setMethod("summaries", "PhytopFilter", 
           function(object, channels = NULL,
                    cluster_var = "Clusters",
                    summary = c("mean", "median" , "cov", "n")) {
@@ -252,14 +294,14 @@ setMethod("summaries", "PhytoFilter",
               
               stop("wrong summary option supplied")
               
-            } else if(is.PhytoFilter(object) & (is.null(channels) | 
+            } else if(is.PhytopFilter(object) & (is.null(channels) | 
                                                 is.null(cluster_var)) ) {
               
               stop("You must supply channels and cluster_var for objects 
                     of class phytoFilter")
             }
             
-            if(is.PhytoFilter(object)) {
+            if(is.PhytopFilter(object)) {
               
               ff <- reducedFlowframe(object)
               
@@ -359,8 +401,6 @@ setMethod("summaries", "PhytoFilter",
 #' @slot y_toplot object of class character representing plot variable 
 #' @slot cut object of class numberic representing estimated inflection point or
 #'           supplied cut-off point 
-#'           
-#' @export MarginEvents
 
 MarginEvents <- setClass('MarginEvents',
          slots = list(
@@ -399,8 +439,6 @@ MarginEvents <- setClass('MarginEvents',
 #' flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 #' cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
 #'            type = 'estimate', y_toplot = "FSC.HLin")
-#' 
-#' 
 #' @export MarginEvents
 
 MarginEvents <- function(fullflowframe, reducedflowframe, 
@@ -550,8 +588,7 @@ setMethod("summaries", "MarginEvents",
 #'               between debris and good cells.
 #' @slot ch_chlorophyll objet of class "character" representing the chlorophyll
 #'                      channel.
-#' @slot ch_p2 object of class character to 
-#' @export DebrisFilter
+#' @slot ch_p2 object of class character to plot
 
 DebrisFilter <- setClass('DebrisFilter',
          slots = list(
@@ -690,12 +727,12 @@ setMethod("summaries", "DebrisFilter",
 #' 
 #' @examples
 #'  x <- c(1, 5, 4)
-#'  is.PhytoFilter(x)
+#'  is.PhytopFilter(x)
 #' 
-#' @export is.PhytoFilter
+#' @export is.PhytopFilter
 
-is.PhytoFilter <- function(x) {
-  methods::is(x, 'PhytoFilter')
+is.PhytopFilter <- function(x) {
+  methods::is(x, 'PhytopFilter')
 }
 
 

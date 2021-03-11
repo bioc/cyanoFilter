@@ -26,7 +26,7 @@ peaks that could affect the gating process.}
 \item{proportion}{proportion of cell count to be returned.}
 }
 \value{
-list containing; \itemize{
+object of class \link{PhytopFilter} containing; \itemize{
 \item \strong{fullflowframe -} flowframe containing all phytoplankton cells 
                                with added columns indicating cluster
 \item \strong{flowframe_proportion -} a part of fullflowframe containing 

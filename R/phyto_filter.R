@@ -13,7 +13,7 @@
 #' @param proportion proportion of cell count to be returned.
 #'
 #'
-#' @return list containing; \itemize{
+#' @return object of class \link{PhytopFilter} containing; \itemize{
 #' \item \strong{fullflowframe -} flowframe containing all phytoplankton cells 
 #'                                with added columns indicating cluster
 #' \item \strong{flowframe_proportion -} a part of fullflowframe containing 
@@ -97,7 +97,7 @@ phytoFilter <- function(flowfile, pig_channels = NULL,
         #group = "Clusters")
         message("Only one cluster found across the supplied channels.")
         
-        ret_result <- PhytoFilter(fullflowframe = full_flowframe,
+        ret_result <- PhytopFilter(fullflowframe = full_flowframe,
                                   flowframe_proportion = NA,
                                   clusters_proportion = NA,
                                   particles_per_cluster = NA,
@@ -147,7 +147,7 @@ phytoFilter <- function(flowfile, pig_channels = NULL,
       #plott1 <- ggpairsDens(flowframe_proportion, channels = channels, 
       #group = "Clusters")
 
-      ret_result <- PhytoFilter(
+      ret_result <- PhytopFilter(
         fullflowframe = full_flowframe,
         flowframe_proportion = flowframe_proportion,
         clusters_proportion = clusters_proportion,

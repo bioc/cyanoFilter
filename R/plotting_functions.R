@@ -37,7 +37,7 @@ pairsPlot <- function(x, notToPlot = c("TIME"), ...) {
                                     "red"),
                                   space = "Lab")
 
-  if(!is.DebrisFilter(x) | !is.MarginEvents(x) | !is.PhytoFilter(x)) {
+  if(!is.DebrisFilter(x) | !is.MarginEvents(x) | !is.PhytopFilter(x)) {
 
 
     pairs.default(flowCore::exprs(x)[, toplot], pch = ".",
@@ -45,7 +45,7 @@ pairsPlot <- function(x, notToPlot = c("TIME"), ...) {
                                                       colramp = col.palette,
                                                       add = TRUE), gap = 0.2,
                   main = flowCore::identifier(x))
-  } else if(is.DebrisFilter(x) | is.MarginEvents(x) | is.PhytoFilter(x)) {
+  } else if(is.DebrisFilter(x) | is.MarginEvents(x) | is.PhytopFilter(x)) {
 
 
     pairs.default(flowCore::exprs(fullFlowframe(x))[, toplot], pch = ".",

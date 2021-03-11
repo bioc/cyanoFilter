@@ -89,6 +89,4 @@ flowfile_noneg <- cyanoFilter::noNeg(x = flowfile_nona)
 flowfile_logtrans <- lnTrans(x = flowfile_noneg, c('SSC.W', 'TIME'))
 cellMargin(flowframe = flowfile_logtrans, Channel = 'SSC.W',
            type = 'estimate', y_toplot = "FSC.HLin")
-
-
 }

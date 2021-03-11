@@ -67,6 +67,6 @@ between debris and good cells.}
 \item{\code{ch_chlorophyll}}{objet of class "character" representing the chlorophyll
 channel.}
 
-\item{\code{ch_p2}}{object of class character to}
+\item{\code{ch_p2}}{object of class character to plot}
 }}
 
