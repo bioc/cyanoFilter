@@ -61,21 +61,22 @@ debrisNc <- function(flowframe, ch_chlorophyll,
 
     #check if the peak heights are above a certain threshold, i.e. check 
     #for tinypeaks
-    if(sum(ch_chlorophyll_peaks$P.h[ch_chlorophyll_peaks$Peaks >= 0] > ph)
-       < lp) {
+    #if(sum(ch_chlorophyll_peaks$P.h[ch_chlorophyll_peaks$Peaks >= 0] > ph)
+    #   < lp) {
 
         ch_chlorophyll_peaks2 <- flowDensity::getPeaks(flowframe, 
                                                        ch_chlorophyll,
                                                        tinypeak.removal = ph)
 
 
-    } else {
-
-        ch_chlorophyll_peaks2 <- flowDensity::getPeaks(flowframe, 
-                                                       ch_chlorophyll,
-                                                       tinypeak.removal = ph)
-
-    }
+    #} 
+    #else {
+    # 
+    #     ch_chlorophyll_peaks2 <- flowDensity::getPeaks(flowframe, 
+    #                                                    ch_chlorophyll,
+    #                                                    tinypeak.removal = ph)
+    # 
+    # }
 
     #recompute length of the peak vectors
     lp2 <- length(ch_chlorophyll_peaks2$Peaks[ch_chlorophyll_peaks2$Peaks >= 0])

@@ -6,7 +6,7 @@
 group indicator as part of the
 expression matrix of the new flowframe.}
 \usage{
-newFlowframe(flowfile, group, togate)
+newFlowframe(flowfile, group = NULL, togate = NULL)
 }
 \arguments{
 \item{flowfile}{flowframe after debris are removed.}

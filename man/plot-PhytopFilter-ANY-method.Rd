@@ -10,7 +10,7 @@
 \item{x}{an object of class PhytoFilter}
 }
 \value{
-object of calss ggplot
+object of class ggplot
 }
 \description{
 plot method for PhytoFilter objects

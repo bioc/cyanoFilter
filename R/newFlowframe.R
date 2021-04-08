@@ -22,55 +22,79 @@
 #' 
 #' @export newFlowframe
 
-newFlowframe <- function(flowfile, group, togate) {
-
-
-  if(!is.null(togate)) {
-
-    ddata <- data.frame(name = paste(togate, "Cluster", sep = "_"),
-                        desc = paste("Cluster Group for", togate),
-                        range = max(group) - min(group),
-                        minRange = range(group)[1],
-                        maxRange = range(group)[2]
-    )
-
-  } else {
-
-    ddata <- data.frame(name = "Clusters",
-                        desc = paste("Detected Cluster groups"),
-                        range = max(group) - min(group),
-                        minRange = range(group)[1],
-                        maxRange = range(group)[2]
-    )
-
-  }
+newFlowframe <- function(flowfile, group = NULL, togate = NULL) {
   
-  pd <- pData(flowCore::parameters(flowfile))
-  dvarMetadata <- flowCore::varMetadata(flowCore::parameters(flowfile))
-  ddimnames <- dimLabels(flowCore::parameters(flowfile))
+  
+  if(methods::is(flowfile, "list")) {
+    
+    mats <- do.call(rbind, lapply(flowfile, exprs))
+    ddata <- pData(flowCore::parameters(flowfile[[1]]))
+    dvarMetadata <- flowCore::varMetadata(flowCore::parameters(flowfile[[1]]))
+    ddimnames <- dimLabels(flowCore::parameters(flowfile[[1]]))
+    describe <- flowCore::keyword(flowfile[[1]])
+    
+  } else if(methods::is(flowfile, "flowSet")) {
+    
+    mats <- do.call(rbind, fsApply(flowfile, exprs))
+    ddata <- pData(flowCore::parameters(flowfile[[1]]))
+    dvarMetadata <- flowCore::varMetadata(flowCore::parameters(flowfile[[1]]))
+    ddimnames <- dimLabels(flowCore::parameters(flowfile[[1]]))
+    describe <- flowCore::keyword(flowfile[[1]])
+    
+  } else if(methods::is(flowfile, "flowFrame")) {
+    
+    if(!is.null(togate)) {
+      
+      ddata <- data.frame(name = paste(togate, "Cluster", sep = "_"),
+                          desc = paste("Cluster Group for", togate),
+                          range = max(group) - min(group),
+                          minRange = range(group)[1],
+                          maxRange = range(group)[2]
+      )
+      
+    } else {
+      
+      ddata <- data.frame(name = "Clusters",
+                          desc = paste("Detected Cluster groups"),
+                          range = max(group) - min(group),
+                          minRange = range(group)[1],
+                          maxRange = range(group)[2]
+      )
+      
+    }
+    
+    pd <- pData(flowCore::parameters(flowfile))
+    ddata <- rbind(pd, ddata)
+    row.names(ddata) <- c(row.names(pd),
+                          paste("$P", 
+                                length(row.names(pd))+1,
+                                sep = ""))
+    #flowframe with indicator added for each cluster
+    mats <- as.matrix(cbind(flowCore::exprs(flowfile), group))
+    # giving a name to the newly added column to the expression matrix
+    colnames(mats) <- ddata$name
+    dvarMetadata <- flowCore::varMetadata(flowCore::parameters(flowfile))
+    ddimnames <- dimLabels(flowCore::parameters(flowfile))
+    describe <- flowCore::keyword(flowfile)
+    
+    
+  } else stop("invalid object supplied")
 
-  ddata <- rbind(pd, ddata)
-  row.names(ddata) <- c(row.names(pd),
-                        paste("$P", 
-                              length(row.names(pd))+1,
-                              sep = ""))
+
+  
 
   
   paraa <- Biobase::AnnotatedDataFrame(data = ddata, 
                                        varMetadata = dvarMetadata,
                                        dimLabels = ddimnames
                                       )
-  describe <- flowCore::keyword(flowfile)
+  
 
-
-  #flowframe with indicator added for each cluster
-  nexp_mat <- as.matrix(cbind(flowCore::exprs(flowfile), group))
-  # giving a name to the newly added column to the expression matrix
-  colnames(nexp_mat) <- ddata$name
 
   # full flow frame with indicator for particly type
-  fflowframe <- flowCore::flowFrame(exprs = nexp_mat, 
+  fflowframe <- flowCore::flowFrame(exprs = mats, 
                                     parameters = paraa,
-                             description = describe)
+                                    description = describe
+                                    )
   return(fflowframe)
 }
