@@ -2,7 +2,7 @@
 % Please edit documentation in R/phytoFilterClass.R
 \name{fullFlowframe,PhytopFilter-method}
 \alias{fullFlowframe,PhytopFilter-method}
-\title{accesor method for reduced flowframe(PhytoFilter class)}
+\title{accesor method for full flowframe(PhytoFilter class)}
 \usage{
 \S4method{fullFlowframe}{PhytopFilter}(x)
 }
@@ -13,7 +13,7 @@
 fullFlowframe method for PhytoFilter
 }
 \description{
-accesor method for reduced flowframe(PhytoFilter class)
+accesor method for full flowframe(PhytoFilter class)
 }
 \examples{
 flowfile_path <- system.file("extdata", "B4_18_1.fcs", 

@@ -7,8 +7,15 @@
 fullFlowframe(x)
 }
 \arguments{
-\item{x}{an object of either class PhytoFilter, MarginEvents or DebrisFilter
-#' @examples 
+\item{x}{an object of either class PhytoFilter, MarginEvents or DebrisFilter}
+}
+\value{
+generic to extract fullFlowframe
+}
+\description{
+generic function for extracting the full flowframe
+}
+\examples{
 flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
 package = "cyanoFilter",
               mustWork = TRUE)
@@ -23,11 +30,5 @@ flowfile_logtrans <- cyanoFilter::lnTrans(x = flowfile_noneg,
 cells_nonmargin <- cellMargin(flowframe = flowfile_logtrans, 
                               Channel = 'SSC.W',
            type = 'estimate', y_toplot = "FSC.HLin")
- reducedFlowframe(cells_nonmargin)}
-}
-\value{
-generic to extract fullFlowframe
-}
-\description{
-generic function for extracting the full flowframe
+ reducedFlowframe(cells_nonmargin)
 }

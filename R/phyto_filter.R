@@ -35,7 +35,6 @@
 #'          identify peaks and identify cut-off points between these peaks.
 #'
 #'@examples
-#'  
 #'  flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
 #' package = "cyanoFilter",
 #'               mustWork = TRUE)
@@ -92,17 +91,18 @@ phytoFilter <- function(flowfile, pig_channels = NULL,
 
         full_flowframe <- newFlowframe(flowfile,
                                        group = rep(1, nrow(flowfile)), 
-                                        togate = NULL)
+                                       togate = NULL)
         #plott1 <- ggpairsDens(full_flowframe, channels = channels, 
         #group = "Clusters")
         message("Only one cluster found across the supplied channels.")
         
         ret_result <- PhytopFilter(fullflowframe = full_flowframe,
-                                  flowframe_proportion = NA,
-                                  clusters_proportion = NA,
-                                  particles_per_cluster = NA,
-                                  Cluster_ind = NA,
-                                  gated_channels = NA
+                                  flowframe_proportion = full_flowframe,
+                                  clusters_proportion = 0,
+                                  particles_per_cluster = data.frame(),
+                                  Cluster_ind = 0,
+                                  gated_channels = "",
+                                  channels = c(pig_channels, com_channels)
                                 )
         return(ret_result)
 
@@ -135,13 +135,13 @@ phytoFilter <- function(flowfile, pig_channels = NULL,
       }
 
       ### formulate a master full flow file
-      full_flowframe <- newFlowframe(fgate$full_flowframe, group = is, 
+      full_flowframe <- newFlowframe(flowfile, group = is, 
                                       togate = NULL)
       needed_proportion <- clusterExtractp(full_flowframe, 
                                             cluster_var = "Clusters",
                                             proportion = proportion)
       flowframe_proportion <- needed_proportion$flowfile_proportion
-      clusters_proportion <- needed_proportion$clusters_proportion
+      clusters_proportion <- as.numeric(needed_proportion$clusters_proportion)
       particles_per_cluster <- needed_proportion$particles_per_cluster
 
       #plott1 <- ggpairsDens(flowframe_proportion, channels = channels, 

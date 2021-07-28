@@ -37,7 +37,7 @@ PhytopFilter <- setClass('PhytopFilter',
          flowframe_proportion = 'flowFrame',
          clusters_proportion = 'numeric',
          particles_per_cluster = 'data.frame',
-         Cluster_ind = 'integer',
+         Cluster_ind = 'numeric',
          gated_channels = 'character',
          channels = 'character'
         )
@@ -89,7 +89,7 @@ PhytopFilter <- function(fullflowframe, flowframe_proportion,
 #' generic function for extracting the full flowframe
 #' 
 #' @param x an object of either class PhytoFilter, MarginEvents or DebrisFilter
-#' #' @examples 
+#' @examples 
 #' flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
 #' package = "cyanoFilter",
 #'               mustWork = TRUE)
@@ -111,7 +111,7 @@ setGeneric("fullFlowframe", function(x){
   standardGeneric("fullFlowframe")
 })
 
-#' accesor method for reduced flowframe(PhytoFilter class)
+#' accesor method for full flowframe(PhytoFilter class)
 #' @param x an object of class PhytoFilter
 #' @return fullFlowframe method for PhytoFilter
 #' @examples 
@@ -138,7 +138,6 @@ setGeneric("fullFlowframe", function(x){
 #'               com_channels = c("FSC.HLin", "SSC.HLin"))
 #' fullFlowframe(phy1)
 #' @export
-
 
 setMethod("fullFlowframe", "PhytopFilter", 
           function(x) { x@fullflowframe })
@@ -762,6 +761,26 @@ is.MarginEvents <- function(x) {
 is.DebrisFilter <- function(x) {
   methods::is(x, 'DebrisFilter')
 }
+
+#' function to check if object is a flowSet
+#' @param x any R object
+#' @return TRUE if object is a flowSet. FALSE otherwise
+#' 
+#' @examples
+#'  x <- c(1, 5, 4)
+#'  is.flowSet(x)
+#' @export is.flowSet
+is.flowSet <- function(x){methods::is(x, 'flowSet')}
+
+#' function to check if object is a flowFrame
+#' @param x any R object
+#' @return TRUE if object is a flowFrame. FALSE otherwise
+#' 
+#' @examples
+#'  x <- c(1, 5, 4)
+#'  is.flowFrame(x)
+#' @export is.flowFrame
+is.flowFrame <- function(x){methods::is(x, 'flowFrame')}
 
 
 

@@ -50,7 +50,6 @@ The function uses the \code{\link[flowDensity]{getPeaks}} and
          identify peaks and identify cut-off points between these peaks.
 }
 \examples{
- 
  flowfile_path <- system.file("extdata", "B4_18_1.fcs", 
 package = "cyanoFilter",
               mustWork = TRUE)
