@@ -92,7 +92,7 @@ gateFunc <- function(flowfile, sfts = c("phytoFilter",
       if('K' %in% nms) {
          K <- unlist(funargs_list[nms == 'K'])
       } else {
-         K <- 1:5
+         K <- seq_len(5)
       }
       
       
@@ -295,7 +295,7 @@ accuracy <- function(mat, mono_clust, bi_clust, nrun = 10000) {
    
    for(j in seq_len(nrun)){
       
-      parts <- sample(1:nrow(mat), 2, replace = FALSE)
+      parts <- sample(seq_len(nrow(mat)), 2, replace = FALSE)
       tests <- apply(mat[parts, c(mono_clust, bi_clust)], 2, dwin)
       tss[j] <- sum(tests)
       

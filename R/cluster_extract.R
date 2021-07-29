@@ -105,7 +105,7 @@ clusterExtractp <- function(flowfile, cluster_var = "Clusters",
 
   if(is.null(cluster_var)) {
 
-    stop("Error: cluster_var is not supplied")
+    stop("cluster_var is not supplied")
 
   } else {
 

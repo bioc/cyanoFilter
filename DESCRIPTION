@@ -26,7 +26,6 @@ Imports:
     flowCore,
     flowDensity,
     flowClust,
-    flowMeans,
     cytometree,
     ggplot2,
     GGally,

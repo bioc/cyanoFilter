@@ -54,7 +54,7 @@ pairsPlot <- function(x, notToPlot = c("TIME"), ...) {
                                                       add = TRUE), gap = 0.2,
                   main = flowCore::identifier(x))
 
-  } else stop('Error: object supplied not supported')
+  } else stop('object supplied not supported')
 
 }
 
